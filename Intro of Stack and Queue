@@ -291,3 +291,131 @@ public:
 
     }
 };
+
+--------------------------------------------------------------------------------
+
+                              (check for valid paretheess)
+
+class Solution {
+public:
+    bool isValid(string s) {
+        
+        int n = s.size();
+
+        if(n & 1){
+            return false;
+        }
+
+        stack<char> st;
+
+        for(int i = 0; i < n; i++){
+
+            if(s[i] == '(' || s[i] == '{' || s[i] == '['){
+                st.push(s[i]);
+                continue;
+            }
+
+            if(st.empty()){
+                return false;
+            }
+
+            if((s[i] == ')' && st.top() != '(') || (s[i] == ']' && st.top() != '[') || (s[i] == '}' && st.top() != '{')){
+                return false;
+            }else{
+                st.pop();
+            }
+
+        }
+
+        return st.empty() ? true : false;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------
+
+                              (next greater element I --> monotonic stack)
+
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& a, vector<int>& b) {
+        
+        stack<int> st;
+
+        map<int, int> hash;
+
+        for(int i = 0; i < b.size(); i++){
+
+            hash[b[i]] = i;
+
+        }
+
+        int n = b.size();
+
+        vector<int> ans(n, -1);
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && st.top() < b[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                ans[i] = st.top();
+
+            }
+
+            st.push(b[i]);
+
+        }
+
+        vector<int> fi;
+
+        for(int i = 0; i < a.size(); i++){
+
+            fi.push_back(ans[hash[a[i]]]);
+
+        }
+
+        return fi;
+    }
+};
+
+------------------------------------------------------------------------------------------------------------
+
+                              (next greater element II)
+
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& arr) {
+
+        int n = arr.size();
+
+        vector<int> ans(n, -1);
+
+        stack<int> st;
+
+        for(int i = (n << 1) - 1; i >= 0; i--){
+
+            while(!st.empty() && st.top() <= arr[i % n]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                ans[i % n] = st.top();
+
+            }
+
+            st.push(arr[i % n]);
+
+        }
+
+        return ans;
+
+    }
+};
