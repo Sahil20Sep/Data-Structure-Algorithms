@@ -1,0 +1,293 @@
+          (stack implement using array)
+
+void MyStack :: push(int x)
+{
+    top++;
+    arr[top] = x;
+}
+
+int MyStack :: pop()
+{
+    if(top == -1){
+        return -1;
+    }
+    return arr[top--];
+}
+
+for size return (top + 1) and empty return (top == -1)
+
+------------------------------------------------------------------------------
+
+      (queue implement using array)
+
+void push(int x){
+
+        if(cnt < n){
+            cnt++;
+            arr[rear % n] = x;
+            rear++;
+        }
+
+        return -1;
+    }
+
+    void pop(){
+
+        if(cnt == 0){
+            // no element
+        }
+        
+        a[front % n] = -1;
+        cnt--;
+        front++;
+
+    }
+
+    void top(){
+
+        if(cnt == 0){
+            // no element
+        }
+        
+        return a[front % n];
+    }
+
+-------------------
+
+void MyQueue :: push(int x)
+{
+    arr[rear++] = x;
+}
+
+int MyQueue :: pop()
+{
+    if(rear == front){
+        return -1;
+    }
+    return arr[front++]; 
+}
+
+determine size and empty we use cnt;
+
+--------------------------------------------------------------------------------------------------------
+
+                (implement stack using 2-queue)
+
+class MyStack {
+public:
+
+    queue<int> Q1, Q2;
+
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        
+        Q2.push(x);
+
+        while(!Q1.empty()){
+
+            Q2.push(Q1.front());
+            Q1.pop();
+
+        }
+
+        swap(Q1, Q2);
+    }
+    
+    int pop() {
+        
+        int ans = Q1.front();
+        Q1.pop();
+        return ans;
+
+    }
+    
+    int top() {
+        
+        return Q1.front();
+
+    }
+    
+    bool empty() {
+        
+        return Q1.empty();
+
+    }
+};
+
+space is 2* N
+
+------------------
+
+        (using one queue)
+
+class MyStack {
+public:
+
+    queue<int> Q1;
+
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        
+        Q1.push(x);
+
+        int cnt = 0, n = Q1.size();
+
+        while(cnt != n - 1){
+
+            cnt++;
+            Q1.push(Q1.front());
+            Q1.pop();
+
+        }
+
+    }
+    
+    int pop() {
+        
+        int ans = Q1.front();
+        Q1.pop();
+        return ans;
+
+    }
+    
+    int top() {
+        
+        return Q1.front();
+
+    }
+    
+    bool empty() {
+        
+        return Q1.empty();
+
+    }
+};
+
+space N
+
+-------------------------------------------------------------------------------------------------
+
+        (implement queue using 2-stack)
+
+class MyQueue {
+public:
+
+    stack<int> st1, st2;
+
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+        
+        while(!st1.empty()){
+
+            st2.push(st1.top());
+            st1.pop();
+
+        }
+
+        st1.push(x);
+
+        while(!st2.empty()){
+
+            st1.push(st2.top());
+            st2.pop();
+
+        }
+
+    }
+    
+    int pop() {
+        
+        int ans = st1.top();
+        
+        st1.pop();
+
+        return ans;
+
+    }
+    
+    int peek() {
+        
+        return st1.top();
+
+    }
+    
+    bool empty() {
+        
+        return st1.empty();
+
+    }
+};
+
+-------------------------------------
+
+        (implement using input and output stack)
+
+class MyQueue {
+public:
+
+    stack<int> input, output;
+
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+
+        input.push(x);
+
+    }
+    
+    int pop() {
+        
+        if(output.empty()){
+
+            while(!input.empty()){
+
+                output.push(input.top());
+                input.pop();
+
+            }
+
+        }
+
+        int ans = output.top();
+        output.pop();
+
+        return ans;
+
+    }
+    
+    int peek() {
+        
+        if(output.empty()){
+
+            while(!input.empty()){
+
+                output.push(input.top());
+                input.pop();
+                
+            }
+
+        }
+
+        int ans = output.top();
+
+        return ans;
+
+    }
+    
+    bool empty() {
+        
+        return input.empty() && output.empty();
+
+    }
+};
