@@ -457,3 +457,36 @@ vector<int> Solution::prevSmaller(vector<int> &arr) {
     return ans;
 
 }
+
+-------------------------------------------------------------------------------------------------------------
+
+                              (count the number of greter element after the index)
+
+class Solution{
+public:
+
+    vector<int> count_NGE(int n, vector<int> &arr, int queries, vector<int> &ind){
+        
+        vector<int> ans(ind.size());
+        
+        for(int i = 0; i < ind.size(); i++){
+            
+            int index = ind[i], cnt = 0;
+            
+            for(int j = index + 1; j < arr.size(); j++){
+                
+                if(arr[j] > arr[index]){
+                    
+                    cnt++;
+                    
+                }
+            }
+            
+            ans[i] = cnt;
+        }
+        
+        return ans;
+       
+    }
+
+};
