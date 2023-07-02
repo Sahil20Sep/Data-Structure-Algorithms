@@ -593,3 +593,171 @@ public:
 
     }
 };
+
+-----------------------------------------------------------------------------------------------------
+
+                              (largest recteengle in histrogram)
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        vector<int> left(n, -1), right(n, n);
+
+        stack<int> st;
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(!st.empty()){
+
+            st.pop();
+
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+                
+                st.pop();
+
+            }
+            
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            ans = max(ans, (right[i] - left[i] - 1) * arr[i]);
+
+        }
+
+        return ans;
+
+    }
+};
+
+------------------------------------------------------------------------------------------------------------------
+
+                              (some modification in above code) --> largest rectangle in grid
+
+class Solution {
+public:
+
+    int func(vector<int> &arr){
+
+        int n = arr.size();
+
+        vector<int> left(n, -1), right(n, n);
+
+        stack<int> st;
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(!st.empty()){
+
+            st.pop();
+
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+                
+                st.pop();
+
+            }
+            
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            ans = max(ans, (right[i] - left[i] - 1) * arr[i]);
+
+        }
+
+        return ans;
+
+    }
+
+    int maximalRectangle(vector<vector<char>>& v) {
+        
+        int n = v.size(), m = v[0].size();
+
+        vector<int> prev(m, 0);
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            for(int j = 0; j < m; j++){
+
+                if(v[i][j] == '1'){
+
+                    prev[j]++;
+
+                }else{
+
+                    prev[j] = 0;
+
+                }
+            }
+
+            ans = max(ans, func(prev));
+        }
+
+        return ans;
+    }
+};
