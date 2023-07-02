@@ -1,0 +1,59 @@
+                    (sum of two element is target)
+
+class Solution {
+public:
+    
+    vector<vector<int>> findPrimePairs(int n) {
+        
+        vector<bool> mark(n + 1, true);
+        
+        mark[0] = mark[1] = false;
+        
+        vector<int> ans;
+        
+        for(int start = 2; start <= n; start++){
+            
+            if(mark[start] == true){
+                
+                ans.push_back(start);
+                
+                for(int ers = start + start; ers <= n; ers += start){
+                    
+                    mark[ers] = false;
+                    
+                }
+            }
+        }
+        
+        int slow = 0, fast = ans.size() - 1;
+        
+        vector<vector<int>> store;
+        
+        while(slow <= fast){
+            
+            if(ans[slow] + ans[fast] < n){
+                
+                slow++;
+                
+            }else if(ans[slow] + ans[fast] > n){
+                
+                fast--;
+                
+            }else{
+                
+                store.push_back({ans[slow], ans[fast]});
+                slow++;
+                fast--;
+                
+            }
+        }
+        
+        return store;
+        
+    }
+};
+
+----------------------------------------------------------------------------------------------------
+
+
+
