@@ -390,6 +390,41 @@ public:
     }
 };
 
+----------------------------------------------------------------------------------------------------------------
+
+                                            (4sum - II)
+
+class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        
+        unordered_map<int, int> hash;
+
+        for(auto i : nums1){
+
+            for(auto j : nums2){
+
+                hash[i + j]++;
+
+            }
+        }
+
+        int ans = 0;
+
+        for(auto i : nums3){
+
+            for(auto j : nums4){
+
+                ans += hash[-(i + j)];
+
+            }
+        }
+
+        return ans;
+
+    }
+};
+
 ------------------------------------------------------------------------------------------------------------------
 
                 (reverse pair)
@@ -420,6 +455,49 @@ public:
 };
 
 ----------------
+
+------------------------------------------------------------------------------------------------------------------
+
+                      (sliding window --> Max Consecutive Ones III)
+
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        
+        // sliding window algorithm
+
+        int n = nums.size();
+
+        int slide_start = 0, slide_end = 0, ans = 0, CountZero = 0;
+
+        while(slide_end < n){
+
+            if(nums[slide_end] == 0){
+
+                CountZero++;
+
+                while(CountZero > k){
+
+                    if(nums[slide_start] == 0){
+                        CountZero--;
+                    }
+
+                    slide_start++;
+
+                }
+
+            }
+
+            ans = max(ans, slide_end - slide_start + 1);
+
+            slide_end++;
+        }
+
+        return ans;
+
+    }
+};
+
 
 
 
