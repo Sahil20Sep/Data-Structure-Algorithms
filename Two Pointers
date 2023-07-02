@@ -225,4 +225,43 @@ public:
     }
 };
 
+------------------------------------------------------------------------------------------------------------
+
+                                        (remove duplicate)
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        if(n == 1){
+
+            return 1;
+
+        }
+
+        int slow = 0, fast = 1;
+
+        while(fast < n){
+
+            if(arr[slow] == arr[fast]){
+
+                fast++;
+
+            }else{
+
+                slow++;
+                arr[slow] = arr[fast];
+                fast++;
+
+            }
+
+        }
+
+        return slow + 1;
+
+    }
+};
+
 
