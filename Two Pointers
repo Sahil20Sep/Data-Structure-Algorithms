@@ -498,6 +498,41 @@ public:
     }
 };
 
+------------------------------------------------------------------------------------------
+
+                          (substring without reapeting same character)
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        
+        unordered_map<char, int> hash;
+
+        int n = s.size();
+
+        int slide_start = 0, slide_end = 0, ans = 0;
+
+        while(slide_end < n){
+
+            hash[s[slide_end]]++;
+
+            while(hash[s[slide_end]] > 1){
+
+                hash[s[slide_start]]--;
+                slide_start++;
+
+            }
+
+            ans = max(ans, slide_end - slide_start + 1);
+
+            slide_end++;
+        }
+
+        return ans;
+
+    }
+};
+
 
 
 
