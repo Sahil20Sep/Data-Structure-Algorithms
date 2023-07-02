@@ -1135,4 +1135,80 @@ public:
 
     }
 };
+
+--------------------------------------------------------------------------------------------
+
+                              (min subarray elemtn * length is maximux but k lies i to j)
+
+class Solution {
+public:
+    int maximumScore(vector<int>& arr, int k) {
+        
+        int n = arr.size();
+
+        stack<int> st;
+
+        vector<int> left(n, -1), right(n, n);
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(st.size()){
+
+            st.pop();
+            
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            int left_side = left[i] + 1;
+            int right_side = right[i] - 1;
+
+            if(left_side <= k && k <= right_side){
+
+                ans = max(ans, (right_side - left_side + 1) * arr[i]);
+
+            }
+        }
+
+        return ans;
+    }
+};
+
+
                     
