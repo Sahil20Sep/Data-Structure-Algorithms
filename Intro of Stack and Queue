@@ -993,49 +993,28 @@ public:
 
             }
 
-            int up = st.top();
             int curr = arr[i];
-
-            bool flag = false;
-
-            if(!st.empty() && st.top() > 0 && curr < 0){
-
-                if(st.top() > abs(curr)){
-
-                    flag = true;
-
-                }
-
-            }
 
             while(!st.empty() && st.top() > 0 && curr < 0 && st.top() < abs(curr)){
 
                 st.pop();
 
-                if(!st.empty()){
+            }
 
-                    if(st.top() > abs(curr)){
+            if(!st.empty() && st.top() > 0 && curr < 0){
 
-                        flag = true;
+                if(st.top() == abs(curr)){
 
-                    }
+                    st.pop();
+
                 }
 
-            }
-
-            if(flag){
-                continue;
-            }
-
-            if(!st.empty() && st.top() > 0 && curr < 0 && st.top() == abs(curr)){
-
-                st.pop();
                 continue;
 
             }
-            
+
             st.push(curr);
-
+            
         }
 
         vector<int> ans;
