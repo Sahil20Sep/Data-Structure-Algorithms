@@ -761,3 +761,84 @@ public:
         return ans;
     }
 };
+
+-------------------------------------------------------------------------------------------------------------
+
+                    (sum of minimum element of subarray)
+
+class Solution {
+public:
+    int sumSubarrayMins(vector<int>& arr) {
+
+        long long mod = 1e9 + 7;
+        
+        int n = arr.size();
+
+        vector<int> left(n, -1), right(n, n);
+
+        stack<int> st;
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+                
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(st.size()){
+
+            st.pop();
+
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] > arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        long long ans = 0;
+
+        for(int i = 0; i < n; i++){
+
+            long long left_side = i - left[i] - 1;
+            long long right_side = right[i] - i - 1;
+
+            ans = (ans + arr[i]) % mod;
+
+            ans = (ans + left_side * arr[i]) % mod;
+
+            ans = (ans + right_side * arr[i]) % mod;
+
+            ans = (ans + (left_side * right_side * arr[i])) % mod; 
+
+        }
+
+        return ans;
+
+    }
+};
+                    
