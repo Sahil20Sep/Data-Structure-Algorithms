@@ -1093,4 +1093,46 @@ public:
         
     }
 };
+
+-------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    vector<int> canSeePersonsCount(vector<int>& height) {
+        
+        int n = height.size();
+
+        stack<int> st;
+
+        vector<int> ans(n, 0);
+
+        st.push(height[n - 1]);
+
+        for(int i = n - 2; i >= 0; i--){
+
+            int cnt = 0;
+
+            while(!st.empty() && st.top() < height[i]){
+
+                st.pop();
+                cnt++;
+
+            }
+
+            if(!st.empty()){
+
+                cnt++;
+
+            }
+
+            ans[i] = cnt;
+
+            st.push(height[i]);
+
+        }
+
+        return ans;
+
+    }
+};
                     
