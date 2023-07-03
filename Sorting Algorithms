@@ -199,3 +199,7 @@ class Solution
         
     }
 };
+
+------------------------------------------------------------------------------------------
+
+              (quick sort) --> same as merge sort but has o(1) compleexity
