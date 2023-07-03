@@ -170,6 +170,80 @@ public:
 
 -----------------------------------------------------------------------------------------
 
+remove duplicate from the array
+
+-------------- brute O(n * logn + ms.size())
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        if(n == 1){
+
+            return 1;
+
+        }
+
+        set<int> ms;
+
+        for(auto it : arr){
+
+            ms.insert(it);
+
+        }
+
+        int idx = 0;
+
+        for(auto it : ms){
+
+            arr[idx] = it;
+            idx++;
+            
+        }
+
+        return (int)ms.size();
+
+    }
+};
+
+-----------------optimmal
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        if(n == 1){
+
+            return 1;
+
+        }
+
+        int slow = 0, fast = 0;
+
+        while(fast < n){
+
+            if(arr[slow] == arr[fast]){
+
+                fast++;
+
+            }else{
+
+                slow++;
+                arr[slow] = arr[fast];
+                fast++;
+
+            }
+        }
+
+        return slow + 1;
+
+    }
+};
+
 
 -----------------------------------------------------------------------------------------
 
