@@ -93,3 +93,40 @@ void bubbleSort(int arr[], int n)
             
         }
     }
+
+----------------------------------------------------------------------------------------------
+
+              (insertion sort) worse case is O(N ^ 2 when reverse order)
+
+best case is O(N) already sorted
+
+class Solution
+{
+    public:
+    
+    void insert(int arr[], int i)
+    {
+        int j = i;
+        
+        while(j > 0 && arr[j - 1] > arr[j]){
+            
+            int temp = arr[j - 1];
+            arr[j - 1] = arr[j];
+            arr[j] = temp;
+            
+            j--;
+            
+        }
+    }
+    
+    public:
+     
+    void insertionSort(int arr[], int n)
+    {
+        for(int i = 1; i <= n - 1; i++){
+            
+            insert(arr, i);
+            
+        }
+    }
+};
