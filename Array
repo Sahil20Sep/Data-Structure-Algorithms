@@ -678,6 +678,34 @@ Single Number
 use hash map then insert take O(N Log(Map.size)) and map.size == (n >> 1) + 1;
 space is map.size
 
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        
+        int n = nums.size();
+
+        map<int, int> hash;
+
+        for(auto it : nums){
+
+            hash[it]++;
+
+        }
+
+        for(auto it : hash){
+
+            if(it.second == 1){
+
+                return it.first;
+
+            }
+        }
+
+        return 0;
+
+    }
+};
+
 --------------optimal is xor
 
 -----------------------------------------------------------------------------------------
