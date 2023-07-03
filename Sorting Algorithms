@@ -1,0 +1,95 @@
+                        (selection sort)
+
+
+int select(int arr[], int i, int n)
+    {
+        int mini = i;
+        
+        for(int j = i; j <= n - 1; j++){
+            
+            if(arr[j] < arr[mini]){
+                
+                mini = j;
+                
+            }
+        }
+        
+        return mini;
+        
+    }
+     
+    void selectionSort(int arr[], int n)
+    {
+        for(int i = 0; i <= n - 2; i++){
+            
+            int mini = select(arr, i, n);
+            
+            swap(arr[i], arr[mini]);
+            
+        }
+    }
+
+main approch is take mini element and swap it. time --> O(N^2) space --> O(1)
+
+(inseted of swap)
+
+int temp = arr[mini];
+            
+arr[mini] = arr[i]; 
+
+arr[i] = temp;
+------------------------------------------------------------------------------------
+
+                  (bubbule sort)
+
+swapping two element at each step when need and at the end the max element at the last index time --> O(N^2) space --> O(1)
+
+void bubbleSort(int arr[], int n)
+    {
+        for(int i = n - 1; i >= 1; i--){
+            
+            for(int j = 0; j <= i - 1; j++){
+                
+                if(arr[j] > arr[j + 1]){
+                    
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    
+                }
+            }
+        }
+    }
+
+
+----------------
+
+time is O(N) and if array is sorrted then we dont't make any kides of swap and just break it out.
+
+void bubbleSort(int arr[], int n)
+    {
+        for(int i = n - 1; i >= 1; i--){
+            
+            bool number_of_swap = false;
+            
+            for(int j = 0; j <= i - 1; j++){
+                
+                
+                if(arr[j] > arr[j + 1]){
+                    
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    
+                    number_of_swap = true;
+                    
+                } 
+                
+            }
+            
+            if(!number_of_swap){
+                break;
+            } 
+            
+        }
+    }
