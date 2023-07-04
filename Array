@@ -799,6 +799,53 @@ int longestSubarrayWithSumK(vector<int> arr, long long k) {
 
 }
 
+------------------------------------------------------------------------------------------------------------
+
+		(how many subarray which sum == k)
+
+---------optimal
+
+int longestSubarrayWithSumK(vector<int> arr, long long k) {
+
+    int n = arr.size();
+    
+    int i = 0, j = 0, len = 0;
+
+    long long sum = 0;
+
+    while(j < n){
+
+        sum += arr[j];
+
+        if(sum == k){
+
+            len = max(len, j - i + 1);
+            j++;
+
+        }
+        else if(sum < k){
+            j++;
+        }
+        else{
+            
+            while(sum > k){
+                sum -= arr[i];
+                i++;
+            }
+
+            if(sum == k){
+                len = max(len, j - i + 1);
+            }
+
+            j++;
+        }
+
+    }
+
+    return len;
+
+}
+
 
 
 
