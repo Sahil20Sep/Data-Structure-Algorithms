@@ -846,14 +846,93 @@ int longestSubarrayWithSumK(vector<int> arr, long long k) {
 
 }
 
+-----------------------------------------------------------------------------------------
 
+	sort 0 1 and 2 (dutch national flag alorithms)
 
+-----------brute is sortingg
 
+----------better cnt1, cnt2, cnt3
+
+-----------optimal
+
+class Solution {
+public:
+    void sortColors(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int low = 0, mid = 0, high = n - 1;
+
+        while(mid <= high){
+
+            if(arr[mid] == 0){
+
+                swap(arr[low], arr[mid]);
+
+                low++;
+                mid++;
+
+            }else if(arr[mid] == 1){
+
+                mid++;
+
+            }else{
+
+                swap(arr[mid], arr[high]);
+
+                high--;
+            }
+        }
+    }
+};
 
 -----------------------------------------------------------------------------------------
 
+majority element (moor's voting algorithms)
 
------------------------------------------------------------------------------------------
+----------brute
+
+take two nested loop and count
+
+----------better
+
+hashing
+
+----------optimal
+
+class Solution {
+public:
+    int majorityElement(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int cnt = 0, el;
+
+        for(auto it : arr){
+
+            if(cnt == 0){
+
+                cnt = 1;
+                el = it;
+
+            }else if(it == el){
+
+                cnt++;
+
+            }else{
+
+                cnt--;
+
+            }
+        }
+
+        return el;
+
+    }
+};
+
+
 
 
 -----------------------------------------------------------------------------------------
