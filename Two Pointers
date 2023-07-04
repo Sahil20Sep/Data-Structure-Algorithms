@@ -569,6 +569,63 @@ public:
     }
 };
 
+-----------------------------------------------------------------------------------------
+
+                    (gfg question -2 giver is arr , k, and maintain x exctly k times)
+
+class Solution {
+  public:
+    long long countSubarray(int n, vector<int> &arr, int X, int K) {
+        
+        int mod = 1e9 + 7;
+        
+        vector<int> idx; // O(number of x in arr)
+        
+        for(int i = 0; i < n; i++){  // O(n)
+            
+            if(arr[i] == X){
+                idx.push_back(i);
+            }
+            
+        }
+        
+        long long ans = 0;
+        
+        int prev = 0;
+        
+        int low = 0, high = K - 1;
+        
+        while(high < idx.size()){
+            
+            unordered_map<int, int> hash;
+            
+            for(int i = prev; i <= idx[low] - 1; i++){
+                
+                hash[arr[i]]++;
+                
+            }
+            
+            for(int i = idx[high] + 1; i < ((high == idx.size() - 1) ? n : idx[high + 1]); i++){
+                
+                if(hash[arr[i]] > 0){
+                    ans = (ans + hash[arr[i]]) % mod;
+                }
+                
+            }
+            
+            prev = idx[low] + 1;
+            
+            low++; high++;
+            
+        }
+        
+        ans = (ans + max(0LL, (long long)(idx.size()) - (long long)K + 1LL)) % mod;
+        
+        return ans;
+        
+    }
+};
+
 
 
 
