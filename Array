@@ -932,11 +932,49 @@ public:
     }
 };
 
-
-
-
 -----------------------------------------------------------------------------------------
 
+maximum subarray sum
+
+-----------brute is O(N^3)
+
+----------better is O(N^2)
+
+------------optimal (kadana's algorithms)
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int sum = 0, ans = INT_MIN;
+
+	int start = -1, fi_start = -1, end_start = -1;
+
+        for(int i = 0; i < n; i++){
+
+	    if(sum == 0) start = i;
+
+            sum += arr[i];
+
+            if(sum > ans){
+		fi_start = start, fi_end = i;
+                ans = sum;
+            }
+
+            if(sum < 0){
+
+                sum = 0;
+
+            }
+
+        }
+
+        return ans;
+
+    }
+};
 
 -----------------------------------------------------------------------------------------
 
