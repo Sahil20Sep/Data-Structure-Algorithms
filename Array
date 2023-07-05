@@ -1810,6 +1810,113 @@ we use gap method which is ceil of length of 2 array / 2. and we reduce the gap 
 
 ------------------------------------------------------------------------------------------
 
+find missing and reapeting 
+
+--------------brute force
+
+for(int i = 1; i <= n; i++){
+
+	for(int j = 0; j < n;j ++ and count missing and reaping
+
+---------------better
+
+also using hasing
+
+-----------optimal (math)
+
+class Solution{
+public:
+    vector<int> findTwoElement(vector<int> arr, int n) {
+        
+        long long sum_n2 = n * (n + 1) * (2 * n + 1) / 6;
+        
+        long long sum_n = n * (n + 1) >> 1;
+        
+        long long sum_arr_n = 0, sum_arr_n2 = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            sum_arr_n += arr[i];
+            
+            sum_arr_n2 += ((long long)arr[i] * (long long)arr[i]);
+            
+        }
+        
+        long long val1 = sum_arr_n - sum_n;
+        
+        long long val2 = sum_arr_n2 - sum_n2;
+        
+        long long val3 = val2 / val1;
+        
+        return { (val1 + val3) / 2 , (val3 - val1) / 2 };
+    }
+};
+
+------optimal(xor)
+
+class Solution{
+public:
+    vector<int> findTwoElement(vector<int> arr, int n) {
+        
+        int xr = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            xr = xr ^ (i + 1);
+            
+            xr = xr ^ (arr[i]);
+            
+        }
+        
+        int bitNo = 0;
+        
+        while(1){
+            
+            if(((1 << bitNo) & xr) == 1){
+                break;
+            }
+            
+            bitNo++;
+            
+        }
+        
+        int zero = 0, one = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            if(((1 << bitNo) & arr[i]) == 1){
+                one = one ^ arr[i];
+            }else{
+                zero = zero ^ arr[i];
+            }
+            
+        }
+        
+        for(int i = 1; i <= n; i++){
+            
+            if((1 << bitNo) & (i + 1) == 1){
+                one = one ^ (i + 1);
+            }else{
+                zero = zero ^ (i + 1);
+            }
+            
+        }
+        
+        int cnt = 0;
+        
+        for(auto it : arr){
+            if(it == zero){
+                cnt++;
+            }
+        }
+        
+        if(cnt == 1){
+            return {one, zero};
+        }
+        
+        return {zero, one};
+    }
+};
 
 ------------------------------------------------------------------------------------------
 
