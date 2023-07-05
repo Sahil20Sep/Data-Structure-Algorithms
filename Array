@@ -1717,6 +1717,96 @@ public:
 
 ------------------------------------------------------------------------------------------
 
+merge two sorted array
+
+-------------brute force
+
+class Solution {
+public:
+    void merge(vector<int>& arr1, int m, vector<int>& arr2, int n) {
+        
+        int slow = 0, fast = 0;
+
+        vector<int> arr3;
+
+        while(slow < m && fast < n){
+
+            if(arr1[slow] <= arr2[fast]){
+
+                arr3.push_back(arr1[slow]);
+                slow++;
+
+            }else{
+
+                arr3.push_back(arr2[fast]);
+                fast++;
+
+            }
+        }
+
+        while(slow < m){
+
+            arr3.push_back(arr1[slow++]);
+
+        }
+
+        while(fast < n){
+
+            arr3.push_back(arr2[fast++]);
+
+        }
+
+        for(int i = 0; i < (n + m); i++){
+
+            arr1[i] = arr3[i];
+
+        }
+
+    }
+};
+
+-----------better
+
+class Solution {
+public:
+    void merge(vector<int>& arr1, int m, vector<int>& arr2, int n) {
+        
+        int slow = m - 1, fast = 0;
+
+        while(slow >= 0 && fast < n){
+
+            if(arr1[slow] > arr2[fast]){
+
+                swap(arr1[slow], arr2[fast]);
+
+                slow--; fast++;
+
+            }else{
+                
+                break;
+
+            }
+        }
+
+        sort(arr1.begin(), arr1.begin() + m);
+
+        sort(arr2.begin(), arr2.begin() + n);
+
+        int idx = 0;
+
+        for(int i = m; i < (m + n); i++){
+
+            arr1[i] = arr2[idx++];
+
+        }
+
+    }
+};
+
+---------opptimal 
+
+we use gap method which is ceil of length of 2 array / 2. and we reduce the gap and swap the two element and break the loop when gap == 1.
+
 
 ------------------------------------------------------------------------------------------
 
