@@ -2219,6 +2219,128 @@ public:
 
 ------------------------------------------------------------------------------------------
 
+merge sort on prefix sum
+
+class Solution {
+public:
+
+    int merge(vector<long long> &sum, int low, int mid, int high, int lower, int upper){
+
+        int cnt = 0;
+
+        int lower_boundry = mid + 1, upper_boundry = mid + 1;
+
+        for(int i = low; i <= mid; i++){
+
+            while(lower_boundry <= high && sum[lower_boundry] - sum[i] < lower){
+
+                lower_boundry++;
+
+            }
+
+            while(upper_boundry <= high && sum[upper_boundry] - sum[i] <= upper){
+
+                upper_boundry++;
+
+            }
+
+            cnt += (upper_boundry - lower_boundry);
+
+        }
+
+        vector<long long> temp;
+
+        int left = low, right = mid + 1;
+
+        while(left <= mid && right <= high){
+
+            if(sum[left] <= sum[right]){
+
+                temp.push_back(sum[left++]);
+
+            }else{
+
+                temp.push_back(sum[right++]);
+
+            }
+
+        }
+
+        while(left <= mid){
+
+            temp.push_back(sum[left++]);
+
+        }
+
+        while(right <= high){
+
+            temp.push_back(sum[right++]);
+
+        }
+
+        for(int i = low; i <= high; i++){
+
+            sum[i] = temp[i - low];
+
+        }
+
+        return cnt;
+
+    }         
+
+    int mergeSort(vector<long long> &sum, int low, int high, int lower, int upper){
+
+        if(low > high){
+
+            return 0;
+
+        }
+
+        if(low == high){
+
+            if(lower <= sum[low] && sum[low] <= upper){
+
+                return 1;
+
+            }
+
+            return 0;
+
+        }
+
+        int cnt = 0;
+
+        int mid = (low + high) >> 1;
+
+        cnt += mergeSort(sum, low, mid, lower, upper);
+
+        cnt += mergeSort(sum, mid + 1, high, lower, upper);
+
+        cnt += merge(sum, low, mid, high, lower, upper);
+
+        return cnt;
+
+    }
+
+    int countRangeSum(vector<int>& nums, int lower, int upper) {
+        
+        int n = nums.size();
+
+        vector<long long> sum(n, 0LL);
+
+        sum[0] = nums[0];
+
+        for(int i = 1; i < n; i++){
+
+            sum[i] = sum[i - 1] + nums[i];
+
+        }
+
+        return mergeSort(sum, 0, n - 1, lower, upper);
+
+    }
+};
+
 
 ------------------------------------------------------------------------------------------
 
