@@ -2113,6 +2113,108 @@ public:
 
 ------------------------------------------------------------------------------------------
 
+ Count of Smaller Numbers After Self
+
+class Solution {
+public:
+
+    void merge(vector<pair<int, int>> &arr, int low, int mid, int high, vector<int> &count){
+
+        int j = mid + 1;
+
+        for(int i = low; i <= mid; i++){
+
+            while(j <= high && arr[i].first > arr[j].first){
+
+                j++;
+
+            }
+
+            count[arr[i].second] += j - (mid + 1);
+
+        }
+
+        vector<pair<int, int>> temp;
+
+        int left = low, right = mid + 1;
+
+        while(left <= mid && right <= high){
+
+            if(arr[left].first <= arr[right].first){
+
+                temp.push_back({arr[left].first, arr[left].second});
+
+                left++;
+
+            }else{
+
+                temp.push_back({arr[right].first, arr[right].second});
+
+                right++;
+            }
+
+        }
+
+        while(left <= mid){
+
+            temp.push_back({arr[left].first, arr[left].second});
+
+            left++;
+
+        }
+
+        while(right <= high){
+
+            temp.push_back({arr[right].first, arr[right].second});
+
+            right++;
+
+        }
+
+        for(int i = low; i <= high; i++){
+
+            arr[i] = temp[i - low];
+
+        }
+    }
+
+    void mergeSort(vector<pair<int, int>> &arr, int low, int high, vector<int> &count){
+
+        if(low >= high){
+
+            return ;
+
+        }
+
+        int mid = (low + high) >> 1;
+
+        mergeSort(arr, low, mid, count);
+        mergeSort(arr, mid + 1, high, count);
+
+        merge(arr, low, mid, high, count);
+
+    }
+
+    vector<int> countSmaller(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        vector<int> count(n, 0);
+
+        vector<pair<int, int>> vp(n);
+
+        for(int i = 0; i < n; i++){
+
+            vp[i] = {arr[i], i};
+
+        }
+
+        mergeSort(vp, 0, n - 1, count);
+
+        return count;
+
+    }
+};
 
 
 ------------------------------------------------------------------------------------------
