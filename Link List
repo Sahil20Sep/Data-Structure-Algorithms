@@ -416,23 +416,324 @@ public:
 
 --------------------------------------------------------------------------
 
+                    middle of list list
+
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        
+        int len = 0;
+
+        ListNode* temp = head;
+
+        while(temp != NULL){
+
+            temp = temp -> next;
+
+            len++;
+
+        }
+
+        int need = (len >> 1) + 1;
+
+        int cnt = 1;
+
+        temp = head;
+
+        while(cnt != need){
+
+            temp = temp -> next;
+
+            cnt++;
+
+        }
+
+        return temp;
+
+    }
+};
+
+------------------optimal
+
+slow and fast pointer
+
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        
+        ListNode* slow = head;
+
+        ListNode* fast = head;
+
+        while(fast != NULL && fast -> next != NULL){
+
+            slow = slow -> next;
+
+            fast = fast -> next -> next;
+
+        }
+
+        return slow;
+
+    }
+};
+
+--------------------------------------------------------------------------
+
+detect cycle
+
+also use of hash
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        
+        map<ListNode*, int> hash;
+
+        ListNode* temp = head;
+
+        while(temp != NULL){
+
+            if(hash[temp] > 0){
+                return true;
+            }
+
+            hash[temp]++;
+
+            temp = temp -> next;
+
+        }
+
+        return false;
+
+    }
+};
+
+-------
+
+slow and fast pointer
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        
+        ListNode* slow = head;
+
+        ListNode* fast = head;
+
+        while(fast != NULL && fast -> next != NULL){
+
+            slow = slow -> next;
+
+            fast = fast -> next -> next;
+
+            if(slow == fast){
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+
+    }
+};
+
+--------------------------------------------------------------------------
+
+                which node index cycyle is started
+
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        
+        map<ListNode*, bool> hash;
+
+        ListNode* temp = head;
+
+        int cnt = 0;
+
+        while(temp != NULL){
+
+            if(hash[temp] == true){
+
+                return temp;
+
+            }
+
+            hash[temp] = true;
+
+            temp = temp -> next;
+
+        } 
+
+        return NULL;
+    }
+};
+
+-----------O(N) l1 = nc - l2 important
+
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        
+        ListNode* slow = head;
+
+        ListNode* fast = head;
+
+        while(fast != NULL && fast -> next != NULL){
+
+            slow = slow -> next;
+
+            fast = fast -> next -> next;
+
+            if(slow == fast){
+
+                ListNode* start = head;
+
+                while(start != slow){
+
+                    start = start -> next;
+
+                    slow = slow -> next;
+
+                }
+
+                return slow;
+
+            }
+        }
+
+        return NULL;
+    }
+};
+
+--------------------------------------------------------------------------
+
+                    length of cycle
+
+int countNodesinLoop(struct Node *head)
+{
+    map<Node*, int> hash;
+    
+    Node* temp = head;
+    
+    int cnt = 0;
+    
+    while(temp != NULL){
+        
+        if(hash.find(temp) != hash.end()){
+            return cnt - hash[temp];
+        }
+        
+        hash[temp] = cnt++;
+        
+        temp = temp -> next;
+        
+    }
+    
+    return 0;
+}
+
+------------
+
+int countNodesinLoop(struct Node *head)
+{
+    Node* slow = head;
+    
+    Node* fast = head;
+    
+    while(fast != NULL && fast -> next != NULL){
+        
+        slow = slow -> next;
+        
+        fast = fast -> next -> next;
+        
+        if(slow == fast){
+            
+           int count = 1;
+           
+           while(slow -> next != fast){
+               slow = slow -> next;
+               count++;
+           }
+            
+            return count;
+        }
+    }
+    
+    return 0;
+}
 
 
 --------------------------------------------------------------------------
 
+                        (check palindrome) also use revese function
 
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
 
---------------------------------------------------------------------------
+        if(head -> next == NULL){
+            return true;
+        }
+        
+        ListNode* slow = head;
 
+        ListNode* fast = head;
 
+        while(fast -> next != NULL && fast -> next -> next != NULL){
 
---------------------------------------------------------------------------
+            slow = slow -> next;
 
+            fast = fast -> next -> next;
 
+        }
 
---------------------------------------------------------------------------
+        ListNode* prev = NULL;
 
+        ListNode* start = slow -> next;
 
+        if(fast -> next == NULL){
+
+            slow -> next = fast;
+
+        }else{
+
+            slow -> next = fast -> next;
+
+        }
+
+        while(start != NULL){
+
+            ListNode* tt = start -> next;
+
+            start -> next = prev;
+
+            prev = start;
+
+            start = tt;
+
+        }
+
+        ListNode* store = slow -> next;
+
+        while(store != NULL){
+
+            if(head -> val != store -> val){
+                return false;
+            }
+
+            head = head -> next;
+            store = store -> next;
+
+        }
+
+        return true;
+
+    }
+};
 
 --------------------------------------------------------------------------
 
