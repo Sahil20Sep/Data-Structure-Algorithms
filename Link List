@@ -1,0 +1,548 @@
+linear data structure and made by collection of node
+
+insertion and deletion is very easy rather than array and vector
+
+------------------------------------------------------------------------
+
+class
+
+class Node{
+
+    public: 
+
+    int val;
+
+    Node* next;
+
+    Node(int val){
+
+        this -> val = val;
+
+        this -> next = NULL;
+
+    }
+
+};
+
+---------------------------------------------------------------------------
+
+display
+
+void display(Node* &head){
+    
+    Node* temp = head;
+
+    while(temp != NULL){
+
+        cout << temp -> val << " -> "; 
+
+        temp = temp -> next;
+    }
+
+    cout << "NULL" << endl;
+
+}
+
+---------------------------------------------------------------------------
+
+insert at head
+
+void insertAtHead(Node* &head, int val){
+
+    Node* temp = new Node(val);
+
+    temp -> next = head;
+
+    head = temp;
+
+}
+
+--------------------------------------------------------------------------
+
+insert at tail
+
+void insertAtTail(Node* &head, int val){
+
+    Node* temp = head;
+
+    while(temp -> next != NULL){
+
+        temp = temp -> next;
+
+    }
+
+    Node* d = new Node(val);
+
+    temp -> next = d;
+
+}
+
+-----------direct using tail
+
+void insertAtTail(Node* &tail, int val){
+
+    Node* d = new Node(val);
+
+    tail -> next = d;
+
+    tail = d;
+
+}
+
+--------------------------------------------------------------------------
+
+                (complete singlely link list)
+
+// single link list
+
+void insertAtHead(Node* &head, int val){
+
+    Node* temp = new Node(val);
+
+    temp -> next = head;
+
+    head = temp;
+
+}
+
+void insertAtTail(Node* &head, int val){
+
+    Node* temp = head;
+
+    while(temp -> next != NULL){
+
+        temp = temp -> next;
+
+    }
+
+    Node* d = new Node(val);
+
+    temp -> next = d;
+
+}
+
+int Length_of_link_list(Node* &head){
+
+    int len = 0;
+
+    Node* temp = head;
+
+    while(temp != NULL){
+
+        len++;
+
+        temp = temp -> next;
+
+    }
+
+    return len;
+
+}
+
+void insertAtMiddle(Node* &head, int pos, int val){
+
+    if(pos == 1){
+
+        insertAtHead(head, val);
+
+        return ;
+    }
+
+    int len = Length_of_link_list(head);
+
+    if(pos >= len + 1){
+
+        insertAtTail(head, val);
+
+        return;
+
+    }
+
+    Node* d = new Node(val);
+
+    Node* temp = head;
+
+    int cnt = 1;
+
+    while(cnt < pos - 1){
+
+        temp = temp -> next;
+
+        cnt++;
+
+    }
+
+    d -> next = temp -> next;
+
+    temp -> next = d;
+
+}
+
+void deleteAt(Node* &head, int pos){
+
+    if(pos == 1){
+
+        Node* temp = head;
+
+        head = head -> next;
+
+        temp -> next = NULL;
+
+        delete temp;
+
+        return; 
+    }
+
+    Node* temp = head;
+
+    int cnt = 2;
+
+    while(cnt < pos){
+
+        temp = temp -> next;
+        cnt++;
+
+    }
+
+    Node* dele = temp -> next;
+
+    temp -> next = temp -> next -> next;
+
+    dele -> next = NULL;
+
+    delete dele;
+
+}
+
+--------------------------------------------------------------------------
+
+                (complete doubly link list)
+
+// double link list
+
+void insertAtHead_doubly(Node* &head, int val){
+
+    if(head == NULL){
+
+        Node* temp = new Node(val);
+
+        head = temp;
+
+        return;
+
+    }
+
+    Node* temp = new Node(val);
+
+    temp -> next = head;
+
+    head -> prev = temp;
+
+    head = temp;
+
+}
+
+void insertAtTail_doubly(Node* &head, int val){
+
+    if(head == NULL){
+
+        Node* temp = new Node(val);
+
+        head = temp;
+
+        return;
+
+    }
+
+    Node* temp = head;
+
+    while(temp -> next != NULL){
+
+        temp = temp -> next;
+
+    }
+
+    Node* d = new Node(val);
+
+    temp -> next = d;
+
+    d -> prev = temp;
+
+}
+
+void insertAtMiddle_doubly(Node* &head, int pos, int val){
+
+    if(head == NULL){
+
+        Node* temp = new Node(val);
+
+        head = temp;
+
+        return;
+
+    }
+
+    if(pos == 1){
+        
+        insertAtHead_doubly(head, val);
+
+        return ;
+
+    }
+
+    int len = Length_of_link_list(head);
+
+    if(pos >= len + 1){
+
+        insertAtTail_doubly(head, val);
+
+        return ;
+
+    }
+
+    int cnt = 2;
+
+    Node* temp = head;
+
+    while(cnt < pos){
+
+        temp = temp -> next;
+        cnt++;
+
+    }
+
+    Node* d = new Node(val);
+
+    d -> next = temp -> next;
+
+    temp -> next -> prev = d;
+
+    temp -> next = d;
+
+    d -> prev = temp;
+
+}
+
+void deleteAt_doubly(Node* &head, int pos){
+
+    if(pos == 1){
+
+        Node* temp = head;
+
+        head = temp -> next;
+
+        head -> prev = NULL;
+
+        temp -> next = NULL;
+
+        delete temp;
+
+        return;
+
+    }
+
+    int len = Length_of_link_list(head);
+
+
+    int cnt = 2;
+
+    Node* temp = head;
+
+    while(cnt < pos){
+
+        temp = temp -> next;
+        cnt++;
+    }
+
+    Node* d = temp -> next;
+
+    if(pos >= len){
+
+        temp -> next = NULL;
+
+        d -> prev = NULL;
+
+        delete d;
+
+        return;
+
+    }
+
+    temp -> next = d -> next;
+
+    d -> next -> prev = temp;
+
+    d -> prev = NULL;
+
+    d -> next = NULL;
+
+    delete d;
+
+}
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+
+
+
