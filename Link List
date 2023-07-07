@@ -380,10 +380,38 @@ void deleteAt_doubly(Node* &head, int pos){
 
 }
 
-
-
 --------------------------------------------------------------------------
 
+                (reverse link list) - iterive
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+
+        if(head == NULL){
+
+            return NULL;
+
+        }
+
+        ListNode* prev = NULL;
+        
+        while(head != NULL){
+
+            ListNode* temp = head -> next;
+
+            head -> next = prev;
+
+            prev = head;
+
+            head = temp;
+
+        }
+
+        return prev;
+
+    }
+};
 
 
 --------------------------------------------------------------------------
