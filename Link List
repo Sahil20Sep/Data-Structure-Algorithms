@@ -783,7 +783,93 @@ public:
 
 --------------------------------------------------------------------------
 
+                        remove Nth node
 
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        
+        int len = 0;
+
+        ListNode* temp = head;
+
+        while(temp != NULL){
+
+            temp  = temp -> next;
+
+            len++;
+
+        }
+
+        if(n == len){
+
+            ListNode* store = head;
+
+            head = head -> next;
+
+            store -> next = NULL;
+
+            return head;
+
+        }
+
+        int rem = len - n;
+
+        int cnt = 1;
+
+        temp = head;
+
+        while(cnt < rem){
+
+            temp = temp -> next;
+
+            cnt++;
+
+        }
+
+        ListNode* store = temp -> next;
+
+        temp -> next = store -> next;
+
+        store -> next = NULL;
+
+        return head;
+
+    }
+};
+
+------------
+
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        
+        ListNode* start = new ListNode();
+
+        start -> next = head;
+
+        ListNode* slow = start;
+
+        ListNode* fast = start;
+
+        for(int i = 1; i <= n; i++){
+            fast = fast -> next;
+        }
+
+        while(fast -> next != NULL){
+
+            slow = slow -> next;
+            fast = fast -> next;
+
+        }
+
+        slow -> next = slow -> next -> next;
+
+        return start -> next;
+
+    }
+};
 
 --------------------------------------------------------------------------
 
