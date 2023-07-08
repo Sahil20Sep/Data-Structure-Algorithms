@@ -737,7 +737,49 @@ public:
 
 --------------------------------------------------------------------------
 
+                        odd even link list
 
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+
+        if(head == NULL || head -> next == NULL || head -> next -> next == NULL){
+            return head;
+        }
+        
+        int cnt = 1;
+
+        ListNode* temp = head;
+
+        ListNode* store = head -> next;
+
+        while(temp -> next -> next != NULL){
+
+            ListNode* ano = temp -> next;
+
+            temp -> next = temp -> next -> next;
+
+            temp = ano;
+
+            cnt++;
+
+        }
+
+        if(cnt & 1){
+
+            temp -> next = store;
+
+            return head;
+        }
+
+        temp -> next -> next = store;
+
+        temp -> next = NULL;
+
+        return head;
+
+    }
+};
 
 --------------------------------------------------------------------------
 
