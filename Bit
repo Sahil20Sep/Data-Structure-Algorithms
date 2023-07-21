@@ -1,0 +1,62 @@
+and , or, xor
+
+xor --> even 1 xor become --> 0
+        odd 1 xor become --> 1
+
+~ flip the bits
+
+>> (10 >> 2) --> (1010) --> (0010)
+
+means devision by 2 twice (by right shift by 2)
+
+<< (5 << 2) --> (00000000....101) --> (00000....10100)
+
+means multiply by 2 twice (by left shift by 2)
+
+------------------------------------------------------------------------
+
+xor property is 
+
+any same two elemment xor == 0
+
+swap property --> swap two number by xor
+
+a = a xor b, b = a xor b, a = a xor b 
+
+------------------------------------------------------------------------
+
+one element appear twice ok so, take all arr xor and xor is answer
+
+-------------------------------------------------------------------------
+
+xor of 1 ---> N
+
+n % 4 == 0 --> print(n)
+
+n % 4 == 1 --> print(1)
+
+n % 4 == 2 --> print(n + 1)
+
+n % 4 == 3 --> print(0) 
+
+------------------------------------------------------------------------
+
+now given range L --> R
+
+take xor to 1 ---> R
+
+take xor 1 --> L - 1
+
+take this two xor
+
+-----------------------------------------------------------------------
+
+n & 1 == 1 --> odd else even
+
+----------------------------------------------------------------------
+
+given (N, i) check in N ith bit is set of not
+
+1st way (N >> i) & 1
+
+2nd way (1 << i) & N
