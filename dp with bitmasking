@@ -1,0 +1,84 @@
+int func(int i, int mask, int n, vector<vector<int>> &v, vector<vector<int>> &dp){
+    if(i == n){
+        return 0;
+    }
+    if(dp[i][mask] != -1){
+        return dp[i][mask];
+    }
+    int ans = INT_MAX;
+    for(int j = 0; j < n; j++){
+        if(mask & (1 << j)){
+            continue;
+        }
+        ans = min(ans, v[i][j] + func(i + 1, mask | (1 << j), n, v, dp));
+    }
+    return dp[i][mask] = ans;
+}
+ 
+//------------------------------------code------------------------------------//
+ 
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);    
+    ll T = 1;
+    // cin >> T;
+    while(T--){
+        int n; cin >> n;
+        vector<vector<int>> v(n, vector<int> (n));
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                cin >> v[i][j];
+            }
+        }
+        vector<vector<int>> dp(n, vector<int> ((1 << n), -1));
+        cout << func(0, 0, n, v, dp) << endl;
+        sahil:; 
+    }
+    return 0;
+}
+
+-----------------------------------------------------------------------------------------------------------------------
+
+                                (traveling salceman problem)
+
+
+int func(int i, int mask, int n, vector<vector<int>> &v, vector<vector<int>> &dp){
+    
+    if(dp[i][mask] != -1){
+        return dp[i][mask];
+    }
+    int ans = INT_MAX;
+    for(int j = 0; j < n; j++){
+        if(mask & (1 << j)){
+            continue;
+        }
+        ans = min(ans, v[i][j] + func(j, mask | (1 << j), n, v, dp));
+    }
+    if(ans == INT_MAX){
+        return dp[i][mask] = v[i][0];
+    }
+    return dp[i][mask] = ans;
+
+}
+ 
+//------------------------------------code------------------------------------//
+ 
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);    
+    ll T = 1;
+    // cin >> T;
+    while(T--){
+        int n; cin >> n;
+        vector<vector<int>> v(n, vector<int> (n));
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                cin >> v[i][j];
+            }
+        }
+        vector<vector<int>> dp(n, vector<int> ((1 << n), -1));
+        cout << func(0, 1, n, v, dp) << endl;
+        sahil:; 
+    }
+    return 0;
+}
