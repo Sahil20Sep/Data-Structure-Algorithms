@@ -96,3 +96,92 @@ n & (n - 1) != 0  --> cnt++;
 ---------------------------------------------------------------------
 
 two element are apper 1 time and other are 2 time
+
+class Solution {
+public:
+    vector<int> singleNumber(vector<int>& arr) {
+        
+        int n = arr.size();
+        int all = 0;
+        for(int i = 0; i < n; i++){
+            all ^= arr[i];
+        }
+        int cnt = 0;
+        while(all){
+            if(all & 1){
+                break;
+            }
+            cnt++;
+            all >>= 1;
+        }
+        int a = 0, b = 0;
+        for(int i = 0; i < n; i++){
+            if(arr[i] & (1 << cnt)){
+                a ^= arr[i];
+            }else{
+                b ^= arr[i];
+            }
+        }
+        return {a, b};
+    }
+};
+
+-------------------------------------------------------------------------------------
+
+power set algorithms
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);    
+    ll T = 1;
+    // cin >> T;
+    while(T--){
+        int n; cin >> n;
+        vector<int> v(n);
+        int sum = 0;
+        for(int i = 0; i < n; i++){
+            int a; cin >> a;
+            v[i] = a;
+            sum += v[i];
+        }
+        for(int i = 0; i < (1 << n); i++){
+            int a = 0;
+            for(int j = 0; j < n; j++){
+                if(i & (1 << j)){
+                    a += v[j];
+                }else{
+                    a -= v[j];
+                }
+            }
+            // cout << a << " " << b << endl;
+            if(a % 360 == 0){
+                cy; goto sahil;
+            }
+        }
+        cn;
+        sahil:; 
+    }
+    return 0;
+}
+
+-------------------------------------------------------------------------------
+
+implement set using bitmasking
+
+N --> 0 to 64;
+
+0000000000000000000000000000...000000000000000000000
+
+add --> if(n == 5) set bit 5 = 1; (x | (1 << i))
+
+00000000000000000000000000...000000000000000010000
+
+remove --> reset(bit 5)  (x & ~(1 << i))
+
+print whateven is 1 just print
+
+-----------------------------------------------------------------------------
+
+xor of all subset
+
+always be zero because event element occurs 2 ^ (N - 1) time and even so
