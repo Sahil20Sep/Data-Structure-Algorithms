@@ -107,3 +107,93 @@ int main(){
     }
     return 0;
 }
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+                (fish hunting)
+
+double find(int num, int remove, int n, vector<vector<double>> &v){
+
+    int k = __builtin_popcount(num);
+
+    long long choice = k * (k - 1) / 2;
+
+    double sum = 0;
+
+    for(int i = 0; i < n; i++){
+
+        if(num & (1 << i)){
+
+            sum += (v[i][remove]);
+
+        }
+
+    }
+
+    return sum / (double)choice;
+
+}
+
+double func(int num, int n, vector<double> &dp, vector<vector<double>> &v){
+
+    int cnt = __builtin_popcount(num);
+
+    // cout << num  << " " << cnt << endl;
+
+    if(cnt == n){
+        // cy;
+        return 1;
+    }
+
+    if(dp[num] != -1){
+        return dp[num];
+    }
+
+    double ans = 0;
+
+    for(int i = 0; i < n; i++){
+
+        if((num & (1 << i)) == 0){
+
+            int pass = num | (1 << i);
+
+            // cout << pass << " ";
+
+            double set_probability = func(pass, n, dp, v);
+
+            ans += set_probability * find(pass, i, n, v);
+
+        }
+    }
+
+    // cout << num << " " << ans << endl;
+
+    return dp[num] = ans;
+
+}
+ 
+//------------------------------------code------------------------------------//
+ 
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);    
+    ll T = 1;
+    // cin >> T;
+    while(T--){
+        int n; cin >> n;
+        vector<vector<double>> v(n, vector<double> (n));
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                cin >> v[i][j];
+                // cout << v[i][j] << " ";
+            }
+            // cout << endl;
+        }
+        vector<double> dp((1 << n), -1);
+        for(int i = 0; i < n; i++){
+            cout << fixed << setprecision(6) << func((1 << i), n, dp, v) << " ";
+        }
+        sahil:; 
+    }
+    return 0;
+}
