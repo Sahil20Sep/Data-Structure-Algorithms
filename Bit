@@ -379,7 +379,43 @@ public:
 
 ------------------------------------------------------------------------------------------------------------
 
+                        maximum xor after arr[i] AND (arr[i] ^ x)
 
+class Solution {
+public:
+    int maximumXOR(vector<int>& arr) {
+        vector<int> bit(32, 0);
+        int n = arr.size();
+        for(int i = 0; i < n; i++){
+            for(int j = 31; j >= 0; j--){
+                if(arr[i] & (1 << j)){
+                    bit[j]++;
+                }
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i <= 31; i++){
+            if(bit[i] == 0){
+                continue;
+            }
+            ans |= (1 << i);
+        }
+        return ans;
+    }
+};
+
+take or of all element
+
+class Solution {
+public:
+    int maximumXOR(vector<int>& arr) {
+        int xr = 0;
+        for(auto it : arr){
+            xr |= it;
+        }
+        return xr;
+    }
+};
 
 
 ------------------------------------------------------------------------------------------------------------
