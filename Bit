@@ -329,7 +329,53 @@ public:
 
 ------------------------------------------------------------------------------------------------------------
 
+                                2564. Substring XOR Queries
 
+
+class Solution {
+public:
+    vector<vector<int>> substringXorQueries(string s, vector<vector<int>>& arr) {
+        
+        int n = s.size();
+        cout << n << endl;
+        unordered_map<int, pair<int, int>> hash;
+        for(int i = n - 1; i >= 0; i--){
+            int be = 0;
+            int bit = 0;
+            for(int j = i; j >= max(0, i - 31); j--){
+                if(s[j] == '1'){
+                    be += (1 << bit);
+                }
+                if(hash.find(be) != hash.end()){
+                    int a = hash[be].first, b = hash[be].second;
+                    if((i - j) > (b - a)){
+
+                    }else if((i - j) < (b - a)){
+                        hash[be] = {j, i};
+                    }else{
+                        if(j < a){
+                            hash[be] = {j, i};
+                        }
+                    }
+                }else{
+                    hash[be] = {j, i};
+                }
+                bit++;
+            }
+        }
+        vector<vector<int>> ans;
+        for(auto it : arr){
+            int a = it[0], b = it[1];
+            int xr = a ^ b;
+            if(hash.find(xr) != hash.end()){
+                ans.push_back({hash[xr].first, hash[xr].second});
+            }else{
+                ans.push_back({-1, -1});
+            }
+        }
+        return ans;
+    }
+};
 
 ------------------------------------------------------------------------------------------------------------
 
