@@ -1,1 +1,1209 @@
+            (check whether target is exits or not return index)
+
+int search(vector<int>& nums, int target) {
+    
+    int n = nums.size();
+
+    int low = 0, high = n - 1;
+
+    while(low <= high){
+
+        int mid = (low + high) >> 1;
+
+        if(nums[mid] == target){
+            return mid;
+        }
+        else if(target > nums[mid]){
+
+            low = mid + 1;
+        }
+        else{
+            high = mid - 1;
+        }
+    }
+
+    return -1;
+
+}
+
+-------------
+
+int bs(int low, int high, vector<int> &nums, int target){
+
+    if(low > high){
+        return -1;
+    }
+
+    int mid = (low + high) >> 1;
+
+    if(nums[mid] == target){
+        return mid;
+    }
+    else if(target > nums[mid]){
+        return bs(mid + 1, high, nums, target);
+    }
+    else{
+        return bs(low, mid - 1, nums, target);
+    }
+}
+
+int search(vector<int>& nums, int target) {
+    
+    return bs(0, nums.size() - 1, nums, target);
+
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+        (implement a lowbound)
+
+return smallest indexx which is follow the given condtion : arr[i] >= x;
+
+if no ans is possible then the last index is always possible
+
+#include<bits/stdc++.h>
+
+
+int lowerBound(vector<int> arr, int n, int x) {
+	
+	int low = 0, high = n - 1;
+
+	int ans = n;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] >= x){
+
+			ans = mid;
+
+			high = mid - 1;
+		}
+		else{
+
+			low = mid + 1;
+		}
+	}
+
+	return ans;
+
+}
+
+--------------------------------
+
+int lowerBound(vector<int> arr, int n, int x) {
+	
+	auto index = lower_bound(arr.begin(), arr.end(), x) - arr.begin();
+
+	return index; 
+
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+    (implement upperbound)
+
+return smallest indexx which is follow the given condtion : arr[i] > x;
+
+if no ans is possible then the last index is always possible
+
+int upperBound(vector<int> &arr, int x, int n){
+	
+	int low = 0, high = n - 1;
+
+	int ans = n;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] > x){
+			ans = mid;
+			high = mid - 1;
+		}else{
+			low = mid + 1;
+		}
+	}
+
+	return ans;
+}
+
+---------------------------------------------------------------------------------------------------------------------
+
+    (search and insert)
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        
+        int low = 0, high = nums.size() - 1;
+
+        int ans = nums.size();
+
+        while(low <= high){
+            
+            int mid = (low + high) >> 1;
+
+            if(nums[mid] >= target){
+                ans = mid;
+                high = mid - 1;
+            }else{
+                low = mid + 1;
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+or either use of lower_bound
+
+--------------------------------------------------------------------------------------------------------------------
+
+              (floor and ceil)
+
+floor is that is largest element <= target;
+
+ceil is that is smallest element >= target;
+
+pair<int, int> getFloorAndCeil(int arr[], int n, int x) {
+
+	sort(arr, arr + n);
+
+	int ans1 = -1;
+
+	int low = 0, high = n - 1;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] <= x){
+			ans1 = mid;
+			low = mid + 1;
+		}else{
+			high = mid - 1;
+		}
+	}
+
+	low = 0, high = n - 1;
+
+	int ans2 = -1;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] >= x){
+			ans2 = mid;
+			high = mid - 1;
+		}else{
+			low = mid + 1;
+		}
+	}
+
+	if(ans1 != -1){
+		ans1 = arr[ans1];
+	}
+	if(ans2 != -1){
+		ans2 = arr[ans2];
+	}
+
+	return {ans1, ans2};
+
+}
+
+-----------------
+
+pair<int, int> getFloorAndCeil(int arr[], int n, int x) {
+
+	sort(arr, arr + n);
+
+	int ans1 = upper_bound(arr, arr + n, x) - arr;
+	ans1--;
+
+	int ans2 = lower_bound(arr, arr + n, x) - arr;
+
+	if(ans2 == n){
+		ans2 = -1;
+	}
+
+	if(ans1 != -1){
+		ans1 = arr[ans1];
+	}
+	if(ans2 != -1){
+		ans2 = arr[ans2];
+	}
+
+	return {ans1, ans2};
+
+----------------------------------------------------------------------------------------------------
+
+          (finding first and last occ)
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+
+        int n = nums.size();
+        
+        int low = 0, high = n - 1;
+
+        int ans = -1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(nums[mid] == target){
+                ans = mid;
+                break;
+            }
+            else if(target > nums[mid]){
+                low = mid + 1;
+            }else{
+                high = mid - 1;
+            }
+        }
+
+        if(ans == -1){
+            return {-1, -1};
+        }
+
+        low = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
+
+        high = upper_bound(nums.begin(), nums.end(), target) - nums.begin();
+        high--;
+
+        return {low, high};
+
+    }
+};
+
+------------------------
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+
+        int n = nums.size();
+
+        int low = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
+
+        if(low == n || nums[low] != target){
+            return {-1, -1};
+        }
+
+        int high = upper_bound(nums.begin(), nums.end(), target) - nums.begin();
+        high--;
+
+        return {low, high};
+
+    }
+};
+
+--------------------
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& arr, int target) {
+
+        int n = arr.size();
+
+        int first = -1, last = -1;
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                first = mid;
+                high = mid - 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        if(first == -1){
+            return {-1, -1};
+        }
+
+        low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                last = mid;
+                low = mid + 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        return {first, last};
+
+    }
+};
+
+-----------------------------------------------------------------------------------------------------
+
+      (same number of occurcex) - return how many
+
+class Solution{
+public:	
+
+	int count(int arr[], int n, int target) {
+
+        int first = -1, last = -1;
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                first = mid;
+                high = mid - 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        if(first == -1){
+            return 0;
+        }
+
+        low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                last = mid;
+                low = mid + 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        return last - first + 1;    
+	}
+};
+
+-------------------------------------------------------------------------------------------------------------
+
+    (search in rotated array) - unique element
+
+
+class Solution {
+public:
+    int search(vector<int>& arr, int target) {
+        
+        int n = arr.size();
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                return mid;
+            }
+            
+            if(arr[low] <= arr[mid]){
+                if(arr[low] <= target && target <= arr[mid]){
+                    high = mid - 1;
+                }else{
+                    low = mid + 1;
+                }
+            }
+            else{
+                if(arr[mid] <= target && target <= arr[high]){
+                    low = mid + 1;
+                }else{
+                    high = mid - 1;
+                }
+            }
+        }
+
+        return -1;
+
+    }
+};
+
+if(arr[low] < arr[mid] || low == mid){ --> this condition we can also use 
+
+-----------------------------------------------------------------------------------------------------------
+
+        (search in rootated arry duplicate element)
+
+class Solution {
+public:
+
+    bool search(vector<int>& arr, int target) {
+        
+        int n = arr.size();
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                return true;
+            }
+
+            if(arr[low] == arr[mid] && arr[mid] == arr[high]){
+                low++; high--;
+                continue;
+            }
+            
+            if(arr[low] <= arr[mid]){
+                if(arr[low] <= target && target <= arr[mid]){
+                    high = mid - 1;
+                }else{
+                    low = mid + 1;
+                }
+            }
+            else{
+                if(arr[mid] <= target && target <= arr[high]){
+                    low = mid + 1;
+                }else{
+                    high = mid - 1;
+                }
+            }
+        }
+
+        return false;
+
+    }
+};
+
+it's near about o(N / 2) and basically O(Log(N))
+
+----------------------------------------------------------------------------------------------------
+
+				(search for minimum element in rotated array)
+
+class Solution {
+public:
+    int findMin(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int low = 0, high = n - 1;
+
+        int ans = INT_MAX;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[low] <= arr[high]){
+                if(arr[low] < ans){
+                    ans = arr[low];
+                }
+                break;
+            }
+
+            if(arr[low] <= arr[mid]){
+
+                if(arr[low] < ans){
+                    ans = arr[low];
+                }
+                low = mid + 1;
+
+            }else{
+
+                if(arr[mid] < ans){
+                    ans = arr[mid];
+                }
+                high = mid - 1;
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+------------------------------------------------------------------------------
+
+		(find minimum element in rotated array with duplicate)
+
+class Solution {
+public:
+    int findMin(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int low = 0, high = n - 1, ans = INT_MAX;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[low] == arr[mid] && arr[mid] == arr[high]){
+                if(arr[low] < ans){
+                    ans = arr[low];
+                }
+                low++; high--;
+                continue;
+            }
+
+            if(arr[low] < arr[high]){
+                if(arr[low] < ans){
+                    ans = arr[low];
+                }
+                break;
+            }
+
+            if(arr[low] <= arr[mid]){
+
+                if(arr[low] < ans){
+                    ans = arr[low];
+                }
+
+                low = mid + 1;
+
+            }else{
+
+                if(arr[mid] < ans){
+                    ans = arr[mid];
+                }
+
+                high = mid - 1;
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+------------------------------------------------------------------------------------------------
+
+			(find how many times array is rotated)
+
+class Solution{
+public:	
+	int findKRotation(int arr[], int n) {
+	    
+	    int low = 0, high = n - 1, ans = INT_MAX, idx = -1;
+	    
+	    while(low <= high){
+	        
+	        int mid = (low + high) >> 1;
+	        
+	        if(arr[low] <= arr[high]){
+	            
+	            if(arr[low] < ans){
+	                ans = arr[low];
+	                idx = low;
+	            } 
+	            break;
+	        }
+	        
+	        if(arr[low] <= arr[mid]){
+	            
+	            if(arr[low] < ans){
+	                ans = arr[low];
+	                idx = low;
+	            }
+	            
+	            low = mid + 1;
+	            
+	        }else{
+	            
+	            if(arr[mid] < ans){
+	                
+	                ans = arr[mid];
+	                idx = mid;
+	            }
+	            
+	            high = mid - 1;
+	        }
+	    }
+	    
+	    return idx;
+	    
+	}
+};
+
+-------------------------------------------------------------------------------------------------------
+
+			(single element in sorted array)
+
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        if(n == 1){
+            return arr[0];
+        }
+
+        if(arr[0] != arr[1]){
+            return arr[0];
+        }
+
+        if(arr[n - 1] != arr[n - 2]){
+            return arr[n - 1];
+        }
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] != arr[mid - 1] && arr[mid] != arr[mid + 1]){
+                return arr[mid];
+            }
+
+            if((mid % 2 == 0 && arr[mid] == arr[mid + 1]) || (mid % 2 == 1 && arr[mid] == arr[mid - 1])){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        return 0;
+
+    }
+};
+
+--------------------------------------------------------------------------------------------------------
+
+			(finding a peak element)
+
+class Solution {
+public:
+    int findPeakElement(vector<int>& arr) {
+
+        int n = arr.size();
+
+        if(n == 1){
+            return 0;
+        }
+        if(arr[0] > arr[1]){
+            return 0;
+        }
+        if(arr[n - 1] > arr[n - 2]){
+            return n - 1;
+        }
+
+        int low = 1, high = n - 2;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] > arr[mid - 1] && arr[mid] > arr[mid + 1]){
+                return mid;
+            }
+
+            if(arr[mid] > arr[mid - 1]){
+                low = mid + 1;
+            }
+            else if(arr[mid] > arr[mid + 1]){
+                high = mid - 1;
+            }
+            else{
+                low = mid + 1;
+            }
+        }
+        
+        return -1;
+        
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
+			(sqrt of n)
+
+class Solution{
+  public:
+    long long int floorSqrt(long long int x) 
+    {
+        long long low = 0, high = x;
+        
+        while(low <= high){
+            
+            long long mid = (low + high) >> 1;
+            
+            if(mid * mid <= x){
+                low = mid + 1;
+            }else{
+                high = mid - 1;
+            }
+        }
+        
+        return high;
+    }
+};
+
+--------------------------------------------------------------------------------------------------
+
+			(finding the Nth root of given number)
+
+class Solution{
+	public:
+	
+	int b_power(int mid, int n, int m){
+	    
+	    long long ans = 1;
+	    
+	    for(int i = 1; i <= n; i++){
+	        
+	        ans = (ans * mid);
+	        
+	        if(ans > m){
+	            return 2;
+	        }
+	    }
+	    
+	    if(ans == m){
+	        return 1;
+	    }
+	    return 0;
+	}
+	
+	int NthRoot(int n, int m)
+	{
+	    
+	    long long low = 1, high = m;
+	    
+	    while(low <= high){
+	        
+	        long long mid = (low + high) >> 1;
+	        
+	        long long temp = b_power(mid, n, m);
+	        
+	        if(temp == 1){
+	            
+	            return mid;
+	        }
+	        
+	        else if(temp == 0){
+	            low = mid + 1;
+	        }
+	        
+	        else{
+	            high = mid - 1;
+	        }
+	    }
+	    
+	    return -1;
+	    
+	}  
+};
+
+----------------------------------------------------------------------------------------------------
+
+			(koko banana)
+
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& arr, int h) {
+
+        long long n = arr.size();
+        
+        long long low = 1, high = *max_element(arr.begin(), arr.end());
+
+        long long ans = 0;
+
+        while(low <= high){
+
+            long long mid = (low + high) >> 1;
+
+            long long curr = 0;
+
+            for(long long i = 0; i < n; i++){
+
+                if(arr[i] % mid == 0){
+
+                    curr += (arr[i] / mid);
+
+                }else{
+
+                    curr += (arr[i] / mid) + 1;
+
+                }
+            }
+
+            curr <= h ? ans = mid, high = mid - 1 : low = mid + 1;
+        }
+
+        return ans;
+
+    }
+};
+
+else you can also return low.
+
+time complexity is O(n) * o(log(max_elemtn))
+
+-----
+
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& arr, int h) {
+
+        long long n = arr.size();
+        
+        long long low = 1, high = *max_element(arr.begin(), arr.end());
+
+        while(low <= high){
+
+            long long mid = (low + high) >> 1;
+
+            long long curr = 0;
+
+            for(long long i = 0; i < n; i++){
+
+                curr += ceil((double)arr[i] / (double)mid);
+
+            }
+
+            curr <= h ? high = mid - 1 : low = mid + 1;
+        }
+
+        return low;
+
+    }
+};
+
+------------------------------------------------------------------------------------------------------------
+
+			(rose garden)
+
+class Solution {
+public:
+    int minDays(vector<int>& arr, int m, int k) {
+        
+        long long n = arr.size();
+
+        if(m > n || k > n || m * k > n){
+            return -1;
+        }
+
+        long long low = *min_element(arr.begin(), arr.end()), high = *max_element(arr.begin(), arr.end());
+
+        while(low <= high){
+
+            long long mid = (low + high) >> 1;
+
+            long long cnt = 0, store = 0;
+
+            for(long long i = 0; i < n; i++){
+
+                if(mid >= arr[i]){
+                    cnt++;
+                }else{
+                    if(cnt >= k){
+                        store += (cnt / k);
+                    }
+                    cnt = 0;
+                }
+
+                if(i == n - 1){
+                    if(cnt >= k){
+                        store += (cnt / k);
+                    }
+                }
+
+            }
+
+            store >= m ? high = mid - 1 : low = mid + 1; 
+
+        }
+
+        return low;
+
+    }
+};
+
+--------------------------------------------------------------------------------------
+
+			(find the smallest divisor)
+
+class Solution {
+public:
+    int smallestDivisor(vector<int>& arr, int t) {
+
+        int n = arr.size();
+        
+        int low = 1, high = *max_element(arr.begin(), arr.end());
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            int sum = 0;
+
+            for(int i = 0; i < n; i++){
+
+                sum += ceil((double)arr[i] / (double)mid);
+
+            }
+
+            sum <= t ? high = mid - 1 : low = mid + 1;
+        }
+
+        return low;
+
+    }
+};
+
+------------------------------------------------------------------------------------------------------------
+
+		(ship load question)
+
+class Solution {
+public:
+    int shipWithinDays(vector<int>& arr, int days) {
+
+        int sum = 0, n = arr.size(), mn = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            if(arr[i] > mn){
+                mn = arr[i];
+            }
+        }
+        
+        int low = mn, high = sum;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            int rem = mid, cnt = 1;
+
+            for(int i = 0; i < n; i++){
+
+                if(rem - arr[i] >= 0){
+
+                    rem -= arr[i];
+
+                }else{
+
+                    cnt++;
+                    rem = mid;
+                    rem -= arr[i];
+
+                }
+
+            }
+
+            cnt <= days ? high = mid - 1 : low = mid + 1;
+
+        }
+
+        return low;
+
+    }
+};
+
+------
+
+	int load = 0, req_days = 1;
+
+	for(int i = 0; i < n; i++){
+	
+	if(load + arr[i] <= mid){
+	    load += arr[i];
+	}else{
+	    req_days++;
+	    load = arr[i];
+	}
+	
+	}
+
+---------------------------------------------------------------------------------------------------------------
+
+ 				(find kth missing element)
+
+class Solution {
+public:
+    int findKthPositive(vector<int>& arr, int k) {
+
+        int n = arr.size();
+
+        int missing = k;
+
+        for(int i = 0; i < n; i++){
+
+            if(arr[i] <= missing){
+                missing++;
+            }else{
+                return missing;
+            }
+
+        }
+
+        return missing;
+
+    }
+};
+
+-------------
+
+class Solution {
+public:
+    int findKthPositive(vector<int>& arr, int k) {
+
+        if(k < arr[0]){
+            return k;
+        }
+
+        int n = arr.size();
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            (arr[mid] - mid - 1 < k) ? low = mid + 1 : high = mid - 1;
+        }
+
+        return arr[high] + abs(k - arr[high] + high + 1);
+
+    }
+};
+
+-----------------------------------------------------------------------------------------------
+
+			(agressive cow) ---> max of min
+
+class Solution {
+public:
+
+    int solve(int n, int k, vector<int> &arr) {
+    
+        sort(arr.begin(), arr.end());
+        
+        int low = 1, high = arr[n - 1] - arr[0];
+        
+        while(low <= high){
+            
+            int mid = (low + high) >> 1;
+            
+            int prev = 0, temp = 1;
+            
+            bool flag = true;
+            
+            for(int i = 1; i < n; i++){
+                
+                if(arr[i] - arr[prev] >= mid){
+                    
+                    prev = i;
+                    temp++;
+                    
+                }
+            }
+            
+            temp < k ? high = mid - 1 : low = mid + 1;
+            
+        }
+        
+        // cout << low << " " << high << endl;
+        
+        return high;
+    }
+};
+
+---------------------------------------------------------------------------------------
+
+			bool allocation --> min of max
+
+class Solution 
+{
+    public:
+    
+    int findPages(int arr[], int n, int m) 
+    {
+        
+        if(m > n){
+            return -1;
+        }
+        
+        int sum = 0, mx = INT_MIN;
+        
+        for(int i = 0; i < n; i++){
+            
+            sum += arr[i];
+            
+            if(arr[i] > mx){
+                
+                mx = arr[i];
+                
+            }
+        }
+        
+        int low = mx, high = sum;
+        
+        while(low <= high){
+            
+            int mid = (low + high) >> 1;
+            
+            int student = 1, page = 0;
+            
+            for(int i = 0; i < n; i++){
+                
+                if(page + arr[i] <= mid){
+                    
+                    page += arr[i];
+                    
+                }else{
+                    
+                    student++;
+                    
+                    page = arr[i];
+                }
+            }
+            
+            student <= m ? high = mid - 1 : low = mid + 1;
+            
+        }
+        
+        // cout << low << " " << high << endl;
+        
+        return low;
+        
+    }
+};
+
+
 
