@@ -1,0 +1,3157 @@
+ancestors --> parent, grandparent, ettc..
+
+full binary tree -- > all node have 0 or 2 children
+no. of leaf node = 1 + no. of internal Node
+
+---------check whether full binary tree or not--------------
+
+bool isFullTree (struct Node* root)
+{
+    // If empty tree
+    if (root == NULL)
+        return true;
+  
+    // If leaf node
+    if (root->left == NULL && root->right == NULL)
+        return true;
+  
+    // If both left and right are not NULL, and left & right subtrees
+    // are full
+    if ((root->left) && (root->right))
+        return (isFullTree(root->left) && isFullTree(root->right));
+  
+    // We reach here when none of the above if conditions work
+    return false;
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+complete binary tree --> all level are completyly filled except the last level and in last level all node as left side as possible
+
+Properties of Complete Binary Tree:
+A complete binary tree is said to be a proper binary tree where all leaves have the same depth.
+In a complete binary tree number of nodes at depth d is 2d. 
+In a  complete binary tree with n nodes height of the tree is log(n+1).
+All the levels except the last level are completely full.
+
+-------------------------
+
+TreeNode* buildTree(vector<int>& nums) {
+    if (nums.empty()) {
+        return NULL;
+    }
+    TreeNode* root = new TreeNode(nums[0]);
+    queue<TreeNode*> q;
+    q.push(root);
+    int i = 1;
+    while (i < nums.size()) {
+        TreeNode* curr = q.front();
+        q.pop();
+        if (i < nums.size()) {
+            curr->left = new TreeNode(nums[i++]);
+            q.push(curr->left);
+        }
+        if (i < nums.size()) {
+            curr->right = new TreeNode(nums[i++]);
+            q.push(curr->right);
+        }
+    }
+    return root;
+}
+
+-------------------count the node in any binary tree
+
+unsigned int countNodes(Node* root)
+{
+    if (root == NULL)
+        return (0);
+    return (1 + countNodes(root->left) +
+            countNodes(root->right));
+}
+
+-------------------------check wherthher it is complete binary tree or not
+
+bool isCompleteBT(node* root)
+
+    queue<node*> q;
+    q.push(root);
+    bool flag = false;
+     while (!q.empty()) {
+        node* temp = q.front();
+        q.pop();
+ 
+        if (temp->left) {
+            if (flag == true)
+                return false;
+ 
+            q.push(temp->left); // Enqueue Left Child
+        else
+            flag = true;
+ 
+        if (temp->right) {
+            if (flag == true)
+                return false;
+ 
+            q.push(temp->right); // Enqueue Right Child
+        }
+        else
+            flag = true;
+    }
+    return true;
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+perfect binary tree --> all leaf node has to be in same level --> total number of node in binary tree is 2 ^ h - 1.
+
+--------------checking
+
+bool isPerfectBinaryTree(Node* root)
+{
+    if (root == nullptr) {
+        return true;
+    }
+ 
+    queue<Node*> q;
+    q.push(root);
+ 
+    int level = 1; // Current level of the tree
+    int flag
+        = 1; // Flag to track if the tree is perfect or not
+ 
+    while (!q.empty()) {
+        int size = q.size();
+        vector<int> levelValues;
+ 
+        // Traverse all nodes at the current level
+        for (int i = 0; i < size; i++) {
+            Node* temp = q.front();
+            q.pop();
+ 
+            levelValues.push_back(temp->data);
+ 
+            // Enqueue the left and right children of the
+            // current node
+            if (temp->left) {
+                q.push(temp->left);
+            }
+            if (temp->right) {
+                q.push(temp->right);
+            }
+        }
+        if (levelValues.size() != 0
+            && levelValues.size() != level) {
+            flag = 0; // Tree is not perfect
+        }
+        level = level * 2;
+    }
+    return flag;
+}
+
+-------------------------------------------------------------------------------
+
+degenerate tree --> every node have signle children || starigh line
+
+-----------------------------------------------------------------------------
+
+struct node
+{
+    int data;
+    struct node *left;
+    struct node *right;
+
+    node (int val){
+        data = val;
+        left = right = NULL;
+    }
+};
+
+struct node *root = new node(1);
+root -> left = new node(2);
+root -> right = new node(3);
+root -> left -> right = new node(5);
+
+-----------------------------------------------------------------------------
+
+
+(DFS)
+
+inorder --> left root right
+
+preorder --> root left right
+
+postorder --> left right root
+
+        1
+    2      3
+4    5   6     7
+
+inorder --> 4 2 5 1 6 3 7
+
+In the case of binary search trees (BST), Inorder traversal gives nodes in non-decreasing order. To get nodes of BST in non-increasing order, a variation of Inorder traversal where Inorder traversal is reversed can be used.
+
+preorder --> 1 2 4 5 3 6 7
+
+Preorder traversal is used to create a copy of the tree. Preorder traversal is also used to get prefix expressions on an expression tree.
+
+postorder --> 4 5 2 6 7 3 1
+
+Postorder traversal is used to delete the tree. Please see the question for the deletion of a tree for details. Postorder traversal is also useful to get the postfix expression of an expression tree
+
+(BFS)
+
+level wise
+
+-----------------------------------------------------------
+
+      (PRE ORDER TRAVESER)
+
+
+class Solution {
+public:
+
+    void preorder(TreeNode* root, vector<int> &ans){
+        if(root == NULL){
+            return;
+        }
+
+        ans.push_back(root -> val);
+
+        preorder(root -> left, ans);
+
+        preorder(root -> right, ans);
+    }
+
+    vector<int> preorderTraversal(TreeNode* root) {
+
+        if(root == NULL){
+            return {};
+        }
+
+        vector<int> ans;
+
+        // preorder(root, ans);
+
+        stack<TreeNode*> st; 
+
+        st.push(root);
+
+        while(!st.empty()){
+            root = st.top(); 
+            st.pop();
+
+            ans.push_back(root -> val);
+
+            if(root -> right != NULL){
+                st.push(root -> right);
+            }
+
+            if(root -> left != NULL){
+                st.push(root -> left);
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+TIME --> O(N) , SPACE --> O(N) or in itretive O(height)
+
+-------------------------------------------------------------------
+
+          (INORDER)
+
+class Solution {
+public:
+
+    void inorder(TreeNode* root, vector<int> &ans){
+
+        if(root == NULL){
+            return ;
+        }
+
+        inorder(root -> left, ans);
+
+        ans.push_back(root -> val);
+
+        inorder(root -> right, ans);
+
+    }
+
+    vector<int> inorderTraversal(TreeNode* root) {
+        
+        vector<int> ans;
+
+        // inorder(root, ans);
+
+        stack<TreeNode*> st;
+
+        auto node = root;
+
+        while(1){
+            if(node != NULL){
+                st.push(node);
+                node = node -> left;
+            }else{
+                if(st.empty()){
+                    break;
+                }
+                node = st.top();
+                st.pop();
+                ans.push_back(node -> val);
+                node = node -> right;
+            }
+        }
+
+        return ans;
+    }
+};
+
+------------------------------------------------------------------------
+
+        (postorder)
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+
+    void postorder(TreeNode* root, vector<int> &ans){
+
+        if(root == NULL){
+            return ;
+        }
+
+        postorder(root -> left, ans);
+
+        postorder(root -> right, ans);
+
+        ans.push_back(root -> val);
+
+    }
+
+    vector<int> postorderTraversal(TreeNode* root) {
+
+        if(root == NULL){
+            return {};
+        }
+        
+        vector<int> ans;
+
+        // postorder(root, ans);
+
+        stack<TreeNode*> st;
+
+        auto current = root;
+
+        while(!st.empty() || current != NULL){
+            if(current != NULL){
+
+                st.push(current);
+
+                current = current -> left;
+
+            }else{
+
+                auto temp = st.top() -> right;
+
+                if(temp == NULL){
+
+                    temp = st.top();
+                    st.pop();
+                    ans.push_back(temp -> val);
+
+                    while(!st.empty() && temp == st.top() -> right){
+                        temp = st.top();
+                        st.pop();
+                        ans.push_back(temp -> val);
+                    }
+
+                }else{
+
+                    current = temp;
+
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+
+--------------------------------------------------------------------------------------------
+
+              (BFS)
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+
+        if(root == NULL){
+            return {};
+        }
+        
+        vector<vector<int>> ans;
+
+        vector<int> store;
+
+        queue<TreeNode*> Q;
+
+        Q.push(root);
+
+        while(!Q.empty()){
+            
+            auto s = Q.size();
+
+            while(s--){
+                auto f = Q.front();
+                Q.pop();
+                store.push_back(f -> val);
+
+                if(f -> left != NULL){
+                    Q.push(f -> left);
+                }
+                
+                if(f -> right != NULL){
+                    Q.push(f -> right);
+                }
+            }
+
+            ans.push_back(store);
+
+            store.clear();
+
+        }
+
+        return ans;
+
+    }
+};
+
+TIME --> O(N) , SPACE --> O(N)
+
+--------------------------------------------------------------------------------------
+                    (all in one)
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+
+    vector<int> postorderTraversal(TreeNode* root) {
+
+        if(root == NULL){
+            return {};
+        }
+        
+        vector<int> pre, in, post;
+
+        stack<pair<TreeNode*, int>> st;
+
+        st.push({root, 1});
+
+        while(!st.empty()){
+            auto f = st.top();
+            st.pop();
+
+            auto root = f.first;
+            auto num = f.second;
+
+            if(num == 1){
+                pre.push_back(root -> val);
+                st.push({root, num + 1});
+
+                if(root -> left != NULL){
+                    st.push({root -> left, 1});
+                }
+            }
+            else if(num == 2){
+                in.push_back(root -> val);
+                st.push({root, num + 1});
+
+                if(root -> right != NULL){
+                    st.push({root -> right, 1});
+                }
+            }
+            else{
+                post.push_back(root -> val);
+            }
+        }
+
+        return post;
+    }
+};
+
+--------------------------------------------------------------------------
+
+                (Depth)
+
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+
+        if(root == NULL){
+            return 0;
+        }
+        
+        queue<TreeNode*> Q;
+        Q.push(root);
+
+        int cnt = 0;
+
+        while(!Q.empty()){
+            auto s = Q.size();
+            cnt++;
+
+            while(s--){
+                auto f = Q.front();
+                Q.pop();
+
+                if(f -> left != NULL){
+                    Q.push(f -> left);
+                }
+
+                if(f -> right != NULL){
+                    Q.push(f -> right);
+                }
+            }
+        }
+
+        return cnt;
+    }
+};
+
+class Solution {
+public:
+
+    int depth(TreeNode* root){
+        if(root == NULL && root == NULL){
+            return 0;
+        }
+
+        return 1 + max(depth(root -> left), depth(root -> right));
+    }
+
+    int maxDepth(TreeNode* root) {
+
+        if(root == NULL){
+            return 0;
+        }
+        
+        return depth(root);
+
+    }
+};
+
+time --> O(N) space --> O(N)
+
+------------------------------------------------------------------------
+
+            (check balance or not)
+
+class Solution {
+public:
+
+    bool flag = true;
+
+    int depth(TreeNode* root){
+
+        if(root == NULL){
+            return 0;
+        }
+
+        int left = depth(root -> left);
+
+        int right = depth(root -> right);
+
+        if(abs(left - right) > 1){
+            flag = false;
+        }
+
+        return 1 + max(left, right);
+
+    }
+
+    bool isBalanced(TreeNode* root) {
+        
+        if(root == NULL){
+            return true;
+        }
+
+        depth(root);
+
+        return flag;
+
+    }
+};
+
+class Solution {
+public:
+
+    int depth(TreeNode* root){
+
+        if(root == NULL){
+            return 0;
+        }
+
+        int left = depth(root -> left);
+
+        int right = depth(root -> right);
+
+        if(abs(left - right) > 1 || left == 1e9 || right == 1e9){
+            return 1e9;
+        }
+
+        return 1 + max(left, right);
+
+    }
+
+    bool isBalanced(TreeNode* root) {
+        
+        if(root == NULL){
+            return true;
+        }
+
+        if(depth(root) == 1e9){
+            return false;
+        }
+
+        return true;
+
+    }
+};
+
+-----------------------------------------------------------------------
+
+            (diameter of tree)
+
+class Solution {
+public:
+
+    int mx = 0;
+
+    int dia(TreeNode* root){
+
+        if(root == NULL){
+            return 0;
+        }
+
+        int left = dia(root -> left);
+
+        int right = dia(root -> right);
+
+        mx = max(mx, left + right);
+
+        return 1 + max(left, right); 
+
+    }
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        
+        dia(root);
+
+        return mx;
+
+    }
+};
+
+-------------------------------------------------------------------------------
+
+            (maximum path sum)
+
+class Solution {
+public:
+
+    int mx = -1e9;
+
+    int func(TreeNode* root){
+        
+        if(root == NULL){
+            return 0;
+        }
+
+        int dabi = max(0, func(root -> left));
+
+        int jmni = max(0, func(root -> right));
+
+        mx = max(mx, root -> val + dabi + jmni);
+
+        return root -> val + max(dabi, jmni);
+    }
+
+    int maxPathSum(TreeNode* root) {
+        
+        func(root);
+
+        return mx;
+
+    }
+};
+
+----------------------------------------------------------------------------
+
+                (Tree is same or not)
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+
+        if((p == NULL && q != NULL) || (p != NULL && q == NULL)){
+            return false;
+        }
+
+        if(p == NULL && q == NULL){
+            return true;
+        }
+
+        if(p -> val != q -> val){
+            return false;
+        }
+
+        bool flag = true;
+
+        flag &= isSameTree(p -> left, q -> left);
+        flag &= isSameTree(p -> right, q -> right);
+
+        return flag;
+
+    }
+};
+
+----------------------------------------------------------------------------
+
+            zig zag
+
+
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+
+        if(root == NULL){
+            return {};
+        }
+
+        queue<TreeNode*> Q;
+        Q.push(root);
+
+        vector<vector<int>> ans;
+
+        vector<int> store;
+
+        int cnt = 0;
+
+        while(!Q.empty()){
+            auto s = Q.size();
+
+            while(s--){
+
+                auto f = Q.front();
+                Q.pop();
+
+                store.push_back(f -> val);
+
+                if(f -> left != NULL){
+                    Q.push(f -> left);
+                }
+
+                if(f -> right != NULL){
+                    Q.push(f -> right);
+                }
+
+            }
+
+            if(cnt & 1){
+                reverse(store.begin(), store.end());
+            }
+
+            ans.push_back(store);
+
+            store.clear();
+
+            cnt++;
+
+        }
+
+        return ans;
+
+    }
+};
+
+-------------------------------
+
+vector<vector<int> > zigzagLevelOrder(TreeNode* root) {
+    if (root == NULL) {
+        return vector<vector<int> > ();
+    }
+    vector<vector<int> > result;
+
+    queue<TreeNode*> nodesQueue;
+    nodesQueue.push(root);
+    bool leftToRight = true;
+
+    while ( !nodesQueue.empty()) {
+        int size = nodesQueue.size();
+        vector<int> row(size);
+        for (int i = 0; i < size; i++) {
+            TreeNode* node = nodesQueue.front();
+            nodesQueue.pop();
+
+            // find position to fill node's value
+            int index = (leftToRight) ? i : (size - 1 - i);
+
+            row[index] = node->val;
+            if (node->left) {
+                nodesQueue.push(node->left);
+            }
+            if (node->right) {
+                nodesQueue.push(node->right);
+            }
+        }
+        // after this level
+        leftToRight = !leftToRight;
+        result.push_back(row);
+    }
+    return result;
+}
+
+-----------------------------------------------------------------------------------------------------------------------
+
+                        (boundry anticlock traveser)
+
+#include <bits/stdc++.h> 
+/************************************************************
+
+    Following is the Binary Tree node structure:
+    
+    template <typename T>
+    class TreeNode {
+        public :
+        T data;
+        TreeNode<T> *left;
+        TreeNode<T> *right;
+
+        TreeNode(T data) {
+            this -> data = data;
+            left = NULL;
+            right = NULL;
+        }
+
+        ~TreeNode() {
+            if(left)
+                delete left;
+            if(right)
+                delete right;
+        }
+    };
+
+************************************************************/
+
+bool isLeaf(TreeNode<int>* root){
+    return (root -> left == NULL) && (root -> right == NULL);
+}
+
+void addleft(TreeNode<int>* root, vector<int> &ans){
+
+    auto temp = root -> left;
+
+    while(temp != NULL){
+        if(!isLeaf(temp)){
+            ans.push_back(temp -> data);
+        }
+        if(temp -> left != NULL){
+            temp = temp -> left;
+        }else{
+            temp = temp -> right;
+        }
+    }
+}
+
+void inorder(TreeNode<int>* root, vector<int> &ans){
+
+    if(isLeaf(root)){
+        ans.push_back(root -> data);
+        return ;
+    }
+
+    if(root -> left != NULL){
+        inorder(root -> left, ans);
+    }
+
+    if(root -> right != NULL){
+        inorder(root -> right, ans);
+    }
+
+}
+
+void addright(TreeNode<int>* root, vector<int> &ans){
+
+    auto temp = root -> right;
+
+    stack<int> st;
+
+    while(temp != NULL){
+        if(!isLeaf(temp)){
+            st.push(temp -> data);
+        }
+        if(temp -> right != NULL){
+            temp = temp -> right;
+        }else{
+            temp = temp -> left;
+        }
+    }
+
+    while(!st.empty()){
+        ans.push_back(st.top());
+        st.pop();
+    }
+}
+
+vector<int> traverseBoundary(TreeNode<int>* root){
+    
+    if(root == NULL){
+        return {};
+    }
+
+    vector<int> ans;
+
+    if(!isLeaf(root)){
+        ans.push_back(root -> data);
+    }
+
+    addleft(root, ans);
+
+    inorder(root, ans);
+
+    addright(root, ans);
+
+    return ans;
+
+}
+
+-------------------------------------------------------------------------------------------------
+
+                (987. Vertical Order Traversal of a Binary Tree)
+
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        
+        queue<pair<TreeNode*, pair<int, int>>> Q;
+        Q.push({root, {0, 0}});
+
+        map<int, map<int, multiset<int>>> hash;
+
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+
+            auto vertex = f.first;
+            auto vertical = f.second.first, level = f.second.second;
+
+            hash[vertical][level].insert(vertex -> val);
+
+            if(vertex -> left != NULL){
+                Q.push({vertex -> left, {vertical - 1, level + 1}});
+            }
+
+            if(vertex -> right != NULL){
+                Q.push({vertex -> right, {vertical + 1, level + 1}});
+            }
+        }
+
+        vector<vector<int>> ans;
+
+        vector<int> store;
+
+        for(auto i : hash){
+            for(auto j : i.second){
+                for(auto it = j.second.begin(); it != j.second.end(); it++){
+                    store.push_back(*it);
+                }
+            }
+            ans.push_back(store);
+            store.clear();
+        }
+
+        return ans;
+
+    }
+};
+
+--------------------------------------------------------------------------------------------------------------
+
+            (TOP view) - small change in above code
+
+vector<int> getTopView(TreeNode<int> *root) {
+
+    if(root == NULL){
+        return {};
+    }
+    
+    queue<pair<TreeNode<int>*, int>> Q;
+    Q.push({root, 0});
+
+    map<int, int> hash;
+
+    while(!Q.empty()){
+        auto f = Q.front();
+        Q.pop();
+
+        auto vertex = f.first;
+        auto vertical = f.second;
+
+        if(hash.find(vertical) == hash.end()){
+            hash[vertical] = (vertex -> val);
+        }
+
+        if(vertex -> left != NULL){
+            Q.push({vertex -> left, vertical - 1});
+        }
+
+        if(vertex -> right != NULL){
+            Q.push({vertex -> right, vertical + 1});
+        }
+    }
+
+    vector<int> store;
+
+    for(auto i : hash){
+        store.push_back(i.second);
+    }
+
+    return store;
+}
+
+-------------------------------------------------------------------------------------------------------------
+
+            (Bottam view) - small change in above code
+
+vector<int> bottomView(BinaryTreeNode<int> * root){
+
+    if(root == NULL){
+        return {};
+    }
+    
+    queue<pair<BinaryTreeNode<int>*, int>> Q;
+    Q.push({root, 0});
+
+    map<int, int> hash;
+
+    while(!Q.empty()){
+        auto f = Q.front();
+        Q.pop();
+
+        auto vertex = f.first;
+        auto vertical = f.second;
+
+        hash[vertical] = (vertex -> data);
+
+        if(vertex -> left != NULL){
+            Q.push({vertex -> left, vertical - 1});
+        }
+
+        if(vertex -> right != NULL){
+            Q.push({vertex -> right, vertical + 1});
+        }
+    }
+
+    vector<int> store;
+
+    for(auto i : hash){
+        store.push_back(i.second);
+    }
+
+    return store;
+    
+}
+
+in this view petter we can not implement recursive because of depth, so we have to pareeller introduce some height concept
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+                    (right view)
+
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        if(root == NULL){
+            return {};
+        }
+        
+        queue<pair<TreeNode*, int>> Q;
+        Q.push({root, 0});
+
+        map<int, int> hash;
+
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+
+            auto vertex = f.first;
+            auto level = f.second;
+
+            hash[level] = vertex -> val;
+
+            if(vertex -> left != NULL){
+                Q.push({vertex -> left, level + 1});
+            }
+
+            if(vertex -> right != NULL){
+                Q.push({vertex -> right, level + 1});
+            }
+        }
+
+        vector<int> store;
+
+        for(auto it : hash){
+            store.push_back(it.second);
+        }
+
+        return store;
+
+    }
+};
+
+--------------------
+
+class Solution {
+public:
+
+    void rightview(TreeNode* root, int level, vector<int> &ans){
+
+        if(root == NULL){
+            return ;
+        }
+
+        if(level == ans.size()){
+            ans.push_back(root -> val);
+        }
+
+        rightview(root -> right, level + 1, ans);
+        rightview(root -> left, level + 1, ans);
+
+    }
+
+    vector<int> rightSideView(TreeNode* root) {
+        if(root == NULL){
+            return {};
+        }
+
+        vector<int> ans;
+        
+        rightview(root, 0, ans);
+
+        return ans;
+
+    }
+};
+
+------------------------------------------------------------------------------------
+
+            (left view) --> O(N) time and O(H) -- > space
+
+void leftview(TreeNode<int> *root, int level, vector<int> &ans){
+    if(root == NULL){
+        return;
+    }
+
+    if(ans.size() == level){
+        ans.push_back(root -> data);
+    }
+
+    leftview(root -> left, level + 1, ans);
+    leftview(root -> right, level + 1, ans);
+}
+
+vector<int> getLeftView(TreeNode<int> *root)
+{
+    if(root == NULL){
+        return {};
+    }
+
+    vector<int > ans;
+
+    leftview(root, 0, ans);
+
+    return ans;
+    
+}
+
+------------------------------------------------------------------------
+
+            (symatric or not)
+
+class Solution {
+public:
+
+    bool func(TreeNode* root1, TreeNode* root2){
+
+        if(root1 == NULL || root2 == NULL){
+            return (root1 == root2);
+        }
+
+        if(root1 -> val != root2 -> val){
+            return false;
+        }
+
+        bool flag = true;
+
+        flag &= func(root1 -> left, root2 -> right);
+        flag &= func(root1 -> right, root2 -> left);
+
+        return flag;
+
+    }
+
+    bool isSymmetric(TreeNode* root) {
+        
+        if(root == NULL){
+            return true;
+        }
+
+        return func(root -> left, root -> right);
+
+    }
+};
+
+--------------------------------------------------------------------
+
+        (path to node) - itretive
+
+vector<int> Solution::solve(TreeNode* root, int find) {
+    
+    queue<TreeNode*> Q;
+    Q.push(root);
+    
+    map<int, int> hash;
+    
+    while(!Q.empty()){
+        auto f = Q.front();
+        Q.pop();
+        
+        if(f -> left != NULL){
+            hash[f -> left -> val] = f -> val;
+            Q.push(f -> left);
+        }
+        
+        if(f -> right != NULL){
+            hash[f -> right -> val] = f -> val;
+            Q.push(f -> right);
+        }
+    }
+    
+    vector<int> ans;
+    
+    while(hash[find] != 0){
+        ans.push_back(find);
+        find = hash[find];
+    }
+    
+    ans.push_back(root -> val);
+    
+    reverse(ans.begin(), ans.end());
+    
+    return ans;
+    
+}
+
+        Recursive approcch
+
+bool inorder(TreeNode* root, int find, vector<int> &ans){
+    
+    if(root == NULL){
+        return false;
+    }
+    
+    bool flag = false;
+    
+    if(root -> val == find){
+        ans.push_back(find);
+        return true;    
+    }
+    
+    ans.push_back(root -> val);
+    
+    flag |= inorder(root -> left, find, ans);
+    
+    flag |= inorder(root -> right, find, ans);
+    
+    if(!flag){
+        ans.pop_back();
+    }
+    
+    return flag;
+    
+}
+ 
+vector<int> Solution::solve(TreeNode* root, int find) {
+    
+    vector<int> ans;
+    
+    inorder(root, find, ans);
+    
+    return ans;
+        
+}
+
+--------------------------------------------------------------------------------------------------------------
+
+        (LCA)
+
+class Solution {
+public:
+
+    bool inorder(TreeNode* root, int p, vector<TreeNode*> &ans1){
+        if(root == NULL){
+            return false;
+        }
+
+        bool flag = false;
+
+        if(root -> val == p){
+            ans1.push_back(root);
+            return true;
+        }
+
+        ans1.push_back(root);
+
+        flag |= inorder(root -> left, p, ans1);
+
+        flag |= inorder(root -> right, p, ans1);
+
+        if(!flag){
+            ans1.pop_back();
+        }
+
+        return flag;
+    }
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+
+        if(root == NULL || p == NULL || q == NULL){
+            return root;
+        }
+        
+        vector<TreeNode*> ans1;
+
+        inorder(root, p -> val, ans1);
+
+        vector<TreeNode*> ans2;
+
+        inorder(root, q -> val, ans2);
+
+        TreeNode* lca;
+
+        for(int i = 0; i < min(ans1.size(), ans2.size()); i++){
+            if((ans1[i] -> val) == (ans2[i] -> val)){
+                lca = ans1[i];
+            }else{
+                break;
+            }
+        }
+
+        return lca;
+
+    }
+};
+
+--------------------
+
+        (LCA)
+
+class Solution {
+public:
+
+    TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q){
+
+        if(root == NULL){
+            return NULL;
+        }
+
+        if(root == p || root == q){
+            return root;
+        }
+
+        TreeNode *left = lca(root -> left, p, q);
+
+        TreeNode *right = lca(root -> right, p, q);
+
+        if(left == NULL && right == NULL){
+            return NULL;
+        }
+
+        if(left != NULL && right != NULL){
+            return root;
+        }
+
+        return left == NULL ? right : left;
+
+    }
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+
+        return lca(root, p, q);
+        
+    }
+};
+
+----------
+
+class Solution {
+public:
+
+    TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q){
+
+        if(root == NULL){
+            return NULL;
+        }
+
+        if(root == p || root == q){
+            return root;
+        }
+
+        TreeNode *left = lca(root -> left, p, q);
+
+        TreeNode *right = lca(root -> right, p, q);
+
+        if(left == NULL){
+            return right;
+        }
+        if(right == NULL){
+            return left;
+        }
+        return root;
+
+    }
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+
+        return lca(root, p, q);
+        
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+            (maximum width of bt)
+
+class Solution {
+public:
+    int widthOfBinaryTree(TreeNode* root) {
+        
+        map<int, int> mn, mx;
+
+        queue<pair<TreeNode*, int>> Q;
+        Q.push({root, 0});
+
+        int ans = 0;
+
+        while(!Q.empty()){
+
+            auto s = Q.size();
+
+            auto mn = Q.front().second, mx = Q.back().second;
+
+            ans = max(ans, mx - mn + 1);
+
+            while(s--){
+                auto f= Q.front();
+                Q.pop();
+
+                auto vertex = f.first;
+                auto level = f.second;
+
+                if(vertex -> left != NULL){
+                    Q.push({vertex -> left, 2LL * level + 1});
+                }
+
+                if(vertex -> right != NULL){
+                    Q.push({vertex -> right, 2LL * level + 2});
+                }
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+---------------------------------------------------------------------------------------
+
+        (Children sum property)
+
+
+increse when going down and sum it up when going up
+
+void convertTree(node* root){
+    if(root == NULL) return;
+     
+    int childSum = 0;
+     
+    if(root->left) childSum+=root->left->data;
+    if(root->right) childSum+=root->right->data;
+     
+    if(childSum>=root->data){
+        //change root
+        root->data = childSum;
+    }
+    else{
+        //change both children
+        if(root->left) root->left->data = root->data;
+        if(root->right) root->right->data = root->data;
+         
+    }
+     
+    //now go down the tree and check others - Inorder
+    convertTree(root->left);
+    convertTree(root->right);
+     
+    //here is the backtracking part happens, as changes may happen
+    int totVal = 0;
+     
+    if(root->left) totVal+=root->left->data;
+    if(root->right) totVal+=root->right->data;
+     
+    // Leaf node dont update, as it will make it 0
+    if(root->left || root->right) root->data = totVal;
+    //So that at last the children Sum property stays TRUE
+ 
+}
+
+O(n) and O(H)
+----------------------------------------------------------------------------------------
+
+        (dist K target node to another node) retturn vector of node
+
+
+class Solution {
+public:
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+
+        if(root == NULL){
+            return {};
+        }
+        
+        map<TreeNode*, TreeNode*> hash;
+
+        queue<TreeNode*> Q;
+        Q.push(root);
+
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+
+            if(f -> left != NULL){
+                hash[f -> left] = f;
+                Q.push(f -> left);
+            }
+
+            if(f -> right != NULL){
+                hash[f -> right] = f;
+                Q.push(f -> right);
+            }
+        }
+
+        map<TreeNode*, bool> visited;
+
+        queue<pair<TreeNode*, int>> QQ;
+
+        QQ.push({target, 0});
+        visited[target] = true;
+
+        vector<int> ans;
+
+        while(!QQ.empty()){
+
+            auto s = QQ.size();
+
+            if(QQ.front().second == k){
+                ans.push_back(QQ.front().first -> val);
+                QQ.pop();
+                continue;
+            }
+
+            while(s--){
+                auto f = QQ.front();
+                QQ.pop();
+
+                auto vertex = f.first;
+                auto dist = f.second;
+
+                if(vertex -> left != NULL && !visited[vertex -> left]){
+                    visited[vertex -> left] = true;
+                    QQ.push({vertex -> left, dist + 1});
+                }
+
+                if(vertex -> right != NULL && !visited[vertex -> right]){
+                    visited[vertex -> right] = true;
+                    QQ.push({vertex -> right, dist + 1});
+                }
+
+                if(vertex != root && !visited[hash[vertex]]){
+                    visited[hash[vertex]] = true;
+                    QQ.push({hash[vertex], dist + 1});
+                }
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+Time -. n aand space n;
+
+-----------------------------------------------------------------------------------------------------------
+
+        (Burn tree and min time)
+
+int timeToBurnTree(BinaryTreeNode<int>* root, int start)
+{
+    map<BinaryTreeNode<int>*, BinaryTreeNode<int>*> parent;
+
+    queue<BinaryTreeNode<int>*> Q;
+
+    Q.push(root);
+
+    BinaryTreeNode<int>* target;
+
+    while(!Q.empty()){
+
+        auto f = Q.front();
+        Q.pop();
+
+        if(f -> data == start){
+            target = f;
+        }
+
+        if(f -> left != NULL){
+            parent[f -> left] = f;
+            Q.push(f -> left);
+        }
+
+        if(f -> right != NULL){
+            parent[f -> right] = f;
+            Q.push(f -> right);
+        }
+
+    }
+
+    map<int, bool> visited;
+
+    queue<pair<BinaryTreeNode<int>*, int>> st;
+
+    st.push({target, 0});
+    visited[target -> data] = true;
+
+    auto curr = 0;
+
+    while(!st.empty()){
+        auto s = st.size();
+        curr = st.front().second;
+
+        while(s--){
+            auto f = st.front();
+            st.pop();
+
+            auto vertex = f.first;
+            auto dist = f.second;
+
+            if(vertex -> left != NULL && !visited[vertex -> left -> data]){
+                visited[vertex -> left -> data] = true;
+                st.push({vertex -> left, dist + 1});
+            }
+
+            if(vertex -> right != NULL && !visited[vertex -> right -> data]){
+                visited[vertex -> right -> data] = true;
+                st.push({vertex -> right, dist + 1});
+            }
+
+            if(parent[vertex] && !visited[parent[vertex] -> data]){
+                visited[parent[vertex] -> data] = true;
+                st.push({parent[vertex], dist + 1});
+            }
+        }
+    }
+
+    return curr;
+
+}
+
+(why not dfs) because we have to move level wise and parelly
+
+o(n) + o(n) --> time complexity
+-----------------------------------------------------------------------------------------------
+
+                (count the number of nodes in bt)
+
+class Solution {
+public:
+
+    void preorder(TreeNode* root, int &ans){
+
+        if(root == NULL){
+            return ;
+        }
+
+        ans++;
+
+        preorder(root -> left, ans);
+
+        preorder(root -> right, ans);
+
+    }
+
+    int countNodes(TreeNode* root) {
+
+        int ans = 0;
+
+        preorder(root, ans);
+
+        return ans;
+
+    }
+};
+
+time O(N) and space O(log(N)) because it is complete tree;
+
+just one line
+
+class Solution {
+public:
+
+    int countNodes(TreeNode* root) {
+
+        return root == NULL ? 0 : 1 + countNodes(root -> left) + countNodes(root -> right);
+
+    }
+};
+
+--------
+
+O(log(N) ^ 2);
+because we at most traverse log(N) node and to find left height and right height log(N) node
+
+class Solution {
+public:
+
+    int find_left_height(TreeNode* root){
+
+        if(root == NULL){
+            return 0;
+        }
+
+        int len = 0;
+
+        while(root != NULL){
+            len++;
+            root = root -> left;
+        }
+
+        return len;
+
+    }
+
+    int find_right_height(TreeNode* root){
+        
+        if(root == NULL){
+            return 0;
+        }
+
+        int len = 0;
+
+        while(root != NULL){
+            len++;
+            root = root -> right;
+        }
+
+        return len;
+
+    }
+
+    int countNodes(TreeNode* root) {
+
+        if(root == NULL){
+            return 0;
+        }
+
+        int left_height = find_left_height(root);
+
+        int right_height = find_right_height(root);
+
+        if(left_height == right_height){
+
+            return (1 << left_height) - 1;
+
+        }
+
+        return 1 + countNodes(root -> left) + countNodes(root -> right);
+
+    }
+};
+
+-------------------------------------------------------------------------------------
+
+        (Construct a unique binart Tree)
+
+if give order is preorder and post order then we can not constuct a unique binary tree
+
+if given order is inorder and (post / pre) then we can constuct a unique binary tree
+
+
+            (given is preorder and inorder)
+
+
+class Solution {
+public:
+
+    TreeNode* func(int pre_start, int pre_end, int in_start, int in_end, vector<int> &preorder, vector<int> &inorder, unordered_map<int, int> &hash){
+
+        if(pre_start > pre_end || in_start > in_end){
+            return NULL;
+        }
+
+        TreeNode* root = new TreeNode(preorder[pre_start]);
+
+        int inorder_root = hash[preorder[pre_start]];
+
+        int rem = inorder_root - in_start;
+
+        root -> left = func(pre_start + 1, pre_start + rem, in_start, inorder_root - 1, preorder, inorder, hash);
+
+        root -> right = func(pre_start + rem + 1, pre_end, inorder_root + 1, in_end, preorder, inorder, hash);
+
+        return root;
+
+    }
+
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+
+        int n = preorder.size();
+
+        unordered_map<int, int> hash;
+
+        for(int i = 0; i < n; i++){
+            hash[inorder[i]] = i;
+        }
+        
+        TreeNode* root = func(0, n - 1, 0, n - 1, preorder, inorder, hash);
+
+        return root; 
+
+    }
+};
+
+O(N) and O(N) and hashmap
+
+---------------------------------------------------------------------------------------------
+
+        (inorder and postorder)
+
+class Solution {
+public:
+
+    TreeNode* func(int post_start, int post_end, int in_start, int in_end, vector<int> &inorder, vector<int> &postorder, unordered_map<int, int> &hash){
+
+        if(post_start > post_end || in_start > in_end){
+            return NULL;
+        }
+
+        TreeNode* root = new TreeNode(postorder[post_end]);
+
+        int inorder_root = hash[postorder[post_end]];
+
+        int rem = in_end - inorder_root;
+
+        root -> left = func(post_start, post_end - rem - 1, in_start, inorder_root - 1, inorder, postorder, hash);
+
+        root -> right = func(post_end - rem, post_end - 1, inorder_root + 1, in_end, inorder, postorder, hash);
+
+        return root;
+
+    }
+
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        
+        int n = inorder.size();
+
+        unordered_map<int, int> hash;
+
+        for(int i = 0; i < n; i++){
+            hash[inorder[i]] = i;
+        }
+
+        TreeNode* root = func(0, n - 1, 0, n - 1, inorder, postorder, hash);
+
+        return root;
+
+    }
+};
+
+----------------------------------------------------------------------------------------------
+
+                    serialize and deserialize binary tree
+
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        
+        string s = "";
+
+        if(root == NULL){
+            return s;
+        }
+
+        queue<TreeNode*> Q;
+        Q.push(root);
+
+        s.append(to_string(root -> val) + ",");
+
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+
+            if(f -> left != NULL){
+                Q.push(f -> left);
+                s.append(to_string(f -> left -> val) + ",");
+            }else{
+                s.append("#,");
+            }
+
+            if(f -> right != NULL){
+                Q.push(f -> right);
+                s.append(to_string(f -> right -> val) + ',');
+            }else{
+                s.append("#,");
+            }
+        }
+
+        // cout << s << endl;
+
+        return s;
+
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+
+        if(!data.size()){
+            return NULL;
+        }
+
+        stringstream s(data);
+        string str;
+
+        getline(s, str, ',');
+
+        queue<TreeNode*> Q;
+
+        TreeNode* root = new TreeNode(stoi(str));
+
+        Q.push(root);
+
+        while(!Q.empty()){
+
+            auto f = Q.front();
+            Q.pop();
+
+            getline(s, str, ',');
+
+            if(str == "#"){
+
+                f -> left = NULL;
+
+            }else{
+
+                TreeNode* temp = new TreeNode(stoi(str));
+                Q.push(temp);
+
+                f -> left = temp;
+
+            }
+
+            getline(s, str, ',');
+
+            if(str == "#"){
+
+                f -> right = NULL;
+
+            }else{
+
+                TreeNode* temp = new TreeNode(stoi(str));
+                Q.push(temp);
+
+                f -> right = temp;
+
+            }
+        }
+
+        return root;
+        
+    }
+};
+
+O(N) time and O(N) space
+
+---------------------------------------------------------------------------------------
+
+            (Morris Travelser)
+
+O(N) time and O(1) space (inorder)
+
+class Solution {
+public:
+
+    vector<int> inorderTraversal(TreeNode* root) {
+        
+        vector<int> inorder;
+
+        TreeNode* curr = root;
+
+        while(curr != NULL){
+
+            if(curr -> left == NULL){
+
+                inorder.push_back(curr -> val);
+
+                curr = curr -> right;
+
+            }else{
+
+                TreeNode* prev = curr -> left;
+
+                while(prev -> right != NULL && prev -> right != curr){
+
+                    prev = prev -> right;
+
+                }
+
+                if(prev -> right == NULL){
+
+                    prev -> right = curr;
+
+                    curr = curr -> left;
+
+                }else{
+
+                    prev -> right = NULL;
+
+                    inorder.push_back(curr -> val);
+
+                    curr = curr -> right;
+
+                }
+            }
+        }   
+
+        return inorder;
+        
+    }
+};
+
+            (pre order)
+
+slight change in above code
+
+class Solution {
+public:
+
+    vector<int> preorderTraversal(TreeNode* root) {
+
+        vector<int> preorder;
+
+        TreeNode* curr = root;
+
+        while(curr != NULL){
+
+            if(curr -> left == NULL){
+
+                preorder.push_back(curr -> val);
+
+                curr = curr -> right;
+
+            }else{
+
+                TreeNode* prev = curr -> left;
+
+                while(prev -> right != NULL && prev -> right != curr){
+
+                    prev = prev -> right;
+
+                }
+
+                if(prev -> right == NULL){
+
+                    prev -> right = curr;
+
+                    preorder.push_back(curr -> val);
+
+                    curr = curr -> left;
+
+                }else{
+
+                    prev -> right = NULL;
+
+                    curr = curr -> right;
+
+                }
+            }
+        }   
+
+        return preorder;
+
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
+            (make binary tree to flatten tree or link list)
+
+class Solution {
+public:
+
+    TreeNode* prev = NULL;
+
+    void func(TreeNode* root){
+
+        if(root == NULL){
+            return ;
+        }
+
+        func(root -> right);
+
+        func(root -> left);
+
+        root -> right = prev;
+
+        root -> left = NULL;
+
+        prev = root;
+
+    }
+
+    void flatten(TreeNode* root) {
+
+        func(root);
+
+    }
+};
+
+-------------
+
+    (using stack)
+
+class Solution {
+public:
+
+    void flatten(TreeNode* root) {
+
+        if(root == NULL){
+            return ;
+        }
+
+        stack<TreeNode*> st;
+
+        st.push(root);
+
+        while(!st.empty()){
+
+            TreeNode* f = st.top();
+            st.pop();
+
+            if(f -> right != NULL){
+                st.push(f -> right);
+            }
+
+            if(f -> left != NULL){
+                st.push(f -> left);
+            }
+
+            if(!st.empty()){
+                f -> right = st.top();
+            }
+
+            f -> left = NULL;
+
+        }
+    }
+};
+
+-----------
+
+        (Morries Travelser)
+
+class Solution {
+public:
+
+    void flatten(TreeNode* root) {
+
+        if(root == NULL){
+            return ;
+        }
+
+        TreeNode* curr = root;
+
+        while(curr != NULL){
+
+            if(curr -> left != NULL){
+
+                TreeNode* prev = curr -> left;
+
+                while(prev -> right != NULL){
+
+                    prev = prev -> right;
+
+                }
+
+                prev -> right = curr -> right;
+
+                curr -> right = curr -> left;
+
+                curr -> left = NULL;
+            }   
+
+            curr = curr -> right;
+
+        }
+    }
+};
+
+O(N) time and O(1) time
+
+-------------------------------------------------------------------------------------------------------
+
+left_side < root < right_side and it's true for the entire left subtree and entire right subtree
+
+height of tree is log2(N)
+
+-------------------------------------------------------------------------------------------------------
+
+                    (search in binary tree)
+
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        
+        while(root != NULL && root -> val != val){
+
+            root = val < root -> val ? root -> left : root -> right;
+
+        }
+
+        return root;
+
+    }
+};
+
+--------------------------------------------------------------------------------------------------------------
+
+            (ceil function in binary search tree)
+
+int findCeil(BinaryTreeNode<int> *root, int x){
+    
+    int ans = -1;
+
+    while(root != NULL){
+
+        x <= root -> data ? ans = root -> data, root = root -> left : root = root -> right;
+
+    }
+
+    return ans;
+
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+            (floor function)
+
+int floorInBST(TreeNode<int> * root, int x)
+{
+    int ans = -1;
+
+    while(root != NULL){
+
+        (x >= root -> val) ? ans = root -> val, root = root -> right : root = root -> left;
+
+    }
+
+    return ans;
+}
+
+---------------------------------------------------------------------------------------------------------------------
+
+                (Insert into a Binary Search Tree)
+
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) {
+
+        if(root == NULL){
+            root = new TreeNode(val);
+            return root;
+        }
+
+        TreeNode* curr = root;
+        
+        while(curr != NULL){
+            
+            if(val < curr -> val){
+
+                if(curr -> left == NULL){
+                    curr -> left = new TreeNode(val);
+                    break;
+                }
+
+                curr = curr -> left;
+
+            }else{
+
+                if(curr -> right == NULL){
+                    curr -> right = new TreeNode(val);
+                    break;
+                }
+
+                curr = curr -> right;
+
+            }
+
+        }
+
+        return root;
+
+    }
+};
+
+Log2(N)
+
+-----------------------------------------------------------------------------------------
+
+            (delete a node in bst)
+
+class Solution {
+public:
+
+    TreeNode* find_deep_right_child(TreeNode* root){
+
+        while(root -> right != NULL){
+
+            root = root -> right;
+
+        }
+
+        return root;
+
+    }
+
+    TreeNode* func(TreeNode* root){
+
+        if(root -> left == NULL){
+
+            return root -> right;
+
+        }else if(root -> right == NULL){
+
+            return root -> left;
+
+        }
+
+        TreeNode* right_child = root -> right;
+
+        TreeNode* left_child = find_deep_right_child(root -> left); 
+
+        left_child -> right = right_child;
+
+        return root -> left;
+
+    }
+
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        
+        if(root == NULL){
+
+            return root;
+
+        }
+
+        if(root -> val == key){
+
+            return func(root);
+
+        }
+
+        TreeNode* dummy = root;
+
+        while(root != NULL){
+
+            if(key < root -> val){
+
+                if(root -> left != NULL && root -> left -> val == key){
+
+                    root -> left = func(root -> left);
+                    break;
+
+                }else{
+
+                    root = root -> left;
+                }
+
+            }else{
+
+                if(root -> right != NULL && root -> right -> val == key){
+
+                    root -> right = func(root -> right);
+                    break;
+
+                }else{
+
+                    root = root -> right;
+                    
+                }
+            }
+        }
+
+        return dummy;
+
+    }
+};
+
+-----------------------------------------------------------------------------------------------------
+
+        (find kth smallest number in binary tree)
+
+time order of n + order of nlogn and space order of n
+
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+
+        queue<TreeNode*> Q;
+        Q.push(root);
+
+        vector<int> store;
+
+        while(!Q.empty()){
+            auto f= Q.front();
+            Q.pop();
+
+            store.push_back(f -> val);
+
+            if(f -> left != NULL){
+                Q.push(f -> left);
+            }
+
+            if(f -> right != NULL){
+                Q.push(f -> right);
+            }
+        }
+        
+        sort(store.begin(), store.end());
+
+        return store[k - 1];
+
+    }
+};
+
+----------------
+
+any inorder of the binary search tree is sorted
+
+class Solution {
+public:
+
+    void inorder(TreeNode* root, int &k, int &ans){
+
+        if(root == NULL){
+            return;
+        }
+
+        inorder(root -> left, k, ans);
+
+        k--;
+
+        if(k == 0){
+            ans = root -> val;
+            return;
+        }
+
+        inorder(root -> right, k, ans);
+
+    }
+
+    int kthSmallest(TreeNode* root, int k) {
+
+        int ans = -1;
+
+        inorder(root, k, ans);
+
+        return ans;
+
+    }
+};
+
+(morries traveleser gives dedely signal don'tt know)
+
+-----------------------------------------------------------------------------
+
+            (kth largest element in binary search tree)
+
+let's say 5 th largest element in bst so we calculate (#node - 5) smallest. and copyy the above code.
+
+node* kthlargest(node* root,int& k)
+{
+	if(root==NULL)
+	return NULL;
+	
+	node* right=kthlargest(root->right,k);
+	if(right!=NULL)
+	return right;
+	k--;
+	
+	if(k==0)
+	return root;
+	
+	return kthlargest(root->left,k);
+}
+
+------------------------------------------------------------------------------------------
+
+		(check given bt is bst or not)
+
+first idea is inorder
+
+class Solution {
+public:
+
+    void inorder(TreeNode* root, vector<int> &ans){
+
+        if(root == NULL){
+            return ;
+        }
+
+        inorder(root -> left, ans);
+
+        ans.push_back(root -> val);
+
+        inorder(root -> right, ans);
+
+    }
+
+    bool isValidBST(TreeNode* root) {
+
+        vector<int> ans;
+        
+        inorder(root, ans);
+
+        for(int i = 1; i < ans.size(); i++){
+            if(ans[i] <= ans[i - 1]){
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+};
+
+-----------------------
+
+	(give rangee)
+
+class Solution {
+public:
+
+    bool func(TreeNode* root, long long mn, long long mx){
+
+        if(root == NULL){
+            return true;
+        }
+
+        long long store = root -> val;
+
+        if(store <= mn || store >= mx){
+            return false;
+        }
+
+        bool flag = true;
+
+        flag &= func(root -> left, mn, store);
+
+        flag &= func(root -> right, store, mx);
+
+        return flag;
+
+    }
+
+    bool isValidBST(TreeNode* root) {
+
+        return func(root, LONG_MIN, LONG_MAX);
+
+    }
+};
+
+--------------------------------------------------------------------------------------
+
+		(LCA in bst)
+
+class Solution {
+public:
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+
+        if((p -> val < root -> val) && (q -> val < root -> val)){
+
+            return lowestCommonAncestor(root -> left, p, q);
+
+        }
+
+        if((p -> val > root -> val) && (q -> val > root -> val)){
+
+            return lowestCommonAncestor(root -> right, p, q);
+
+        }
+
+        return root;
+
+    }
+};
+
+--------------------------------------------------------------------------------------
+
+			(given is preorder and make bst)
+
+class Solution {
+public:
+
+    TreeNode* make(int pre_start, int pre_end, int in_start, int in_end, vector<int> &inorder, vector<int> &preorder, map<int, int> &hash){
+
+        if(pre_start > pre_end || in_start > in_end){
+            return NULL;
+        }
+
+        TreeNode* root = new TreeNode(preorder[pre_start]);
+
+        int inorder_root = hash[preorder[pre_start]];
+
+        int rem = inorder_root - in_start;
+
+        root -> left = make(pre_start + 1, pre_start + rem, in_start, inorder_root - 1, inorder, preorder, hash);
+
+        root -> right = make(pre_start + rem + 1, pre_end, inorder_root + 1, in_end, inorder, preorder, hash);
+
+        return root;
+
+    }
+
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        
+        vector<int> inorder(preorder);
+
+        sort(inorder.begin(), inorder.end());
+
+        map<int, int> hash;
+
+        int n = inorder.size();
+
+        for(int i = 0; i < n; i++){
+
+            hash[inorder[i]] = i;
+
+        }
+
+        return make(0, n - 1, 0, n - 1, inorder, preorder, hash);
+
+    }
+};
+
+time is O(n * log(N)) + O(N)
+
+------------
+
+class Solution {
+public:
+
+    TreeNode* make(vector<int>& preorder, int &index, int bound){
+
+        if(index == preorder.size() || preorder[index] > bound){
+            return NULL;
+        }
+
+        TreeNode* root = new TreeNode(preorder[index]);
+
+        index++;
+
+        root -> left = make(preorder, index, root -> val);
+
+        root -> right = make(preorder, index, bound);
+
+        return root;
+    }
+
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+
+        int index = 0;
+        
+        return make(preorder, index, INT_MAX);
+    }
+};
+
+---------------------------------------------------------------------------------------------
+
+		(inorder successor in bst)
+
+class Solution{
+  public:
+    // returns the inorder successor of the Node x in BST (rooted at 'root')
+    Node * inOrderSuccessor(Node *root, Node *x)
+    {
+        Node* ans = NULL;
+        
+        while(root != NULL){
+            
+            if(x -> data >= root -> data){
+                
+                root = root -> right;
+                
+            }else{
+                
+                ans = root;
+                
+                root = root -> left;
+                
+            }
+        }
+        
+        return ans;
+        
+    }
+};
+
+---------------------------------------------------------------------------------
+
+			(inorder pre in bst)
+
+class Solution{
+  public:
+    // returns the inorder successor of the Node x in BST (rooted at 'root')
+    Node * inOrderSuccessor(Node *root, Node *x)
+    {
+        Node* ans = NULL;
+        
+        while(root != NULL){
+            
+            if(x -> data <= root -> data){
+                
+                root = root -> left;
+                
+            }else{
+                
+                ans = root;
+                
+                root = root -> right;
+                
+            }
+        }
+        
+        return ans;
+        
+    }
+};
+
+---------------------------------------------------------------------------------
+
+		(BST design question inorder using stacck next and hasnext function)
+
+class BSTIterator {
+public:
+
+    stack<TreeNode*> st;
+
+    void pushall(TreeNode* root){
+        while(root != NULL){
+            st.push(root);
+            root = root -> left;
+        }
+    }
+
+    BSTIterator(TreeNode* root) {
+        pushall(root);
+    }
+    
+    int next() {
+        TreeNode* ans = st.top();
+        st.pop();
+        pushall(ans -> right);
+        return ans -> val;
+    }
+    
+    bool hasNext() {
+        return !st.empty();
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
+		(sum of two element == k)
+
+class Solution {
+public:
+
+    void inorder(TreeNode* root, vector<int> &ans){
+
+        if(root == NULL){
+            return ;
+        }
+
+        inorder(root -> left, ans);
+
+        ans.push_back(root -> val);
+
+        inorder(root -> right, ans);
+
+    }
+
+    bool findTarget(TreeNode* root, int k) {
+        
+        vector<int> ans;
+
+        inorder(root, ans);
+
+        int slow = 0, fast = ans.size() - 1;
+
+        while(slow < fast){
+            
+            int sum = ans[slow] + ans[fast];
+
+            if(sum == k){
+                return true;
+            }
+
+            if(sum > k){
+                fast--;
+            }
+
+            if(sum < k){
+                slow++;
+            }
+        }
+
+        return false;
+
+    }
+};
+
+----------------
+
+		(using next and before iterator)
+
+class Solution {
+public:
+
+    stack<TreeNode*> s, t;
+
+    void push_all_left(TreeNode* root){
+        while(root != NULL){
+            s.push(root);
+            root = root -> left;
+        }
+    }
+
+    void push_all_right(TreeNode* root){
+        while(root != NULL){
+            t.push(root);
+            root = root -> right;
+        }
+    }
+
+    void next(){
+
+        TreeNode* ans = s.top();
+        s.pop();
+        push_all_left(ans -> right);
+
+    }
+
+    void before(){
+
+        TreeNode* ans = t.top();
+        t.pop();
+        push_all_right(ans -> left);
+
+    }
+
+    bool findTarget(TreeNode* root, int k) {
+        
+        push_all_left(root);
+
+        push_all_right(root);
+
+        while(!s.empty() && !t.empty()){
+
+            int a = s.top() -> val, b = t.top() -> val;
+            
+            if(a == b){
+                break;
+            }
+
+            if(a + b == k){
+                return true;
+            }
+
+            if(a + b < k){
+                next();
+            }
+
+            if(a + b > k){
+                before();
+            }
+
+        }
+
+        return false;
+    }
+};
+
+time O(N) and O(H) * 2 space.
+
+----------------------------------------------------------------------------------------
+
+	(make two swap and correct the bst)
+
+brute force is take inorder of tree and sort it.
+
+now compare when node are not same put the value of this node in bt.
+
+bool my(TreeNode* a, TreeNode* b){
+    return a -> val < b -> val;
+}
+
+class Solution {
+public:
+
+    void inorder(TreeNode* root, vector<TreeNode*> &ans){
+
+        if(root == NULL){
+            return;
+        }
+
+        inorder(root -> left, ans);
+
+        ans.push_back(root);
+
+        inorder(root -> right, ans);
+    }
+
+    void recoverTree(TreeNode* root) {
+
+        vector<TreeNode*> ans;
+
+        inorder(root, ans);
+
+        vector<TreeNode*> temp(ans);
+
+        sort(temp.begin(), temp.end(), my);
+
+        TreeNode* first = NULL;
+
+        TreeNode* last = NULL;
+
+        for(int i = 0; i < ans.size(); i++){
+            if(ans[i] != temp[i]){
+                first = ans[i];
+                last = temp[i];
+                break;
+            }
+        }
+
+        swap(first -> val, last -> val);
+    }
+};
+
+-----
+
+time o(N) and space o(1).
+
+class Solution {
+public:
+
+    TreeNode* first = NULL;
+    TreeNode* middle = NULL;
+    TreeNode* last = NULL;
+    TreeNode* prev = NULL;
+
+    void inorder(TreeNode* root){
+
+        if(root == NULL){
+            return;
+        }
+
+        inorder(root -> left);
+
+        if(prev != NULL && (prev -> val > root -> val)){
+            if(first == NULL){
+                first = prev;
+                middle = root;
+            }else{
+                last = root;
+            }
+        }
+
+        prev = root;
+
+        inorder(root -> right);
+    }
+
+    void recoverTree(TreeNode* root) {
+
+        inorder(root);
+
+        if(first != NULL && last != NULL){
+            swap(first -> val, last -> val);
+        }else{
+            swap(first -> val, middle -> val);
+        }
+    }
+};
+
+------------------------------------------------------------------------------
+			(largest bst in bt)
+
+template <typename T>
+class NodeValue{
+public:
+
+    T maxSize; 
+    T maxNode; 
+    T minNode;
+
+    NodeValue(T maxSize, T maxNode, T minNode){
+        this -> maxSize = maxSize;
+        this -> maxNode = maxNode;
+        this -> minNode = minNode;
+    }
+
+};
+
+NodeValue<int> func(TreeNode<int>* root){
+
+    if(root == NULL){
+
+        return NodeValue(0, INT_MIN, INT_MAX);
+
+    }
+
+    auto slow = func(root -> left);
+
+    auto fast = func(root -> right);
+
+    if((slow.maxNode < root -> data) && (root -> data < fast.minNode)){
+
+        return NodeValue(1 + slow.maxSize + fast.maxSize, max({root -> data, slow.maxNode, fast.maxNode}), min({root -> data, slow.minNode, fast.minNode}));
+
+    }
+
+    return NodeValue(max(slow.maxSize, fast.maxSize), INT_MAX, INT_MIN);
+
+}
+
+int largestBST(TreeNode<int>* root) 
+{
+    return func(root).maxSize;
+}
+
+O(N) time and O(1) space
+
+-------------------------
+
+		(maximum sum of binary search tree in binary tree)
+
+class NodeValue{
+public:
+
+    int maxSum; 
+    int maxNode; 
+    int minNode;
+
+    NodeValue(int maxSum, int maxNode, int minNode){
+        this -> maxSum = maxSum;
+        this -> maxNode = maxNode;
+        this -> minNode = minNode;
+    }
+};
+
+NodeValue func(TreeNode* root, int &sum){
+
+    if(root == NULL){
+
+        return NodeValue(0, INT_MIN, INT_MAX);
+
+    }
+
+    auto slow = func(root -> left, sum);
+
+    auto fast = func(root -> right, sum);
+
+    if((slow.maxNode < root -> val) && (root -> val < fast.minNode)){
+
+        sum = max(sum, root -> val + slow.maxSum + fast.maxSum);
+
+        return NodeValue(root -> val + slow.maxSum + fast.maxSum, max({root -> val, slow.maxNode, fast.maxNode}), min({root -> val, slow.minNode, fast.minNode}));
+
+    }
+
+    return NodeValue(max(slow.maxSum, fast.maxSum), INT_MAX, INT_MIN);
+
+}
+
+class Solution {
+public:
+    int maxSumBST(TreeNode* root) {
+
+        int sum = 0;
+        
+        func(root, sum);
+
+        return sum;
+    }
+};
+
+
+
+
+
+
