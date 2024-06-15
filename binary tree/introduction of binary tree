@@ -153,6 +153,10 @@ bool isPerfectBinaryTree(Node* root)
 
 degenerate tree --> every node have signle children || starigh line
 
+-------------------------------------------------------------------------------
+
+balanced binary tree --> height of the tree is at most log(number of node).
+
 -----------------------------------------------------------------------------
 
 struct node
