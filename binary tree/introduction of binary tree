@@ -314,8 +314,41 @@ public:
 };
 
 ------------------------------------------------------------------------
+		post order 2 stack
 
-        (postorder)
+class Solution {
+public:
+
+    vector<int> postorderTraversal(TreeNode* root) {
+        if(root == NULL){
+            return {};
+        }
+        vector<int> ans;
+        stack<TreeNode*> st1, st2;
+        st1.push(root);
+        while(st1.size() > 0){
+            auto f = st1.top();
+            st1.pop();
+            st2.push(f);
+            if(f -> left){
+                st1.push(f -> left);
+            }
+            if(f -> right){
+                st1.push(f -> right);
+            }
+        }
+        while(st2.size() > 0){
+            auto f = st2.top();
+            st2.pop();
+            ans.push_back(f -> val);
+        }
+        return ans;
+    }
+};
+
+------------------------------------------------------------------------
+
+        (postorder) 1 stack
 
 /**
  * Definition for a binary tree node.
