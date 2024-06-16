@@ -1238,6 +1238,36 @@ vector<int> getLeftView(TreeNode<int> *root)
     return ans;
     
 }
+------------------------------------------------------------------------
+
+vector<int> leftView(Node *root)
+{
+       if(root == NULL){
+           return {};
+       }
+       queue<Node*> Q;
+       Q.push(root);
+       vector<int> store;
+       while(!Q.empty()){
+           int len = Q.size();
+           int cnt = 0;
+           while(len--){
+               auto f = Q.front();
+               Q.pop();
+               if(cnt == 0){
+                   store.push_back(f -> data);
+               }
+               cnt++;
+               if(f -> left){
+                   Q.push(f -> left);
+               }
+               if(f -> right){
+                   Q.push(f -> right);
+               }
+           }
+       }
+       return store;
+}
 
 ------------------------------------------------------------------------
 
