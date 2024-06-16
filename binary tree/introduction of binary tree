@@ -1147,6 +1147,37 @@ public:
 
 class Solution {
 public:
+    vector<int> rightSideView(TreeNode* root) {
+        if(root == NULL){
+            return {};
+        }
+        queue<TreeNode*> Q;
+        Q.push(root);
+        vector<int> store;
+        while(Q.size() > 0){
+            int len = Q.size();
+            while(len--){
+                auto node = Q.front();
+                Q.pop();
+                if(len == 0){
+                    store.push_back(node -> val);
+                }
+                if(node -> left){
+                    Q.push(node -> left);
+                }
+                if(node -> right){
+                    Q.push(node -> right);
+                }
+            }
+        }
+        return store;
+    }
+};
+
+------------------------------------------------------
+
+class Solution {
+public:
 
     void rightview(TreeNode* root, int level, vector<int> &ans){
 
