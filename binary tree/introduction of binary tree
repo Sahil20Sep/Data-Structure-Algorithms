@@ -1693,76 +1693,53 @@ O(n) and O(H)
 class Solution {
 public:
     vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-
-        if(root == NULL){
-            return {};
-        }
-        
-        map<TreeNode*, TreeNode*> hash;
-
+        vector<int> ans;
+        map<TreeNode*, TreeNode*> par;
         queue<TreeNode*> Q;
         Q.push(root);
-
-        while(!Q.empty()){
+        while(Q.size() > 0){
             auto f = Q.front();
             Q.pop();
-
-            if(f -> left != NULL){
-                hash[f -> left] = f;
+            if(f -> left){
                 Q.push(f -> left);
+                par[f -> left] = f;
             }
-
-            if(f -> right != NULL){
-                hash[f -> right] = f;
+            if(f -> right){
                 Q.push(f -> right);
+                par[f -> right] = f;
             }
         }
-
         map<TreeNode*, bool> visited;
-
-        queue<pair<TreeNode*, int>> QQ;
-
-        QQ.push({target, 0});
-        visited[target] = true;
-
-        vector<int> ans;
-
-        while(!QQ.empty()){
-
-            auto s = QQ.size();
-
-            if(QQ.front().second == k){
-                ans.push_back(QQ.front().first -> val);
-                QQ.pop();
-                continue;
-            }
-
-            while(s--){
-                auto f = QQ.front();
-                QQ.pop();
-
-                auto vertex = f.first;
-                auto dist = f.second;
-
-                if(vertex -> left != NULL && !visited[vertex -> left]){
-                    visited[vertex -> left] = true;
-                    QQ.push({vertex -> left, dist + 1});
-                }
-
-                if(vertex -> right != NULL && !visited[vertex -> right]){
-                    visited[vertex -> right] = true;
-                    QQ.push({vertex -> right, dist + 1});
-                }
-
-                if(vertex != root && !visited[hash[vertex]]){
-                    visited[hash[vertex]] = true;
-                    QQ.push({hash[vertex], dist + 1});
-                }
-            }
+        while(Q.size() > 0){
+            Q.pop();
         }
-
+        Q.push(target);
+        int level = 0;
+        while(!Q.empty()){
+            auto len = Q.size();
+            while(len--){
+                auto f = Q.front();
+                Q.pop();
+                visited[f] = true;
+                if(level == k){
+                    ans.push_back(f -> val);
+                }
+                if(f -> left && !visited[f -> left]){
+                    Q.push(f -> left);
+                }
+                if(f -> right && !visited[f -> right]){
+                    Q.push(f -> right);
+                }
+                if(par.find(f) != par.end() && !visited[par[f]]){
+                    Q.push(par[f]);
+                }
+            }
+            if(level == k){
+                break;
+            }
+            level++;
+        }
         return ans;
-
     }
 };
 
