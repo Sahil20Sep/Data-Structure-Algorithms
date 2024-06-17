@@ -1600,6 +1600,8 @@ public:
     }
 };
 
+	(2 * level), (2 * level) + 1 will also work take less integer.
+
 ---------------------------------------------------------------------------------------
 
         (Children sum property)
