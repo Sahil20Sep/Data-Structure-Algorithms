@@ -1837,6 +1837,8 @@ public:
 
 time O(N) and space O(log(N)) because it is complete tree;
 
+---------------------------------------------------------------------------------------------------------
+
 just one line
 
 class Solution {
@@ -1849,7 +1851,7 @@ public:
     }
 };
 
---------
+-------------------------------------------------------------------------------------------------------------
 
 O(log(N) ^ 2);
 because we at most traverse log(N) node and to find left height and right height log(N) node
