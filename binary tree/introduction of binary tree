@@ -1749,77 +1749,56 @@ Time -. n aand space n;
 
         (Burn tree and min time)
 
-int timeToBurnTree(BinaryTreeNode<int>* root, int start)
-{
-    map<BinaryTreeNode<int>*, BinaryTreeNode<int>*> parent;
-
-    queue<BinaryTreeNode<int>*> Q;
-
-    Q.push(root);
-
-    BinaryTreeNode<int>* target;
-
-    while(!Q.empty()){
-
-        auto f = Q.front();
-        Q.pop();
-
-        if(f -> data == start){
-            target = f;
+class Solution {
+  public:
+    int minTime(Node* root, int target) 
+    {
+        map<Node*, Node*> par;
+        queue<Node*> Q;
+        Q.push(root);
+        Node* tar;
+        while(Q.size() > 0){
+            auto f = Q.front();
+            Q.pop();
+            if(f -> data == target){
+                tar = f;
+            }
+            if(f -> left){
+                par[f -> left] = f;
+                Q.push(f -> left);
+            }
+            if(f -> right){
+                par[f -> right] = f;
+                Q.push(f -> right);
+            }
         }
-
-        if(f -> left != NULL){
-            parent[f -> left] = f;
-            Q.push(f -> left);
+        while(Q.size()){
+            Q.pop();
         }
-
-        if(f -> right != NULL){
-            parent[f -> right] = f;
-            Q.push(f -> right);
+        map<Node*, bool> visited;
+        Q.push(tar);
+        int ans = -1;
+        while(Q.size() > 0){
+            auto len = Q.size();
+            ans++;
+            while(len--){
+                auto f= Q.front();
+                Q.pop();
+                visited[f] = true;
+                if(f -> left && !visited[f -> left]){
+                    Q.push(f -> left);
+                }
+                if(f -> right && !visited[f -> right]){
+                    Q.push(f -> right);
+                }
+                if(par.find(f) != par.end() && !visited[par[f]]){
+                    Q.push(par[f]);
+                }
+            }
         }
-
+        return ans;
     }
-
-    map<int, bool> visited;
-
-    queue<pair<BinaryTreeNode<int>*, int>> st;
-
-    st.push({target, 0});
-    visited[target -> data] = true;
-
-    auto curr = 0;
-
-    while(!st.empty()){
-        auto s = st.size();
-        curr = st.front().second;
-
-        while(s--){
-            auto f = st.front();
-            st.pop();
-
-            auto vertex = f.first;
-            auto dist = f.second;
-
-            if(vertex -> left != NULL && !visited[vertex -> left -> data]){
-                visited[vertex -> left -> data] = true;
-                st.push({vertex -> left, dist + 1});
-            }
-
-            if(vertex -> right != NULL && !visited[vertex -> right -> data]){
-                visited[vertex -> right -> data] = true;
-                st.push({vertex -> right, dist + 1});
-            }
-
-            if(parent[vertex] && !visited[parent[vertex] -> data]){
-                visited[parent[vertex] -> data] = true;
-                st.push({parent[vertex], dist + 1});
-            }
-        }
-    }
-
-    return curr;
-
-}
+};
 
 (why not dfs) because we have to move level wise and parelly
 
