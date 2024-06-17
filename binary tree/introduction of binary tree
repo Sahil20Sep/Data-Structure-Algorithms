@@ -1604,45 +1604,85 @@ public:
 
 ---------------------------------------------------------------------------------------
 
-        (Children sum property)
+	(Childrem sum property - Checking)
+
+class Solution{
+    public:
+    
+    bool check(Node* root){
+        if(root == NULL){
+            return true;
+        }
+        if(root -> left == NULL && root -> right == NULL){
+            return true;
+        }
+        int val = 0;
+        if(root -> left){
+            val += root -> left -> data;
+        }
+        if(root -> right){
+            val += root -> right -> data;
+        }
+        if(val != root -> data){
+            return false;
+        }
+        bool flag = true;
+        flag &= check(root -> left);
+        flag &= check(root -> right);
+        return flag;
+    }
+    
+    int isSumProperty(Node *root)
+    {
+        if(check(root)){
+            return 1;
+        }
+        return 0;
+        
+    }
+};
+
+-------------------------------------------------------------------------------------------
+
+        (Children sum property) -- implement
 
 
 increse when going down and sum it up when going up
 
-void convertTree(node* root){
-    if(root == NULL) return;
-     
-    int childSum = 0;
-     
-    if(root->left) childSum+=root->left->data;
-    if(root->right) childSum+=root->right->data;
-     
-    if(childSum>=root->data){
-        //change root
-        root->data = childSum;
+void changeTree(BinaryTreeNode < int > * root) {
+    if(root == NULL){
+        return ;
     }
-    else{
-        //change both children
-        if(root->left) root->left->data = root->data;
-        if(root->right) root->right->data = root->data;
-         
+    if(root -> left == NULL && root -> right == NULL){
+        return ;
     }
-     
-    //now go down the tree and check others - Inorder
-    convertTree(root->left);
-    convertTree(root->right);
-     
-    //here is the backtracking part happens, as changes may happen
-    int totVal = 0;
-     
-    if(root->left) totVal+=root->left->data;
-    if(root->right) totVal+=root->right->data;
-     
-    // Leaf node dont update, as it will make it 0
-    if(root->left || root->right) root->data = totVal;
-    //So that at last the children Sum property stays TRUE
- 
-}
+    int add = 0;
+    if(root -> left){
+        add += root -> left -> data;
+    }
+    if(root -> right){
+        add += root -> right -> data;
+    }
+    if(add < root -> data){
+        if(root -> left){
+            root -> left -> data = root -> data;
+        }
+        if(root -> right){
+            root -> right -> data = root -> data;
+        }
+    }
+    changeTree(root -> left);
+    changeTree(root -> right);
+    int make = 0;
+    if(root -> left){
+        make += root -> left -> data;
+    }
+    if(root -> right){
+        make += root -> right -> data;
+    }
+    root -> data = make;
+    return;
+}  
 
 O(n) and O(H)
 ----------------------------------------------------------------------------------------
