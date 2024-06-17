@@ -1386,6 +1386,38 @@ vector<int> Solution::solve(TreeNode* root, int find) {
         
 }
 
+-----------------------------------------------------------------------------------------------------------------
+
+				(root to all leaf Node path)
+
+class Solution {
+  public:
+  
+    void inorder(Node* node, vector<vector<int>> &ans, vector<int> &temp){
+        if(node == NULL){
+            return;
+        }
+        if(node -> left == NULL && node -> right == NULL){
+            temp.push_back(node -> data);
+            ans.push_back(temp);
+            temp.pop_back();
+            return;
+        }
+        temp.push_back(node -> data);
+        inorder(node -> left, ans, temp);
+        inorder(node -> right, ans, temp);
+        temp.pop_back();
+        return;
+    }
+  
+    vector<vector<int>> Paths(Node* root) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        inorder(root, ans, temp);
+        return ans;
+    }
+};
+
 --------------------------------------------------------------------------------------------------------------
 
         (LCA)
