@@ -546,3 +546,64 @@ public:
         return start == -1 ? "" : s.substr(start, len);
     }
 };
+
+--------------------------------------------------------------------------------
+
+        (Brumpy Book store owner)
+
+----------better
+
+class Solution {
+public:
+    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
+        int n = cust.size(), l = 0, r = min - 1, sum = 0;
+        vector<int> pref(n, 0);
+        pref[0] = g[0] == 0 ? cust[0] : 0;
+        sum += cust[0];
+        for(int i = 1; i < n; i++){
+            if(i < min){
+                sum += cust[i];
+            }
+            pref[i] = g[i] == 0 ? pref[i - 1] + cust[i] : pref[i - 1];
+        }
+        int ans = sum + pref[n - 1] - pref[min - 1];
+        while(r < n - 1){
+            sum -= cust[l];
+            l++;
+            r++;
+            sum += cust[r];
+            if(l - 1 >= 0){
+                ans = max(ans, sum + pref[n - 1] - pref[r] + pref[l - 1]);
+            }
+        }
+        return ans;
+
+    }
+};
+
+---------optimal
+
+class Solution {
+public:
+    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
+        int n = cust.size(), l = 0, r = min - 1, sum = 0, lsum = 0, rsum = 0;
+        for(int i = 0; i < n; i++){
+            i < min ? sum += cust[i] : (g[i] ? rsum += 0 : rsum += cust[i]);
+        }
+        int ans = sum + rsum + lsum;
+        while(r < n - 1){
+            if(g[l] == 0){
+                lsum += cust[l];
+            }
+            sum -= cust[l];
+            l++;
+            r++;
+            sum += cust[r];
+            if(g[r] == 0){
+                rsum -= cust[r];
+            }
+            ans = max(ans, sum + lsum + rsum);
+        }
+        return ans;
+    }
+};
