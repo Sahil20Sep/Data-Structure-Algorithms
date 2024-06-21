@@ -428,3 +428,62 @@ public:
         return func(arr, k) - func(arr, k - 1);
     }
 };
+
+-------------------------------------------------------------------------------
+
+        (minimum window substring)
+
+---------brute
+
+generate all substring and check
+
+----------my code.
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> ss(58, 0), tt(58, 0);
+        for(int i = 0; i < m; i++){
+            tt[t[i] - 'A']++;
+        }
+        int l = 0, r = 0, min_index = -1, max_index = -1;
+        while(r < n){
+            ss[s[r] - 'A']++;
+            bool flag = true;
+            for(int i = 0; i < 58; i++){
+                if(tt[i] > 0){
+                    if(ss[i] < tt[i]){
+                        flag = false;
+                        break;
+                    }
+                }
+            }
+            while(flag){
+                if((max_index == -1 && min_index == -1) || (r - l + 1 < max_index - min_index + 1)){
+                    min_index = l, max_index = r;
+                }
+                ss[s[l] - 'A']--;
+                l++;
+                for(int i = 0; i < 58; i++){
+                    if(tt[i] > 0){
+                        if(ss[i] < tt[i]){
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            r++;
+        }
+        string ans = "";
+        if(min_index == -1 && max_index == -1){
+            return ans;
+        }
+        // cout << min_index << " " << max_index << endl;
+        for(int i = min_index; i <= max_index; i++){
+            ans += s[i];
+        }
+        return ans;
+    }
+};
