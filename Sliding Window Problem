@@ -174,3 +174,55 @@ int totalFruits(int n, vector<int> &arr) {
         }
         return len;
     }
+
+--------------------------------------------------------------------------------------
+
+        (longest substring with at most/exect k distinct character)
+
+----------brute force
+
+generate all substring and check
+
+----------better
+
+int longestKSubstr(string s, int k) {
+        int l = 0, r = 0, n = s.size(), len = -1;
+        map<int, int> hash;
+        while(r < n){
+            hash[s[r] - 'a']++;
+            while(hash.size() > k){
+                hash[s[l] - 'a']--;
+                if(hash[s[l] - 'a'] == 0){
+                    hash.erase(s[l] - 'a');
+                }
+                l++;
+            }
+            if(hash.size() == k){
+                len = max(len, r - l + 1);
+            }
+            r++;
+        }
+        return len;
+    }
+
+----------optimal
+
+int longestKSubstr(string s, int k) {
+        int l = 0, r = 0, n = s.size(), len = -1;
+        map<int, int> hash;
+        while(r < n){
+            hash[s[r] - 'a']++;
+            if(hash.size() > k){
+                hash[s[l] - 'a']--;
+                if(hash[s[l] - 'a'] == 0){
+                    hash.erase(s[l] - 'a');
+                }
+                l++;
+            }
+            if(hash.size() == k){
+                len = max(len, r - l + 1);
+            }
+            r++;
+        }
+        return len;
+    }
