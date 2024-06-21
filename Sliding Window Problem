@@ -388,3 +388,43 @@ public:
 
 -------------------------------------------------------------------------------------------------
 
+                (subarray has exaclty k diffrenet element)
+
+-------brute force
+
+generate all subarray and check
+
+----better
+
+is not there because if we find == k then we find the longest subarray count which is not include every subarray that's why we use <= k - <= k - 1 is ans.
+
+-------optimal
+
+class Solution {
+public:
+
+    int func(vector<int> &arr, int k){
+        if(k == 0){
+            return 0;
+        }
+        int n = arr.size(), l = 0, r = 0, cnt = 0;
+        unordered_map<int, int> hash;
+        while(r < n){
+            hash[arr[r]]++;
+            while(hash.size() > k){
+                hash[arr[l]]--;
+                if(hash[arr[l]] == 0){
+                    hash.erase(arr[l]);
+                }
+                l++;
+            }
+            cnt += r - l + 1;
+            r++;
+        }
+        return cnt;
+    }
+
+    int subarraysWithKDistinct(vector<int>& arr, int k) {
+        return func(arr, k) - func(arr, k - 1);
+    }
+};
