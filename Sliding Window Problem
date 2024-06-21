@@ -359,3 +359,32 @@ public:
     }
 };
                 
+---------------------------------------------------------------------------------------
+
+        (count the subarray with k odd number)
+
+-----optimal
+
+class Solution {
+public:
+
+    int func(vector<int> &arr, int k){
+        int n = arr.size(), l = 0, r = 0, cnt = 0, odd = 0;
+        while(r < n){
+            odd += (arr[r] & 1);
+            while(odd > k){
+                odd -= (arr[l++] & 1);
+            }
+            cnt += (r - l + 1);
+            r++;
+        }
+        return cnt;
+    }
+
+    int numberOfSubarrays(vector<int>& arr, int k) {
+        return func(arr, k) - func(arr, k - 1);
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
