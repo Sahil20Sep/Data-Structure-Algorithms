@@ -24,3 +24,49 @@ public:
 };
 
 -----------------------------------------------------------------------------------------
+
+                (longest substring without reapeing char)
+
+---------brute force 
+
+generate all substring by 2 for loop and check condtion and take max len
+
+------------better - create map for char and freq.
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int l = 0, r = 0, n = s.size(), len = 0;
+        vector<int> hash(256, 0);
+        while(r < n){
+            hash[s[r]]++;
+            while(hash[s[r]] > 1){
+                hash[s[l++]]--;
+            }
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+    }
+};
+
+---------optimal - create map for char and index. O(N) and O(256) to access the array is take constant not logn.
+
+cadbzabcd
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int l = 0, r = 0, n = s.size(), len = 0;
+        vector<int> hash(256, -1);
+        while(r < n){
+            if(hash[s[r]] >= l){
+                l = hash[s[r]] + 1;
+            }
+            hash[s[r]] = r;
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+    }
+};
