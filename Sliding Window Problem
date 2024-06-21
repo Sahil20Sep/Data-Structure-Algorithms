@@ -306,5 +306,56 @@ public:
 
 -------------------------------------------------------------------------------------------------
 
+        (count the binary subarray which is equal to goal)
 
+------brute
 
+generate all subarray and check
+
+------better
+
+class Solution {
+public:
+    int numSubarraysWithSum(vector<int>& arr, int k) {
+        int n = arr.size();
+        int sum = 0;
+        int ans = 0;
+        map<int, int> hash;
+        hash[0] = 1;
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            if(hash[sum - k] > 0){
+                ans += hash[sum - k];
+            }
+            hash[sum]++;
+        }
+        return ans;
+    }
+};
+
+-------optimal
+
+class Solution {
+public:
+
+    int func(vector<int> &arr, int k){
+        if(k < 0){
+            return 0;
+        }
+        int l = 0, r = 0, n = arr.size(), cnt = 0, sum = 0;
+        while(r < n){
+            sum += arr[r];
+            while(sum > k){
+                sum -= arr[l++];
+            }
+            cnt += (r - l + 1);
+            r++;
+        }
+        return cnt;
+    }
+
+    int numSubarraysWithSum(vector<int>& arr, int k) {
+        return func(arr, k) - func(arr, k - 1);
+    }
+};
+                
