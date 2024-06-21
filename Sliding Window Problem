@@ -1,0 +1,26 @@
+        (Take card to make max score from front and back)
+
+class Solution {
+public:
+    int maxScore(vector<int>& arr, int k) {
+        int n = arr.size();
+        int lsum = 0, rsum = 0;
+        for(int i = 0; i < k; i++){
+            lsum += arr[i];
+        }
+        if(n == k){
+            return lsum;
+        }
+        int j = n - 1, tsum = lsum;
+        for(int i = k - 1; i >= 0; i--){
+            lsum -= arr[i];
+            rsum += arr[j--];
+            if(lsum + rsum > tsum){
+                tsum = lsum + rsum;
+            }
+        }
+        return tsum;
+    }
+};
+
+-----------------------------------------------------------------------------------------
