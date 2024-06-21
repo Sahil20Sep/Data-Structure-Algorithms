@@ -124,3 +124,53 @@ public:
         return len;
     }
 };
+
+-------------------------------------------------------------------------------------------
+
+                (maximum fruit put into basket 2 type)
+
+-----------brute force
+
+generate all subarray and check
+
+------------better O(2N) O(3)
+
+int totalFruits(int n, vector<int> &arr) {
+        int l = 0, r = 0, len = 0;
+        map<int, int> hash;
+        while (r < n){
+            hash[arr[r]]++;
+            while(hash.size() > 2){
+                hash[arr[l]]--;
+                if(hash[arr[l]] == 0){
+                    hash.erase(arr[l]);
+                }
+                l++;
+            }
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+}
+
+---------optimal
+
+int totalFruits(int n, vector<int> &arr) {
+        int l = 0, r = 0, len = 0;
+        map<int, int> hash;
+        while (r < n){
+            hash[arr[r]]++;
+            if(hash.size() > 2){
+                hash[arr[l]]--;
+                if(hash[arr[l]] == 0){
+                    hash.erase(arr[l]);
+                }
+                l++;
+            }
+            if(hash.size() <= 2){
+                len = max(len, r - l + 1);
+            }
+            r++;
+        }
+        return len;
+    }
