@@ -285,3 +285,26 @@ public:
 
 we can remove the inside for loop 0 --> 26 no need to update it because we have to find maximum.
 
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        vector<int> cnt(26, 0);
+        int l = 0, r = 0, n = s.size(), len = 0, maxf = 0;
+        while(r < n){
+            maxf = max(maxf, ++cnt[s[r] - 'A']);
+            if(r - l + 1 - maxf > k){
+                cnt[s[l++] - 'A']--;
+            } 
+            if(r - l + 1 - maxf <= k){
+                len = max(len, r - l + 1);
+            }  
+            r++;
+        }
+        return len;
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
+
+
