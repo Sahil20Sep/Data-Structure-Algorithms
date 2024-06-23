@@ -2653,21 +2653,30 @@ public:
 
 let's say 5 th largest element in bst so we calculate (#node - 5) smallest. and copyy the above code.
 
-node* kthlargest(node* root,int& k)
+class Solution (reverse inorder)
 {
-	if(root==NULL)
-	return NULL;
-	
-	node* right=kthlargest(root->right,k);
-	if(right!=NULL)
-	return right;
-	k--;
-	
-	if(k==0)
-	return root;
-	
-	return kthlargest(root->left,k);
-}
+    public:
+    
+    void inorder(Node* root, int &cnt, int k, int &ans){
+        if(root == NULL){
+            return ;
+        }
+        inorder(root -> right, cnt, k, ans);
+        cnt++;
+        if(cnt == k){
+            ans = root -> data;
+            return;
+        }
+        inorder(root -> left, cnt, k , ans);
+    }
+    
+    int kthLargest(Node *root, int k)
+    {
+        int cnt = 0, ans = -1;
+        inorder(root, cnt, k, ans);
+        return ans;
+    }
+};
 
 ------------------------------------------------------------------------------------------
 
