@@ -2883,12 +2883,14 @@ class Solution{
 
 -----------------
 
+2 1 3 if you find 3 inorder succesor then it will return -1.
+
 class Solution{
   public:
     // returns the inorder successor of the Node x in BST (rooted at 'root')
     Node * inOrderSuccessor(Node *root, Node *x)
     {   
-        Node* ans;
+        Node* ans new Node(-1);
         while(root){
             if(x -> data < root -> data){
                 ans = root;
