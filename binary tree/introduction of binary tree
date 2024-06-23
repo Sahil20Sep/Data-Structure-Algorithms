@@ -3080,49 +3080,37 @@ brute force is take inorder of tree and sort it.
 
 now compare when node are not same put the value of this node in bt.
 
-bool my(TreeNode* a, TreeNode* b){
-    return a -> val < b -> val;
-}
-
 class Solution {
 public:
 
-    void inorder(TreeNode* root, vector<TreeNode*> &ans){
-
+    void inorder(TreeNode* root, vector<int> &ans){
         if(root == NULL){
             return;
         }
-
         inorder(root -> left, ans);
-
-        ans.push_back(root);
-
+        ans.push_back(root -> val);
         inorder(root -> right, ans);
     }
 
-    void recoverTree(TreeNode* root) {
-
-        vector<TreeNode*> ans;
-
-        inorder(root, ans);
-
-        vector<TreeNode*> temp(ans);
-
-        sort(temp.begin(), temp.end(), my);
-
-        TreeNode* first = NULL;
-
-        TreeNode* last = NULL;
-
-        for(int i = 0; i < ans.size(); i++){
-            if(ans[i] != temp[i]){
-                first = ans[i];
-                last = temp[i];
-                break;
-            }
+    void check(TreeNode* root, vector<int> &ans, int &i){
+        if(root == NULL){
+            return ;
         }
+        check(root -> left, ans, i);
+        i++;
+        if(ans[i] != root -> val){
+            root -> val = ans[i];
+        }
+        check(root -> right, ans, i);
+        return;
+    }
 
-        swap(first -> val, last -> val);
+    void recoverTree(TreeNode* root) {
+        vector<int> ans;
+        inorder(root, ans);
+        sort(ans.begin(), ans.end());
+        int i = -1;
+        check(root, ans, i);
     }
 };
 
