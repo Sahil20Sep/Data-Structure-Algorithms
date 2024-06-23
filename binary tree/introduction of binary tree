@@ -2310,6 +2310,14 @@ O(N) time and O(1) time
 
 left_side < root < right_side and it's true for the entire left subtree and entire right subtree
 
+if duplicated allowed in binary search tree:
+
+1. put condition like L <= N < R or L < N <= R.
+2. make pair of node , freq.
+
+search in bt --> o(N)
+bst ==> O(logN)
+
 height of tree is log2(N)
 
 -------------------------------------------------------------------------------------------------------
@@ -2338,13 +2346,9 @@ public:
 int findCeil(BinaryTreeNode<int> *root, int x){
     
     int ans = -1;
-
-    while(root != NULL){
-
-        x <= root -> data ? ans = root -> data, root = root -> left : root = root -> right;
-
+    while(root){
+        (input <= root -> data) ? (ans = root -> data, root = root -> left) : (root = root -> right);
     }
-
     return ans;
 
 }
@@ -2356,14 +2360,10 @@ int findCeil(BinaryTreeNode<int> *root, int x){
 int floorInBST(TreeNode<int> * root, int x)
 {
     int ans = -1;
-
-    while(root != NULL){
-
-        (x >= root -> val) ? ans = root -> val, root = root -> right : root = root -> left;
-
-    }
-
-    return ans;
+        while(root){
+            (root -> data <= x) ? (ans = root -> data, root = root -> right) : root = root -> left;
+        }
+	return ans;
 }
 
 ---------------------------------------------------------------------------------------------------------------------
