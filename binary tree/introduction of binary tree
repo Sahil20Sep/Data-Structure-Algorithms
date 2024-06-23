@@ -2418,6 +2418,74 @@ Log2(N)
 
 class Solution {
 public:
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(root == NULL){
+            return root;
+        }
+        TreeNode* curr = root; 
+        TreeNode* prev = NULL;
+        int flag = 0; // 0 for root, 1 for left, 2 for right
+        while(curr){
+            if(curr -> val == key){
+                TreeNode* l = curr -> left;
+                TreeNode* r = curr -> right;
+                if(l == NULL && r == NULL){
+                    if(flag == 1){
+                        prev -> left = NULL;
+                    }else if(flag == 2){
+                        prev -> right = NULL;
+                    }else{
+                        root = NULL;
+                    }
+                }
+                else if(l == NULL){
+                    if(flag == 1){
+                        prev -> left = r;
+                    }else if(flag == 2){
+                        prev -> right = r;
+                    }else {
+                        root = r;
+                    }
+                }else if(r == NULL){
+                    if(flag == 1){
+                        prev -> left = l;
+                    }else if(flag == 2){
+                        prev -> right = l;
+                    }else{
+                        root = l;
+                    }
+                }else{
+                    while(l -> right != NULL){
+                        l = l -> right;
+                    }
+                    l -> right = r;
+                    if(flag == 1){
+                        prev -> left = curr -> left;
+                    }else if(flag == 2){
+                        prev -> right = curr -> left;
+                    }else{
+                        root = curr -> left;
+                    }
+                }
+                break;
+            }else if(curr -> val < key){
+                prev = curr;
+                flag = 2;
+                curr = curr -> right;
+            }else{
+                prev = curr;
+                flag = 1;
+                curr = curr -> left;
+            }
+        }
+        return root;
+    }
+};
+
+-----------
+
+class Solution {
+public:
 
     TreeNode* find_deep_right_child(TreeNode* root){
 
