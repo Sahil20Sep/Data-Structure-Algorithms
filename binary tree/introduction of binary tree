@@ -2725,32 +2725,22 @@ public:
 class Solution {
 public:
 
-    bool func(TreeNode* root, long long mn, long long mx){
-
+    bool check(TreeNode* root, long long mn, long long mx){
         if(root == NULL){
             return true;
         }
-
-        long long store = root -> val;
-
-        if(store <= mn || store >= mx){
+        long long curr = root -> val;
+        if(!(mn < curr && curr < mx)){
             return false;
         }
-
         bool flag = true;
-
-        flag &= func(root -> left, mn, store);
-
-        flag &= func(root -> right, store, mx);
-
+        flag &= check(root -> left, mn, curr);
+        flag &= check(root -> right, curr, mx);
         return flag;
-
     }
 
     bool isValidBST(TreeNode* root) {
-
-        return func(root, LONG_MIN, LONG_MAX);
-
+        return check(root, LONG_MIN, LONG_MAX);
     }
 };
 
