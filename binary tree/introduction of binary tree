@@ -3024,67 +3024,48 @@ public:
 
 class Solution {
 public:
+    stack<TreeNode*> increase, decrease;
 
-    stack<TreeNode*> s, t;
-
-    void push_all_left(TreeNode* root){
-        while(root != NULL){
-            s.push(root);
-            root = root -> left;
+    void push_left(TreeNode* node){
+        while(node){
+            increase.push(node);
+            node = node -> left;
+        }
+    }
+    void push_right(TreeNode* node){
+        while(node){
+            decrease.push(node);
+            node = node -> right;
         }
     }
 
-    void push_all_right(TreeNode* root){
-        while(root != NULL){
-            t.push(root);
-            root = root -> right;
-        }
+    int next(){
+        TreeNode* store = increase.top();
+        increase.pop();
+        push_left(store -> right);
+        return store -> val;  
     }
 
-    void next(){
-
-        TreeNode* ans = s.top();
-        s.pop();
-        push_all_left(ans -> right);
-
-    }
-
-    void before(){
-
-        TreeNode* ans = t.top();
-        t.pop();
-        push_all_right(ans -> left);
-
+    int before(){
+        TreeNode* store = decrease.top();
+        decrease.pop();
+        push_right(store -> left);
+        return store -> val;
     }
 
     bool findTarget(TreeNode* root, int k) {
-        
-        push_all_left(root);
-
-        push_all_right(root);
-
-        while(!s.empty() && !t.empty()){
-
-            int a = s.top() -> val, b = t.top() -> val;
-            
-            if(a == b){
-                break;
-            }
-
-            if(a + b == k){
+        push_left(root);
+        push_right(root);
+        int l = next(), r = before();
+        while(l < r){
+            if(l + r == k){
                 return true;
+            }else if(l + r < k){
+                l = next();
+            }else{
+                r = before();
             }
-
-            if(a + b < k){
-                next();
-            }
-
-            if(a + b > k){
-                before();
-            }
-
         }
-
         return false;
     }
 };
