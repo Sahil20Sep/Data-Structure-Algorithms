@@ -3156,6 +3156,53 @@ public:
 ------------------------------------------------------------------------------
 			(largest bst in bt)
 
+--------brute force
+
+class Solution{
+    public:
+    
+    int countNode(Node* node){
+        return node == NULL ? 0 : 1 + countNode(node -> left) + countNode(node -> right);
+    }
+    
+    bool checkBST(Node* node, int mn, int mx){
+        if(node == NULL){
+            return true;
+        }
+        int store = node -> data;
+        if(!(mn < store && store < mx)){
+            return false;
+        }
+        bool flag = true;
+        flag &= checkBST(node -> left, mn, store);
+        flag &= checkBST(node -> right, store, mx);
+        return flag;
+    }
+    
+    void inorder(Node* root, int &ans){
+        if(root == NULL){
+            return ;
+        }
+        if(checkBST(root, 0, 1e7)){
+            ans = max(ans, countNode(root));
+        }
+        inorder(root -> left, ans);
+        inorder(root -> right, ans);
+        return;
+    }
+    
+    /*You are required to complete this method */
+    // Return the size of the largest sub-tree which is also a BST
+    int largestBst(Node *root)
+    {
+        int ans = 1;
+    	inorder(root, ans);
+    	return ans;
+    }
+};
+
+---------striver
+
 template <typename T>
 class NodeValue{
 public:
