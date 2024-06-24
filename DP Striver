@@ -511,3 +511,77 @@ int uniquePathsWithObstacles(vector<vector<int>>& arr) {
         }
         return prev[m - 1];
     }
+
+----------------------------------------------------------------------------------
+
+    (minimum path sum -- right and bottam)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<vector<int>> &arr, vector<vector<int>> &dp){
+        int n = arr.size(), m = arr[0].size();
+        if(i == 0 && j == 0){
+            return dp[i][j] = arr[0][0];
+        }
+        if(i < 0 || j < 0){
+            return 1e9 + 1;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 1e9;
+        ans = min(ans, arr[i][j] + func(i - 1, j, arr, dp));
+        ans = min(ans, arr[i][j] + func(i, j - 1, arr, dp));
+        return dp[i][j] = ans;
+    }
+
+    int minPathSum(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, arr, dp);
+    }
+};
+
+-----tabular
+
+int minPathSum(vector<vector<int>>& arr) {
+    int n = arr.size(), m = arr[0].size();
+    vector<vector<int>> dp(n, vector<int> (m, 0));
+    dp[0][0] = arr[0][0];
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(i == 0 && j == 0){
+                continue;
+            }
+            int ans = 1e9;
+            if(i - 1 >= 0) ans = min(ans, arr[i][j] + dp[i - 1][j]);
+            if(j - 1 >= 0) ans = min(ans, arr[i][j] + dp[i][j - 1]);
+            dp[i][j] = ans;
+        }
+    }
+    return dp[n - 1][m - 1];
+}
+
+----space
+
+int minPathSum(vector<vector<int>>& arr) {
+    int n = arr.size(), m = arr[0].size();
+    vector<int> curr(m, 0), prev(m, 0);
+    curr[0] = arr[0][0];
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(i == 0 && j == 0){
+                continue;
+            }
+            int ans = 1e9;
+            if(i - 1 >= 0) ans = min(ans, arr[i][j] + prev[j]);
+            if(j - 1 >= 0) ans = min(ans, arr[i][j] + curr[j - 1]);
+            curr[j] = ans;
+        }
+        prev = curr;
+    }
+    return prev[m - 1];
+}
