@@ -427,3 +427,87 @@ int uniquePaths(int m, int n) {
         }
         return prev[n - 1];
     }
+
+-----------------------------------------------------------------------------
+
+        (unique path with obstackle)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<vector<int>> &arr, vector<vector<int>> &dp){
+        if(i < 0 || j < 0){
+            return 0;
+        } 
+        if(arr[i][j]){
+            return dp[i][j] = 0;
+        }
+        if(i == 0 && j == 0){
+            return 1;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 0;
+        ans += func(i - 1, j, arr, dp);
+        ans += func(i, j - 1, arr, dp);
+        return dp[i][j] = ans;
+    }
+
+    int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, arr, dp);
+    }
+};
+
+-----tab
+
+int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dp(n, vector<int> (m, 0));
+        if(arr[0][0] == 0){
+            dp[0][0] = 1;
+        }
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 && j == 0) continue;
+                if(arr[i][j]){
+                    dp[i][j] = 0;
+                    continue;
+                }
+                int ans = 0;
+                if(i - 1 >= 0) ans += dp[i - 1][j];
+                if(j - 1 >= 0) ans += dp[i][j - 1];
+                dp[i][j] = ans;
+            }
+        }
+        return dp[n - 1][m - 1];
+    }
+
+------space
+
+int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<int> prev(m, 0), curr(m, 0);
+        if(arr[0][0] == 0){
+            curr[0] = 1;
+        }
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 && j == 0) continue;
+                if(arr[i][j]){
+                    curr[j] = 0;
+                    continue;
+                }
+                int ans = 0;
+                if(i - 1 >= 0) ans += prev[j];
+                if(j - 1 >= 0) ans += curr[j - 1];
+                curr[j] = ans;
+            }
+            prev = curr;
+        }
+        return prev[m - 1];
+    }
