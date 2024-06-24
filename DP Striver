@@ -1,0 +1,91 @@
+    (fibonacci)
+
+class Solution {
+  public:
+    long long mod = 1e9 + 7;
+    long long func(int n, vector<long long> &dp){
+        if(n <= 1){
+            return n;
+        }
+        if(dp[n] != -1){
+            return dp[n];
+        }
+        return dp[n] = (func(n - 1, dp) + func(n - 2, dp)) % mod;
+    }
+  
+    long long int topDown(int n) {
+        vector<long long> dp(n + 1, -1);
+        return func(n, dp);
+    }
+    long long int bottomUp(int n) {
+        int prev2 = 0, prev1= 1;
+        for(int i = 2; i <= n; i++){
+            int cur = (prev1 + prev2) % mod;
+            prev2 = prev1;
+            prev1 = cur;
+        }
+        return prev1;
+    }
+};
+
+---------------------------------------------------------------------------------------------
+
+            (distinct way to climb stair)
+
+-----memo
+
+class Solution {
+public:
+
+    int func(int i, vector<int> &dp){
+        if(i < 0){
+            return 0;
+        }
+        if(i == 0){
+            return 1;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        return dp[i] = func(i - 1, dp) + func(i - 2, dp);
+    }
+
+    int climbStairs(int n) {
+        vector<int> dp(n + 1, -1);
+        return func(n, dp);
+    }
+};
+
+---tab
+
+class Solution {
+public:
+
+    int climbStairs(int n) {
+        vector<int> dp(n + 1, -1);
+        dp[0] = 1, dp[1] = 1;
+        for(int i = 2; i <= n; i++){
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+};
+
+-------opti
+
+class Solution {
+public:
+
+    int climbStairs(int n) {
+        int prev2 = 1, prev = 1;
+        for(int i = 2; i <= n; i++){
+            int cur = prev + prev2;
+            prev2 = prev;
+            prev = cur;
+        }
+        return prev;
+    }
+};
+
+----------------------------------------------------------------------------------
+
