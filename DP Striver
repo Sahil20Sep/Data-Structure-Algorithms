@@ -32,16 +32,14 @@ class Solution {
 
             (distinct way to climb stair)
 
------memo
+-----memo (use base case as i = 0 and i = 1 return 1;
 
 class Solution {
 public:
 
     int func(int i, vector<int> &dp){
-        if(i < 0){
-            return 0;
-        }
-        if(i == 0){
+        
+        if(i == 0 || i == 1){
             return 1;
         }
         if(dp[i] != -1){
