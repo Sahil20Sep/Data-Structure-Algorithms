@@ -86,4 +86,54 @@ public:
 };
 
 ----------------------------------------------------------------------------------
+        (min energy to reach n -1 index)
 
+----momo
+
+class Solution {
+  public:
+  
+    int func(int i, vector<int> &arr, vector<int> &dp){
+        if(i == 0){
+            return 0;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        int ans = 1e9;
+        if(i - 1 >= 0) ans = min(ans, func(i - 1, arr, dp) + abs(arr[i] - arr[i - 1]));
+        if(i - 2 >= 0) ans = min(ans, func(i - 2, arr, dp) + abs(arr[i] - arr[i - 2]));
+        return dp[i] = ans;
+    }
+  
+    int minimumEnergy(vector<int>& arr, int n) {
+        vector<int> dp(n, -1);
+        return func(n - 1, arr, dp);
+    }
+};
+
+-----tab
+
+int minimumEnergy(vector<int>& arr, int n) {
+    vector<int> dp(n, 1e9);
+    dp[0] = 0;
+    for(int i = 1; i < n; i++){
+        if(i - 1 >= 0) dp[i] = min(dp[i], dp[i - 1] + abs(arr[i] - arr[i - 1]));
+        if(i - 2 >= 0) dp[i] = min(dp[i], dp[i - 2] + abs(arr[i] - arr[i - 2]));
+    }
+    return dp[n - 1];
+}\
+
+---------opti
+
+int minimumEnergy(vector<int>& arr, int n) {
+        int prev2 = 0, prev1 = 0;
+        for(int i = 1; i < n; i++){
+            int ans = 1e9;
+            if(i - 1 >= 0) ans = min(ans, prev1 + abs(arr[i] - arr[i - 1]));
+            if(i - 2 >= 0) ans = min(ans, prev2 + abs(arr[i] - arr[i - 2]));
+            prev2 = prev1;
+            prev1 = ans;
+        }
+        return prev1;
+    }
