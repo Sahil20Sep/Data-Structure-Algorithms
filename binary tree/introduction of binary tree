@@ -3302,6 +3302,41 @@ public:
     }
 };
 
+------------------------------------------------------------------------
+
+		(make it balanced binary search tree)
+
+class Solution {
+public:
+
+    void inorder(TreeNode* root, vector<int> &ans){
+        if(root == NULL){
+            return ;
+        }
+        inorder(root -> left, ans);
+        ans.push_back(root -> val);
+        inorder(root -> right, ans);
+    }   
+
+    TreeNode* buildTree(int l, int r, vector<int> &ans){
+        if(l > r){
+            return NULL;
+        }
+        int mid = (l + r) >> 1;
+        TreeNode* node = new TreeNode(ans[mid]);
+        node -> left = buildTree(l, mid - 1, ans);
+        node -> right = buildTree(mid + 1, r, ans);
+        return node;
+    }
+
+    TreeNode* balanceBST(TreeNode* root) {
+        vector<int> ans;
+        inorder(root, ans);
+        int n = ans.size();
+        return buildTree(0, n - 1, ans);
+    }
+};
+
 
 
 
