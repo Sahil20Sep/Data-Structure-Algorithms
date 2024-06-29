@@ -1295,3 +1295,109 @@ int perfectSum(int arr[], int n, int sum)
         }
         return dp[n - 1][sum];
 	}
+
+-------------------------------------------------------------------------------------------------
+		(devide into two subset s1 >= s2 where diffrenece is d)
+
+---memo
+
+class Solution {
+  public:
+    int mod = 1e9 + 7;
+    int func(int i, int need, vector<int> &arr, vector<vector<int>> &dp){
+        if(i == 0){
+            if(need == 0 && arr[0] == 0) return 2;
+            if(need == 0 || arr[0] == need) return 1;
+            return 0;
+        }
+        if(dp[i][need] != -1){
+            return dp[i][need];
+        }
+        int count = 0;
+        count = (count + func(i - 1, need, arr, dp)) % mod;
+        if(need - arr[i] >= 0){
+            count = (count + func(i - 1, need - arr[i], arr, dp)) % mod;
+        }
+        return dp[i][need] = count;
+    }
+  
+    int countPartitions(int n, int d, vector<int>& arr) {
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if((sum + d) & 1){
+            return 0;
+        }
+        int need = (sum + d) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, -1));
+        return func(n - 1, need, arr, dp);
+    }
+};
+
+-----tab
+
+int countPartitions(int n, int d, vector<int>& arr) {
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if((sum + d) & 1){
+            return 0;
+        }
+        int need = (sum + d) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, 0));
+        if(arr[0] == 0){
+            dp[0][0] = 2;
+        }else{
+            dp[0][0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            dp[0][arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int target = 0; target <= need; target++){
+                int count = 0;
+                count = (count + dp[i - 1][target]) % mod;
+                if(target - arr[i] >= 0){
+                    count = (count + dp[i - 1][target - arr[i]]) % mod;
+                }
+                dp[i][target] = count;
+            }
+        }
+        return dp[n - 1][need];
+    }
+
+----space
+
+int countPartitions(int n, int d, vector<int>& arr) {
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if((sum + d) & 1){
+            return 0;
+        }
+        int need = (sum + d) >> 1;
+        vector<int> curr(need + 1, 0), prev(need + 1, 0);
+        if(arr[0] == 0){
+            prev[0] = 2;
+        }else{
+            prev[0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            prev[arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int target = 0; target <= need; target++){
+                int count = 0;
+                count = (count + prev[target]) % mod;
+                if(target - arr[i] >= 0){
+                    count = (count + prev[target - arr[i]]) % mod;
+                }
+                curr[target] = count;
+            }
+            prev = curr;
+        }
+        return prev[need];
+    }
