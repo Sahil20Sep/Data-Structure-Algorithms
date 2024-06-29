@@ -1123,18 +1123,18 @@ int minSubsetSumDifference(vector<int>& arr, int n)
 	vector<bool> curr(half + 1, false), prev(half + 1, false);
     prev[0] = curr[0] = true;
     if(arr[0] <= half){
-        prev[arr[0]] = true;
+	prev[arr[0]] = true;
     }
     for(int i = 1; i < n; i++){
-        for(int target = 1; target <= half; target++){
-            bool flag = false;
-            flag |= prev[target];
-            if(target - arr[i] >= 0){
-                flag |= prev[target - arr[i]];
-            }
-            curr[target] = flag;
-        }
-        prev = curr;
+	for(int target = 1; target <= half; target++){
+	    bool flag = false;
+	    flag |= prev[target];
+	    if(target - arr[i] >= 0){
+		flag |= prev[target - arr[i]];
+	    }
+	    curr[target] = flag;
+	}
+	prev = curr;
     }
 	for(int target = half; target >= 0; target--){
 		if(prev[target]){
@@ -1146,123 +1146,38 @@ int minSubsetSumDifference(vector<int>& arr, int n)
 
 -------------------------------------------------------------------------------
 
-	(count subset sum == k, onlyy positive)
-
----memo
-
-class Solution{
-
-	public:
-	 int mod = 1e9 + 7;
-	 int func(int i, int target, int arr[], vector<vector<int>> &dp){
-	     if(target == 0){
-	         return dp[i][target] = 1;
-	     }
-	     if(i == 0){
-	         return dp[i][target] = (target == arr[0]);
-	     }
-	     if(dp[i][target] != -1){
-	         return dp[i][target];
-	     }
-	     int count = 0;
-	     count = (count + func(i - 1, target, arr, dp)) % mod;
-	     if(target - arr[i] >= 0){
-	         count = (count + func(i - 1, target - arr[i], arr, dp)) % mod;
-	     }
-	     return dp[i][target] = count;
-	 }
-	
-	int perfectSum(int arr[], int n, int sum)
-	{
-        vector<vector<int>> dp(n, vector<int> (sum + 1, -1));
-        return func(n - 1, sum, arr, dp);
-	}
-	  
-};
-
-----tab
-
-int perfectSum(int arr[], int n, int sum)
-{
-vector<vector<int>> dp(n, vector<int> (sum + 1, 0));
-for(int i = 0; i < n; i++){
-    dp[i][0] = 1;
-}
-if(arr[0] <= sum){
-    dp[0][arr[0]] = 1;
-}
-for(int i = 1; i < n; i++){
-    for(int target = 1; target <= sum; target++){
-	int count = 0;
-	     count = (count + dp[i - 1][target]) % mod;
-	     if(target - arr[i] >= 0){
-		 count = (count + dp[i - 1][target - arr[i]]) % mod;
-	     }
-	     dp[i][target] = count;
-    }
-}
-return dp[n - 1][sum];
-}
-
------space
-
-int perfectSum(int arr[], int n, int sum)
-	{
-        vector<int> prev(sum + 1, 0), curr(sum + 1, 0);
-        prev[0] = curr[0] = 1;
-        if(arr[0] <= sum){
-            prev[arr[0]] = 1;
-        }
-        for(int i = 1; i < n; i++){
-            for(int target = 1; target <= sum; target++){
-                int count = 0;
-        	     count = (count + prev[target]) % mod;
-        	     if(target - arr[i] >= 0){
-        	         count = (count + prev[target - arr[i]]) % mod;
-        	     }
-        	     curr[target] = count;
-            }
-            prev = curr;
-        }
-        return prev[sum];
-	}
-
------------------------------------------------------------------------------------------
-
 		(count subset with sum k include 0, +ve)
 
 class Solution{
 
 	public:
 	 int mod = 1e9 + 7;
-	 int func(int i, int target, int arr[], vector<vector<int>> &dp){
+	 
+	 int func(int i, int sum, int arr[], vector<vector<int>> &dp){
 	     if(i == 0){
-	         if(target == 0 && arr[i] == 0){
+	         if(sum == 0 && arr[0] == 0){
 	             return 2;
 	         }
-	         if(target == 0 && arr[i] != 0){
-	             return 1;
-	         }
-	         if(arr[i] == target){
+	         if(sum == 0 || arr[0] == sum){
 	             return 1;
 	         }
 	         return 0;
 	     }
-	     if(dp[i][target] != -1){
-	         return dp[i][target];
+	     if(dp[i][sum] != -1){
+	         return dp[i][sum];
 	     }
 	     int count = 0;
-	     count = (count + func(i - 1, target, arr, dp)) % mod;
-	     if(target - arr[i] >= 0){
-	         count = (count + func(i - 1, target - arr[i], arr, dp)) % mod;
+	     count = (count + func(i - 1, sum, arr, dp)) % mod;
+	     if(sum >= arr[i]){
+	         count = (count + func(i - 1, sum - arr[i], arr, dp)) % mod;
 	     }
-	     return dp[i][target] = count;
+	     return dp[i][sum] = count;
 	 }
 	
 	int perfectSum(int arr[], int n, int sum)
 	{
-        vector<vector<int>> dp(n, vector<int> (sum + 1, -1));
-        return func(n - 1, sum, arr, dp);
+	    vector<vector<int>> dp(n, vector<int> (sum + 1, -1));
+	    return func(n - 1, sum, arr, dp);
 	}
 	  
 };
@@ -1271,29 +1186,53 @@ class Solution{
 
 int perfectSum(int arr[], int n, int sum)
 	{
-	    int total = 0;
-	    for(int i = 0; i < n; i++){
-	        total += arr[i];
+	    vector<vector<int>> dp(n, vector<int> (sum + 1, 0));
+	    if(arr[0] == 0){
+	        dp[0][0] = 2;
+	    }else{
+	        dp[0][0] = 1;
 	    }
-        vector<vector<int>> dp(n, vector<int> (total + 1, 0));
-        if(arr[0] <= total){
-            if(arr[0] == 0) dp[0][0] = 2;
-            if(arr[0] > 0){
-                dp[0][arr[0]] = 1;
-                dp[0][0] = 1;
-            }
-        }
-        for(int i = 1; i < n; i++){
-            for(int target = 0; target <= total; target++){
-        	int count = 0;
-    	     count = (count + dp[i - 1][target]) % mod;
-    	     if(target - arr[i] >= 0){
-    		    count = (count + dp[i - 1][target - arr[i]]) % mod;
-    	     }
-    	     dp[i][target] = count;
-            }
-        }
-        return dp[n - 1][sum];
+	    if(arr[0] <= sum && arr[0] != 0){
+	        dp[0][arr[0]] = 1;
+	    }
+	    for(int i = 1; i < n; i++){
+	        for(int target = 0; target <= sum; target++){
+	            int count = 0;
+	            count = (count + dp[i - 1][target]) % mod;
+	            if(target - arr[i] >= 0){
+	                count = (count + dp[i - 1][target - arr[i]]) % mod;
+	            }
+	            dp[i][target] = count;
+	        }
+	    }
+	    return dp[n - 1][sum];
+	}
+
+----space
+
+int perfectSum(int arr[], int n, int sum)
+	{
+	    vector<int> curr(sum + 1, 0), prev(sum + 1, 0);
+	    if(arr[0] == 0){
+	        prev[0] = 2;
+	    }else{
+	        prev[0] = 1;
+	    }
+	    if(arr[0] <= sum && arr[0] != 0){
+	        prev[arr[0]] = 1;
+	    }
+	    for(int i = 1; i < n; i++){
+	        for(int target = 0; target <= sum; target++){
+	            int count = 0;
+	            count = (count + prev[target]) % mod;
+	            if(target - arr[i] >= 0){
+	                count = (count + prev[target - arr[i]]) % mod;
+	            }
+	            curr[target] = count;
+	        }
+	        prev = curr;
+	    }
+	    return prev[sum];
 	}
 
 -------------------------------------------------------------------------------------------------
