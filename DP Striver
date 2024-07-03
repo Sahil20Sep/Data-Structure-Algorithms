@@ -1340,3 +1340,81 @@ int countPartitions(int n, int d, vector<int>& arr) {
         }
         return prev[need];
     }
+
+--------------------------------------------------------------------------------------------
+
+	(knap shake problem)
+
+----memo
+
+class Solution
+{
+    public:
+    
+    int func(int i, int w, int wt[], int val[], vector<vector<int>> &dp){
+        if(i == 0){
+            if(w - wt[0] >= 0){
+                return val[0];
+            }
+            return 0;
+        }
+        if(dp[i][w] != -1){
+            return dp[i][w];
+        }
+        int ans = INT_MIN;
+        ans = max(ans, func(i - 1, w, wt, val, dp));
+        if(w - wt[i] >= 0){
+            ans = max(ans, func(i - 1, w - wt[i], wt, val, dp) + val[i]);
+        }
+        return dp[i][w] = ans;
+    }
+    
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<vector<int>> dp(n, vector<int> (W + 1, -1));
+       return func(n - 1, W, wt, val, dp);
+    }
+};
+
+------tab
+
+int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<vector<int>> dp(n, vector<int> (W + 1, 0));
+       for(int i = wt[0]; i <= W; i++){
+           dp[0][i] = val[0];
+       }
+       for(int i = 1; i < n; i++){
+           for(int w = 0; w <= W; w++){
+                int ans = INT_MIN;
+                ans = max(ans, dp[i - 1][w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, dp[i - 1][w - wt[i]] + val[i]);
+                }
+                dp[i][w] = ans;
+           }
+       }
+       return dp[n - 1][W];
+    }
+
+----space
+
+int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<int> curr(W + 1, 0), prev(W + 1, 0);
+       for(int i = wt[0]; i <= W; i++){
+           prev[i] = val[0];
+       }
+       for(int i = 1; i < n; i++){
+           for(int w = 0; w <= W; w++){
+                int ans = INT_MIN;
+                ans = max(ans, prev[w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, prev[w - wt[i]] + val[i]);
+                }
+                curr[w] = ans;
+           }
+           prev = curr;
+       }
+       return prev[W];
+    }
