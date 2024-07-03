@@ -1529,3 +1529,154 @@ int coinChange(vector<int>& arr, int Target) {
         int ans = prev[Target];
         return ans == 1e9 ? -1 : ans;
     }
+
+-----------------------------------------------------------------------------------------
+
+	use + and - and get target
+
+---trick
+
+always use s2 as a target = sum - target / 2;
+
+-----memo
+
+class Solution {
+public:
+
+    int func(int i, int need, vector<int> &arr, vector<vector<int>> &dp){
+        if(i == 0){
+            if(need == 0 && arr[0] == 0){
+                return 2;
+            }else if(need == arr[0] || need == 0){
+                return 1;
+            }
+            return 0;
+        }
+        if(dp[i][need] != -1){
+            return dp[i][need];
+        }
+        int count = 0;
+        count += func(i - 1, need, arr, dp);
+        if(need - arr[i] >= 0){
+            count += func(i - 1, need - arr[i], arr, dp);
+        }
+        return dp[i][need] = count;
+    }
+
+    int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, -1));
+        return func(n - 1, need, arr, dp);
+    }
+};
+
+---tab
+
+int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, 0));
+        if(arr[0] == 0){
+            dp[0][0] = 2;
+        }else{
+            dp[0][0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            dp[0][arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int ned = 0; ned <= need; ned++){
+                int count = 0;
+                count += dp[i - 1][ned];
+                if(ned - arr[i] >= 0){
+                    count += dp[i - 1][ned - arr[i]];
+                }
+                dp[i][ned] = count;
+            }
+        }
+        return dp[n - 1][need];
+    }
+
+----space
+
+int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<int> prev(need + 1, 0), curr(need + 1, 0);
+        if(arr[0] == 0){
+            prev[0] = 2;
+        }else{
+            prev[0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            prev[arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int ned = 0; ned <= need; ned++){
+                int count = 0;
+                count += prev[ned];
+                if(ned - arr[i] >= 0){
+                    count += prev[ned - arr[i]];
+                }
+                curr[ned] = count;
+            }
+            prev = curr;
+        }
+        return prev[need];
+    }
+
+------one vector only (i - 1) and second state is like this.
+
+int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<int> prev(need + 1, 0);
+        if(arr[0] == 0){
+            prev[0] = 2;
+        }else{
+            prev[0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            prev[arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int ned = need; ned >= 0; ned--){
+                int count = 0;
+                count += prev[ned];
+                if(ned - arr[i] >= 0){
+                    count += prev[ned - arr[i]];
+                }
+                prev[ned] = count;
+            }
+        }
+        return prev[need];
+    }
