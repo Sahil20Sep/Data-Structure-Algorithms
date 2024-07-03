@@ -1439,3 +1439,93 @@ int knapSack(int W, int wt[], int val[], int n)
        }
        return prev[W];
     }
+
+-----------------------------------------------------------------------------------
+
+	(coin change -- return minimum number of coin to get target - infinite suuppply of coin)
+
+---recursion time complexity is >> o(2^n) because on same index we are and space complexity is o(target) (because of reduce by 11111..) not o(N) same reason.
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int amount, vector<int> &arr, vector<vector<int>> &dp){
+        if(i == 0){
+            if(amount % arr[i] == 0){
+                return amount / arr[i];
+            }
+            return 1e9;
+        }
+        if(dp[i][amount] != -1){
+            return dp[i][amount];
+        }
+        int ans = 1e9;
+        ans = min(ans, func(i - 1, amount, arr, dp));
+        if(amount - arr[i] >= 0){
+            ans = min(ans, 1 + func(i, amount - arr[i], arr, dp));
+        }
+        return dp[i][amount] = ans;
+    }
+
+    int coinChange(vector<int>& arr, int amount) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (amount + 1, -1));
+        int ans = func(n - 1, amount, arr, dp);
+        return ans == 1e9 ? -1 : ans;
+    }
+};
+
+---tab
+
+int coinChange(vector<int>& arr, int Target) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (Target + 1, 0));
+        for(int i = 0; i <= Target; i++){
+            if(i % arr[0] == 0){
+                dp[0][i] = (i / arr[0]);
+            }else{
+                dp[0][i] = 1e9;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            for(int amount = 0; amount <= Target; amount++){
+                int ans = 1e9;
+                ans = min(ans, dp[i - 1][amount]);
+                if(amount - arr[i] >= 0){
+                    ans = min(ans, 1 + dp[i][amount - arr[i]]);
+                }
+                dp[i][amount] = ans;
+            }
+        }
+        int ans = dp[n - 1][Target];
+        return ans == 1e9 ? -1 : ans;
+    }
+
+---space
+
+int coinChange(vector<int>& arr, int Target) {
+        int n = arr.size();
+        vector<int> prev(Target + 1, 0), curr(Target + 1, 0);
+        for(int i = 0; i <= Target; i++){
+            if(i % arr[0] == 0){
+                prev[i] = (i / arr[0]);
+            }else{
+                prev[i] = 1e9;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            for(int amount = 0; amount <= Target; amount++){
+                int ans = 1e9;
+                ans = min(ans, prev[amount]);
+                if(amount - arr[i] >= 0){
+                    ans = min(ans, 1 + curr[amount - arr[i]]);
+                }
+                curr[amount] = ans;
+            }
+            prev = curr;
+        }
+        int ans = prev[Target];
+        return ans == 1e9 ? -1 : ans;
+    }
