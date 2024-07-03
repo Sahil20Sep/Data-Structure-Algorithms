@@ -1767,3 +1767,78 @@ int change(int target, vector<int>& arr) {
         }
         return prev[target];
     }
+
+--------------------------------------------------------------------------------
+
+	(unbounded knapskate)
+
+----memo
+
+class Solution{
+public:
+
+    int func(int i, int w, int val[], int wt[], vector<vector<int>> &dp){
+        if(i == 0){
+            int temp = w / wt[0];
+            return temp * val[0];
+        }
+        if(dp[i][w] != -1){
+            return dp[i][w];
+        }
+        int ans = -1e9;
+        ans = max(ans, func(i - 1, w, val, wt, dp));
+        if(w - wt[i] >= 0){
+            ans = max(ans, val[i] + func(i, w - wt[i], val, wt, dp));
+        }
+        return dp[i][w] = ans;
+    }
+
+    int knapSack(int n, int W, int val[], int wt[])
+    {
+        vector<vector<int>> dp(n, vector<int> (W + 1, -1));
+        return func(n - 1, W, val, wt, dp);
+    }
+};
+
+----tab
+
+int knapSack(int n, int W, int val[], int wt[])
+    {
+        vector<vector<int>> dp(n, vector<int> (W + 1, 0));
+        for(int i = 0; i <= W; i++){
+            dp[0][i] = (i / wt[0]) * val[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int w = 0; w <= W; w++){
+                int ans = -1e9;
+                ans = max(ans, dp[i - 1][w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, val[i] + dp[i][w - wt[i]]);
+                }
+                dp[i][w] = ans;
+            }
+        }
+        return dp[n - 1][W];
+    }
+
+----space
+
+int knapSack(int n, int W, int val[], int wt[])
+    {
+        vector<int> prev(W + 1, 0), curr(W + 1, 0);
+        for(int i = 0; i <= W; i++){
+            prev[i] = (i / wt[0]) * val[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int w = 0; w <= W; w++){
+                int ans = -1e9;
+                ans = max(ans, prev[w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, val[i] + curr[w - wt[i]]);
+                }
+                curr[w] = ans;
+            }
+            prev = curr;
+        }
+        return prev[W];
+    }
