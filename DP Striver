@@ -1768,6 +1768,29 @@ int change(int target, vector<int>& arr) {
         return prev[target];
     }
 
+---one vector
+
+int change(int target, vector<int>& arr) {
+        int n = arr.size();
+        vector<int> prev(target + 1, 0);
+        for(int i = 0; i <= target; i++){
+            if(i % arr[0] == 0){
+                prev[i] = 1;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            for(int amount = 0; amount <= target; amount++){
+                int count = 0;
+                count += prev[amount];
+                if(amount - arr[i] >= 0){
+                    count += prev[amount - arr[i]];
+                }
+                prev[amount] = count;
+            }
+        }
+        return prev[target];
+    }
+
 --------------------------------------------------------------------------------
 
 	(unbounded knapskate)
