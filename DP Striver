@@ -1418,3 +1418,24 @@ int knapSack(int W, int wt[], int val[], int n)
        }
        return prev[W];
     }
+
+----one array only size of W
+
+int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<int> prev(W + 1, 0);
+       for(int i = wt[0]; i <= W; i++){
+           prev[i] = val[0];
+       }
+       for(int i = 1; i < n; i++){
+           for(int w = W; w >= 0; w--){
+                int ans = INT_MIN;
+                ans = max(ans, prev[w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, prev[w - wt[i]] + val[i]);
+                }
+                prev[w] = ans;
+           }
+       }
+       return prev[W];
+    }
