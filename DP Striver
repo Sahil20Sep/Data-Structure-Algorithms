@@ -2076,3 +2076,84 @@ int longestCommonSubsequence(string s, string t) {
         return prev[m];
     }
 
+-----------------------------------------------------------------------------
+
+	Print the LCS
+
+---tab
+
+int longestCommonSubsequence(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                }else{
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        } 					       - 
+        int i = n, j = m;			       -
+        string ans = ""; //O(n + m) --> worse case -----
+        while(i > 0 && j > 0){
+            if(s[i - 1] == t[j - 1]){
+                ans.push_back(s[i - 1]);
+                i--;
+                j--;
+            }else{
+                if(dp[i - 1][j] > dp[i][j - 1]){
+                    i--;
+                }else{
+                    j--;
+                }
+            }
+        }
+        reverse(ans.begin(), ans.end());
+        cout << ans;
+        return dp[n][m];
+    }
+
+-----------------------------------------------------------------------------
+
+		(substring consecutive and maintain the order)
+
+----tab
+
+int longestCommonSubstr (string s, string t, int n, int m)
+    {
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        int ans = 0;
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                    ans = max(ans, dp[i][j]);
+                }else{
+		    dp[i][j] = 0;
+		}
+            }
+        }
+        return ans;
+    }
+
+----space
+
+int longestCommonSubstr (string s, string t, int n, int m)
+    {
+        vector<int> prev(m + 1, 0), curr(m + 1, 0);
+        int ans = 0;
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = 1 + prev[j - 1];
+                    ans = max(ans, curr[j]);
+                }else{
+                    curr[j] = 0;
+                }
+            }
+            prev = curr;
+        }
+        return ans;
+    }
+
