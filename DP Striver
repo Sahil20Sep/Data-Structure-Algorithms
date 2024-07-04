@@ -3329,3 +3329,5 @@ int lengthOfLIS(vector<int>& arr) {
         }
         return temp.size();
     }
+
+temp is not LIS --> matter with only length for print the LIS dp[n] solution will work no this one.
