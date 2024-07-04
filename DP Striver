@@ -2816,3 +2816,98 @@ int maxProfit(vector<int>& arr) {
         return nextBuy;
     }
 
+------------------------------------------------------------------------------------------------------------
+
+		(buy and sell at most two time 3d dp)
+
+-----memo
+
+class Solution {
+public:
+
+    int func(int i, int buy, int rem, vector<int> &arr, vector<vector<vector<int>>> &dp){
+        if(rem == 0){
+            return 0;
+        }
+        int n = arr.size();
+        if(i == n - 1){
+            if(buy){
+                return 0;
+            }
+            return arr[n - 1];
+        }
+        if(dp[i][buy][rem] != -1){
+            return dp[i][buy][rem];
+        }
+        int profit = 0;
+        if(buy){
+            profit = max({profit, -arr[i] + func(i + 1, !buy, rem, arr, dp), func(i + 1, buy, rem, arr, dp)});
+        }else{
+            profit = max({profit, arr[i] + func(i + 1, !buy, rem - 1, arr, dp), func(i + 1, buy, rem, arr, dp)});
+        }
+        return dp[i][buy][rem] = profit;
+    }
+
+    int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>> (2, vector<int> (3, -1)));
+        return func(0, 1, 2, arr, dp); // gives time limit (TLE)
+    }
+};
+
+----tab
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>> (2, vector<int> (3, 0)));
+        dp[n - 1][1][0] = 0;
+        dp[n - 1][0][0] = 0;
+        for(int rem = 1; rem <= 2; rem++){
+            dp[n - 1][1][rem] = 0;
+            dp[n - 1][0][rem] = arr[n - 1];
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                for(int rem = 1; rem <= 2; rem++){
+                    int profit = 0;
+                    if(buy){
+                        profit = max({ profit, -arr[i] + dp[i + 1][!buy][rem], dp[i + 1][buy][rem] });
+                    }else{
+                        profit = max({ profit, arr[i] + dp[i + 1][!buy][rem - 1], dp[i + 1][buy][rem] });
+                    }
+                    dp[i][buy][rem] = profit;
+                }
+            }
+        }
+        return dp[0][1][2];
+    }
+
+----space
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> next(2, vector<int> (3, 0));
+        vector<vector<int>> curr(2, vector<int> (3, 0));
+        next[1][0] = 0;
+        next[0][0] = 0;
+        for(int rem = 1; rem <= 2; rem++){
+            next[1][rem] = 0;
+            next[0][rem] = arr[n - 1];
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                for(int rem = 1; rem <= 2; rem++){
+                    int profit = 0;
+                    if(buy){
+                        profit = max({ profit, -arr[i] + next[!buy][rem], next[buy][rem] });
+                    }else{
+                        profit = max({ profit, arr[i] + next[!buy][rem - 1], next[buy][rem] });
+                    }
+                    curr[buy][rem] = profit;
+                }
+            }
+            next = curr;
+        }
+        return next[1][2];
+    }
+
