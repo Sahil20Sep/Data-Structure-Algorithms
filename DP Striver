@@ -2678,3 +2678,24 @@ bool isMatch(string s, string t) {
     }
 
 ----one vector is not possible
+
+------------------------------------------------------------------------------------------
+
+	(buy and sell stock, only 1 time and max the profit)
+
+----optimal
+
+class Solution {
+public:
+    int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0, mn = arr[0];
+        for(int i = 1; i < n; i++){
+            ans = max(ans, arr[i] - mn);
+            if(arr[i] < mn){
+                mn = arr[i];
+            }
+        }
+        return ans;
+    }
+};
