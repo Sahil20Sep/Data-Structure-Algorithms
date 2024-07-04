@@ -2800,3 +2800,19 @@ int maxProfit(vector<int>& arr) {
         return nextBuy;
     }
 
+---- remove second for loop
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        int nextBuy = 0;
+        int nextSell = arr[n - 1];
+        for(int i = n - 2; i >= 0; i--){
+            int currBuy = 0, currSell = 0;
+            currBuy = max({currBuy, -arr[i] + nextSell, nextBuy});
+            currSell = max({currSell, arr[i] + nextBuy, nextSell});
+            nextSell = currSell;
+            nextBuy = currBuy;
+        }
+        return nextBuy;
+    }
+
