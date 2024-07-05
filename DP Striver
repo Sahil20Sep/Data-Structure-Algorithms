@@ -3480,3 +3480,40 @@ class Solution {
         return ans;
     }
 };
+
+----------------------------------------------------------------------------
+
+	(number of LIS)
+
+---2 vector solution.
+
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> dp(n, 1), path(n, 1);
+        int len = 1;
+        for(int i = 1; i < n; i++){
+            for(int j = 0; j < i; j++){
+                if(arr[j] < arr[i]){
+                    if(1 + dp[j] > dp[i]){
+                        dp[i] = 1 + dp[j];
+                        path[i] = path[j];
+                    }else if(1 + dp[j] == dp[i]){
+                        path[i] += path[j];
+                    }
+                }
+            }
+            if(dp[i] > len){
+                len = dp[i];
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            if(len == dp[i]){
+                ans += path[i];
+            }
+        }
+        return ans;
+    }
+};
