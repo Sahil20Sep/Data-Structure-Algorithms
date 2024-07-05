@@ -3368,3 +3368,51 @@ public:
         return ans;
     }
 };
+
+--------------------------------------------------------------------------------
+
+		(longest string chain)
+
+---tab
+
+class Solution {
+private:
+    static bool comp(string &s, string &t){
+        return s.size() < t.size();
+    }
+    bool check(string &s, string &t){
+        int n = s.size(), m = t.size();
+        if(m - n != 1){
+            return false;
+        }
+        int i = 0, j = 0, cnt = 0;
+        while(i < n && j < m){
+            if(s[i] != t[j]){
+                cnt++;
+                j++;
+            }else{
+                i++; 
+                j++;
+            }
+        }
+        return cnt <= 1;
+    }
+public:
+    int longestStrChain(vector<string>& arr) {
+        sort(arr.begin(), arr.end(), comp);
+        int n = arr.size();
+        int len = 1;
+        vector<int> dp(n, 1);
+        for(int i = 1; i < n; i++){
+            for(int j = 0; j < i; j++){
+                if(check(arr[j], arr[i]) && 1 + dp[j] > dp[i]){
+                    dp[i] = 1 + dp[j];
+                }
+            }
+            if(dp[i] > len){
+                len = dp[i];
+            }
+        }
+        return len;
+    }
+};
