@@ -3566,3 +3566,112 @@ int matrixMultiplication(int n, int arr[])
         }
         return dp[1][n - 1];
     }
+
+
+------------------------------------------------------------------------------------------------------
+
+		(minimum cost to cut the stick)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<int> &arr, vector<vector<int>> &dp){
+        if(i > j){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 1e9;
+        for(int k = i; k <= j; k++){
+            int cuts = arr[j + 1] - arr[i - 1] + func(i, k - 1, arr, dp) + func(k + 1, j, arr, dp);
+            ans = min(ans, cuts);
+        }
+        return dp[i][j] = ans;
+    }
+
+    int minCost(int len, vector<int>& arr) {
+        arr.insert(arr.begin(), 0);
+        arr.push_back(len);
+        int n = arr.size();
+        sort(arr.begin(), arr.end());
+        vector<vector<int>> dp(n, vector<int> (n, -1));
+        return func(1, n - 2, arr, dp);
+    }
+};
+
+----tab
+
+int minCost(int len, vector<int>& arr) {
+        arr.insert(arr.begin(), 0);
+        arr.push_back(len);
+        int n = arr.size();
+        sort(arr.begin(), arr.end());
+        vector<vector<int>> dp(n, vector<int> (n, 0));
+        for(int i = n - 2; i >= 1; i--){
+            for(int j = i; j <= n - 2; j++){
+                int ans = 1e9;
+                for(int k = i; k <= j; k++){
+                    int cuts = arr[j + 1] - arr[i - 1] + dp[i][k - 1] + dp[k + 1][j];
+                    ans = min(ans, cuts);
+                }
+                dp[i][j] = ans;
+            }
+        }
+        return dp[1][n - 2];
+    }
+
+---------------------------------------------------------------------------------------------------
+
+		(burst bulloons)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<int> &arr, vector<vector<int>> &dp){
+        if(i > j){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = -1e9;
+        for(int k = i; k <= j; k++){
+            int val = arr[i - 1] * arr[k] * arr[j + 1] + func(i, k - 1, arr, dp) + func(k + 1, j, arr, dp);
+            ans = max(ans, val);
+        }
+        return dp[i][j] = ans;
+    }
+
+    int maxCoins(vector<int>& arr) {
+        arr.insert(arr.begin(), 1);
+        arr.push_back(1);
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (n, -1));
+        return func(1, n - 2, arr, dp);
+    }
+};
+
+---tab
+
+int maxCoins(vector<int>& arr) {
+        arr.insert(arr.begin(), 1);
+        arr.push_back(1);
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (n, 0));
+        for(int i = n - 2; i >= 1; i--){
+            for(int j = i; j <= n - 2; j++){
+                int ans = -1e9;
+                for(int k = i; k <= j; k++){
+                    int val = arr[i - 1] * arr[k] * arr[j + 1] + dp[i][k - 1] + dp[k + 1][j];
+                    ans = max(ans, val);
+                }
+                dp[i][j] = ans;
+            }
+        }
+        return dp[1][n - 2];
+    }
