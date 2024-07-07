@@ -3845,3 +3845,55 @@ int minCut(string s) {
         return dp[0] - 1;   
     }
 
+------------------------------------------------------------------------
+
+		(make at most k partition and max subarray sum)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int k, vector<int> &arr, vector<int> &dp){
+        if(i == arr.size()){
+            return 0;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        int mx = -1, ans = -1;
+        for(int j = i; j < min(i + k, (int)arr.size()); j++){
+            if(arr[j] > mx){
+                mx = arr[j];
+            }
+            int temp = mx * (j - i + 1) + func(j + 1, k, arr, dp);
+            ans = max(ans, temp);
+        }
+        return dp[i] = ans;
+    }
+
+    int maxSumAfterPartitioning(vector<int>& arr, int k) {
+        int n = arr.size();
+        vector<int> dp(n, -1);
+        return func(0, k, arr, dp);
+    }
+};
+
+----tab
+
+int maxSumAfterPartitioning(vector<int>& arr, int k) {
+        int n = arr.size();
+        vector<int> dp(n + 1, 0);
+        for(int i = n - 1; i >= 0; i--){
+            int mx = -1, ans = -1;
+            for(int j = i; j < min(i + k, (int)arr.size()); j++){
+                if(arr[j] > mx){
+                    mx = arr[j];
+                }
+                int temp = mx * (j - i + 1) + dp[j + 1];
+                ans = max(ans, temp);
+            }
+            dp[i] = ans;
+        }
+        return dp[0];
+    }
