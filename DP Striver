@@ -3675,3 +3675,113 @@ int maxCoins(vector<int>& arr) {
         }
         return dp[1][n - 2];
     }
+
+-----------------------------------------------------------------------------------------------------
+
+		(evalute to true and false)
+
+----memo
+
+#include<bits/stdc++.h>
+
+const int mod = 1e9 + 7;
+
+int func(int i, int j, int flag, string &s, vector<vector<vector<int>>> &dp){
+    if(i == j){
+        return flag ? s[i] == 'T' : s[i] == 'F';
+    }
+    if(dp[i][j][flag] != -1){
+        return dp[i][j][flag];
+    }
+    int count = 0;
+    for(int k = i + 1; k <= j - 1; k += 2){
+        int left_true = func(i, k - 1, 1, s, dp);
+        int left_false = func(i, k - 1, 0, s, dp);
+        int right_true = func(k + 1, j, 1, s, dp);
+        int right_false = func(k + 1, j, 0, s, dp);
+        if(s[k] == '|'){
+            if(flag){
+                count = (count + 1LL * left_true * right_true) % mod;
+                count = (count + 1LL * left_true * right_false) % mod;
+                count = (count + 1LL * left_false * right_true) % mod;
+            }else{
+                count = (count + 1LL * left_false * right_false) % mod;
+            }
+        }else if(s[k] == '&'){
+            if(flag){
+                count = (count + 1LL * left_true * right_true) % mod;
+            }else{
+                count = (count + 1LL * left_true * right_false) % mod;
+                count = (count + 1LL * left_false * right_true) % mod;
+                count = (count + 1LL * left_false * right_false) % mod;
+            }
+        }else{
+            if(flag){
+                count = (count + 1LL * left_true * right_false) % mod;
+                count = (count + 1LL * left_false * right_true) % mod;
+            }else{
+                count = (count + 1LL * left_true * right_true) % mod;
+                count = (count + 1LL * left_false * right_false) % mod;
+            }
+        }
+    }
+    return dp[i][j][flag] = count;
+}
+
+int evaluateExp(string & s) {
+    int n = s.size();
+    vector<vector<vector<int>>> dp(n, vector<vector<int>> (n, vector<int> (2, -1)));
+    return func(0, n - 1, 1, s, dp);
+}
+
+---tab
+
+int evaluateExp(string & s) {
+    int n = s.size();
+    vector<vector<vector<int>>> dp(n, vector<vector<int>> (n, vector<int> (2, 0)));
+    for(int i = 0; i < n; i += 2){
+        for(int flag = 0; flag <= 1; flag++){
+            dp[i][i][flag] = (flag ? s[i] == 'T' : s[i] == 'F');
+        }
+    }
+    for(int i = n - 1; i >= 0; i--){
+        for(int j = i + 1; j <= n - 1; j++){
+            for(int flag = 0; flag <= 1; flag++){
+                int count = 0;
+                for(int k = i + 1; k <= j - 1; k += 2){
+                    int left_true = dp[i][k - 1][1];
+                    int left_false = dp[i][k - 1][0];
+                    int right_true = dp[k + 1][j][1];
+                    int right_false = dp[k + 1][j][0];
+                    if(s[k] == '|'){
+                        if(flag){
+                            count = (count + 1LL * left_true * right_true) % mod;
+                            count = (count + 1LL * left_true * right_false) % mod;
+                            count = (count + 1LL * left_false * right_true) % mod;
+                        }else{
+                            count = (count + 1LL * left_false * right_false) % mod;
+                        }
+                    }else if(s[k] == '&'){
+                        if(flag){
+                            count = (count + 1LL * left_true * right_true) % mod;
+                        }else{
+                            count = (count + 1LL * left_true * right_false) % mod;
+                            count = (count + 1LL * left_false * right_true) % mod;
+                            count = (count + 1LL * left_false * right_false) % mod;
+                        }
+                    }else{
+                        if(flag){
+                            count = (count + 1LL * left_true * right_false) % mod;
+                            count = (count + 1LL * left_false * right_true) % mod;
+                        }else{
+                            count = (count + 1LL * left_true * right_true) % mod;
+                            count = (count + 1LL * left_false * right_false) % mod;
+                        }
+                    }
+                }
+                dp[i][j][flag] = count;
+            }
+        }
+    }
+    return dp[0][n - 1][1];
+}
