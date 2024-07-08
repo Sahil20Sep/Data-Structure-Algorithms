@@ -82,4 +82,31 @@ space is O(2N) time is for directed O(N +E) and for undirected O(N + 2E).
 
 ----------------------------------------------------------------------------------------
 
+            (dfs striver)
+
+class Solution {
+  public:
+  
+    void dfs(int node, vector<int> &ans, vector<int> adj[], vector<int> &visited){
+        visited[node] = true;
+        ans.push_back(node);
+        for(auto it : adj[node]){
+            if(!visited[it]){
+                dfs(it, ans, adj, visited);
+            }
+        }
+    }
+  
+    vector<int> dfsOfGraph(int n, vector<int> adj[]) {
+        vector<int> visited(n, false);
+        vector<int> ans;
+        dfs(0, ans, adj, visited);
+        return ans;
+    }
+};
+
+space complexity O(N) + O(N) + recursion stack space O(N) if queue graph.
+time complexity O(N + 2E)
+
+--------------------------------------------------------------------------------------
 
