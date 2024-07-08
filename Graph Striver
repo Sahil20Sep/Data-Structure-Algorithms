@@ -1,0 +1,85 @@
+-----------------------------------------------------------------------------------------
+
+    (intro)
+
+node, vertex
+
+directed cyclic/acyclic ggraph
+undirected cyclic/acuclic graph
+
+indgree --> number of incoming edge
+outdegree --> number of outgoint edge
+
+for undirected graph sum of total indegree = 2 * #ofedges
+
+1 2 3 4 is path
+then edges exits between adjecent node and do not repeat the visted node in path.
+
+edges also contain weight if not then consider as 1.
+
+if there is at least one cycle in graph callled cyclic graph.
+
+--------------------------------------------------------------------------------------------
+
+      (representation)
+
+matrix
+mat[n +1][n + 1];
+mat[i][j] = 1 // represent i and j are connected
+
+not usefull take O(N^2)
+
+adj list
+vector<int> adj[n + 1];
+
+take only O(2E) space --> for undirected graph
+take only (E) space --> for directed graph
+
+---- about wt
+
+mat[i][j] = wt;
+
+in list we store pair adj[u].push_back({v,wt}];
+
+-------------------------------------------------------------------------------------
+
+        (connected componets)
+
+maintain visited array 
+
+run loop for 1 to n and check !vis[n] --> run_traversal(i);
+
+------------------------------------------------------------------------------------
+
+        (bfs)
+
+---run for directed and undirected both
+
+class Solution {
+  public:
+    vector<int> bfsOfGraph(int n, vector<int> adj[]) {
+        vector<int> visited(n, false);
+        visited[0] = true;
+        queue<int> Q;
+        Q.push(0);
+        vector<int> bfs;
+        while(!Q.empty()){
+            int node = Q.front();
+            Q.pop();
+            bfs.push_back(node);
+            for(auto it : adj[node]){
+                if(!visited[it]){
+                    visited[it] = true;
+                    Q.push(it);
+                }
+            }
+        }
+        return bfs;
+    }
+};
+
+space is O(2N) time is for directed O(N +E) and for undirected O(N + 2E).
+
+----------------------------------------------------------------------------------------
+
+
