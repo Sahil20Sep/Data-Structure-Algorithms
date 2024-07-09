@@ -945,3 +945,70 @@ class Solution {
         return cnt == n ? false : true;
     }
 };
+
+--------------------------------------------------------------------------------------------------------
+
+----course schedule -I
+
+class Solution {
+public:
+    bool canFinish(int n, vector<vector<int>>& arr) {
+        vector<int> in(n, 0), adj[n];
+        for(auto it : arr){
+            in[it[0]]++;
+            adj[it[1]].push_back(it[0]);
+        }
+        queue<int> Q;
+        for(int i = 0; i < n; i++){
+            if(in[i] == 0){
+                Q.push(i);
+            }
+        }
+        int cnt = 0;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            cnt++;
+            for(auto child : adj[f]){
+                if(--in[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        return cnt == n ? true : false;
+    }
+};
+
+------------course schedule II
+
+class Solution {
+public:
+    vector<int> findOrder(int n, vector<vector<int>>& arr) {
+        vector<int> in(n, 0), adj[n];
+        for(auto it : arr){
+            in[it[0]]++;
+            adj[it[1]].push_back(it[0]);
+        }
+        queue<int> Q;
+        for(int i = 0; i < n; i++){
+            if(in[i] == 0){
+                Q.push(i);
+            }
+        }
+        vector<int> topo;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            topo.push_back(f);
+            for(auto child : adj[f]){
+                if(--in[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        if(topo.size() == n){
+            return topo;
+        }
+        return {};
+    }
+};
