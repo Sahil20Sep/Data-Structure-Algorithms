@@ -199,3 +199,191 @@ public:
 
 space O(N2) -- visited + O(N2) --> queue if all are 1
 time O(N2) + 9 * O(N2)
+
+--------------------------------------------------------------------------
+
+        (flood fill)
+
+class Solution {
+public:
+
+    void bfs(int i, int j, queue<pair<int, int>> &Q, vector<vector<bool>> &visited, vector<vector<char>> &arr, vector<pair<int, int>> &movement){
+        int n = arr.size(), m = arr[0].size();
+        visited[i][j] = true;
+        Q.push({i, j});
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            for(auto it : movement){
+                int x = f.first + it.first;
+                int y = f.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == '1'){
+                    Q.push({x, y});
+                    visited[x][y] = true;
+                }
+            }
+        }
+    }
+
+    int numIslands(vector<vector<char>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<int, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {1, 0}, {0, 1}, {0, -1}
+        };
+        int cc = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!visited[i][j] && arr[i][j] == '1'){
+                    cc++;
+                    bfs(i, j, Q, visited, arr, movement);
+                }
+            }
+        }
+        return cc;
+    }
+};
+
+time 4 * n * m
+space n * m
+
+---------------------------------------------------------------------------------------
+
+            (orange rotting)
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> arr = grid;
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<pair<int, int>, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        int one = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 2){
+                    Q.push({{i, j}, 0});
+                    visited[i][j] = true;
+                }else if(arr[i][j] == 1){
+                    one++;
+                }
+            }
+        }
+        if(one == 0){
+            return 0;
+        }
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        int second = 0;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            int time = f.second;
+            if(time > second) second = time;
+            for(auto it : movement){
+                int x = f.first.first + it.first;
+                int y = f.first.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == 1){
+                    Q.push({{x, y}, time + 1});
+                    one--;
+                    visited[x][y] = true;
+                }
+            }
+        }
+        return one ? -1 : second;
+    }
+};
+
+-----
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> arr = grid;
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<int, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        int one = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 2){
+                    Q.push({i, j});
+                    visited[i][j] = true;
+                }else if(arr[i][j] == 1){
+                    one++;
+                }
+            }
+        }
+        if(one == 0){
+            return 0;
+        }
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        int second = 0;
+        while(Q.size()){
+            int len = Q.size();
+            second++;
+            while(len--){
+                auto f = Q.front();
+                Q.pop();
+                for(auto it : movement){
+                    int x = f.first + it.first;
+                    int y = f.second + it.second;
+                    if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == 1){
+                        Q.push({x, y});
+                        one--;
+                        visited[x][y] = true;
+                    }
+                }
+            }
+        }
+        return one ? -1 : second - 1;
+    }
+};
+
+-----
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> arr = grid;
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<pair<int, int>, int>> Q;
+        int one = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 2){
+                    Q.push({{i, j}, 0});
+                }else if(arr[i][j] == 1){
+                    one++;
+                }
+            }
+        }
+        if(one == 0){
+            return 0;
+        }
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        int second = 0;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            int time = f.second;
+            if(time > second) second = time;
+            for(auto it : movement){
+                int x = f.first.first + it.first;
+                int y = f.first.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 1){
+                    Q.push({{x, y}, time + 1});
+                    one--;
+                    arr[x][y] = 2;
+                }
+            }
+        }
+        return one ? -1 : second;
+    }
+};
