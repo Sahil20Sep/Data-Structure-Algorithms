@@ -603,7 +603,48 @@ public:
 
 -------------------------------------------------------------------------------------------------------
 
+            (nnumber of distict island)
 
+class Solution {
+  public:
+    int countDistinctIslands(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        queue<pair<int, int>> Q;
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {1, 0}, {0, -1}, {0, 1}  
+        };
+        set<vector<pair<int, int>>> ms;
+        vector<pair<int, int>> store;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!visited[i][j] && arr[i][j]){
+                    Q.push({i, j});
+                    store.push_back({0, 0});
+                    visited[i][j] = true;
+                    while(!Q.empty()){
+                        auto f = Q.front();
+                        Q.pop();
+                        for(auto it : movement){
+                            int x = f.first + it.first;
+                            int y = f.second + it.second;
+                            if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 1 && !visited[x][y]){
+                                Q.push({x, y});
+                                store.push_back({x - i, y - j});
+                                visited[x][y] = true;
+                            }
+                        }
+                    }
+                    ms.insert(store);
+                    store.clear();
+                }
+            }
+        }
+        return (int)ms.size();
+    }
+};
 
+time n * m * log(n*m) + 4 * n * m
 
+-----------------------------------------------------------------------------------------
 
