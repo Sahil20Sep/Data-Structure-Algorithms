@@ -466,6 +466,49 @@ class Solution {
     }
 };
 
+-------------------------------------------------------------------------------------
+
+            (minimum distance to all 0 to 1)
+
+---maru
+
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> level(n, vector<int> (m, 1e9));
+        queue<pair<int, int>> Q;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 0){
+                    Q.push({i, j});
+                    level[i][j] = 0;
+                }
+            }
+        } 
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, 1}, {1, 0}, {0, -1}
+        };
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            int i = f.first;
+            int j = f.second;
+            for(auto it : movement){
+                int x = it.first + i;
+                int y = it.second + j;
+                if(x >= 0 && x < n && y >= 0 && y < m && 1 + level[i][j] < level[x][y]){
+                    level[x][y] = 1 + level[i][j];
+                    Q.push({x, y});
+                }
+            }
+        }  
+        return level; 
+    }
+};
+
+---striver soluton is use visited and when we pop then mark as ij = dist;
+
 
 
 
