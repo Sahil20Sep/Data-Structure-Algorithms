@@ -827,3 +827,85 @@ public:
         return ans;
     }
 };
+
+-------------------------------------------------------------------------------------
+
+            (topo logical sort)
+
+if there is edge between u and v then u must be apper before v in array.
+
+only apply on DAG.
+
+topo is working only for directed acyclic graph.
+
+not for directed cyclic graph.
+
+----dfs
+
+use stack
+
+class Solution
+{
+	public:
+
+	void dfs(int node, vector<int> adj[], vector<bool> &visited, stack<int> &st){
+	    visited[node] = true;
+	    for(auto child : adj[node]){
+	        if(!visited[child]){
+	            dfs(child, adj, visited, st);
+	        }
+	    }
+	    st.push(node);
+	}
+	
+	vector<int> topoSort(int n, vector<int> adj[]) 
+	{
+	    vector<int> ans;
+	    vector<bool> visited(n, false);
+	    stack<int> st;
+	    for(int i = 0; i < n; i++){
+	        if(!visited[i]){
+	            dfs(i, adj, visited, st);
+	        }
+	    }
+	    while(st.size()){
+	        ans.push_back(st.top());
+	        st.pop();
+	    }
+	    return ans;
+	}
+};
+
+TIME V + e AND space is 2N
+
+-----bfs
+
+vector<int> topoSort(int n, vector<int> adj[]) 
+	{
+	    vector<int> ans, indegree(n, 0);
+	    for(int i = 0; i < n; i++){
+	        for(auto it : adj[i]){
+	            indegree[it]++;
+	        }
+	    }
+	    queue<int> Q;
+	    for(int i = 0; i < n; i++){
+	        if(indegree[i] == 0){
+	            Q.push(i);
+	        }
+	    }
+	    while(Q.size()){
+	        auto f = Q.front();
+	        Q.pop();
+	        ans.push_back(f);
+	        for(auto child : adj[f]){
+	            indegree[child]--;
+	            if(indegree[child] == 0){
+	                Q.push(child);
+	            }
+	        }
+	    }
+	    return ans;
+	}
+
+v + e and 2n space
