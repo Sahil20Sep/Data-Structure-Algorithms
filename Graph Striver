@@ -1048,3 +1048,58 @@ public:
         return {};
     }
 };
+
+---------------------------------------------------------------------------
+
+		(alien dictonary) - topo sort
+
+class Solution{
+    public:
+    string findOrder(string dict[], int n, int k) {
+        vector<int> in(k, 0);
+        vector<int> adj[k];
+        for(int i = 0; i < n - 1; i++){
+            int l = dict[i].size();
+            int r = dict[i + 1].size();
+            for(int j = 0; j < min(l, r); j++){
+                if(dict[i][j] != dict[i + 1][j]){
+                    adj[dict[i][j] - 'a'].push_back(dict[i + 1][j] - 'a');
+                    in[dict[i + 1][j] - 'a']++;
+                    break;
+                }  
+            }
+        }
+        queue<int> Q;
+        for(int i = 0; i < k; i++){
+            if(in[i] == 0){
+                Q.push(i);
+            }
+        }
+        string ans = "";
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            ans += (f + 'a');
+            for(auto child : adj[f]){
+                if(--in[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+test case 1 abcd 
+	    abc  no order possible
+
+test case 2 
+abc
+bad
+abd 
+
+a < b < a --> cyclic dependancy
+
+-----------------------------------------------------------------------------------------------------------------
+
+
