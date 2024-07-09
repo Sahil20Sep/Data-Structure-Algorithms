@@ -1202,3 +1202,36 @@ class Solution {
         return dist;
     }
 };
+
+------------------------------------------------------------------------------
+
+		(shortest dist in undirected graph with unit weigght)
+
+---simple bfs
+
+class Solution {
+  public:
+    vector<int> shortestPath(vector<vector<int>>& edges, int n,int m, int src){
+        vector<int> adj[n];
+        for(auto it : edges){
+            int u = it[0], v = it[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        vector<int> dist(n, -1);
+        queue<int> Q;
+        Q.push(src);
+        dist[src] = 0;
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            for(auto child : adj[f]){
+                if(dist[child] == -1){
+                    dist[child] = 1 + dist[f];
+                    Q.push(child);
+                }
+            }
+        }
+        return dist;
+    }
+};
