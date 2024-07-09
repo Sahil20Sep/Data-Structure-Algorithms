@@ -110,3 +110,92 @@ time complexity O(N + 2E)
 
 --------------------------------------------------------------------------------------
 
+                    (Number of Provinces)
+----
+class Solution {
+public:
+
+    void dfs(int node, vector<int> adj[], vector<int> &visited){
+        visited[node] = true;
+        for(auto it : adj[node]){
+            if(!visited[it]){
+                dfs(it, adj, visited);
+            }
+        }
+    }
+
+    int findCircleNum(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<int> adj[n + 1];
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if(arr[i][j] && i != j){
+                    adj[i + 1].push_back(j + 1);
+                    adj[j + 1].push_back(i + 1);
+                }
+            }
+        }
+        int cc = 0;
+        vector<int> visited(n + 1, false);
+        for(int i = 1; i <= n; i++){
+            if(!visited[i]){
+                cc++;
+                dfs(i, adj, visited);
+            }
+        }
+        return cc;
+    }
+};
+
+space O(N) recursion stack space and O(N) visited
+time O(N) + O(v + 2e)
+
+---------------------------------------------------------------------
+
+            (cc in matrix)
+
+---bfs
+
+class Solution {
+public:
+
+    void bfs(int i, int j, queue<pair<int, int>> &Q, vector<vector<bool>> &visited, vector<vector<char>> &arr, vector<pair<int, int>> &movement){
+        int n = arr.size(), m = arr[0].size();
+        visited[i][j] = true;
+        Q.push({i, j});
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            for(auto it : movement){
+                int x = f.first + it.first;
+                int y = f.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == '1'){
+                    Q.push({x, y});
+                    visited[x][y] = true;
+                }
+            }
+        }
+    }
+
+    int numIslands(vector<vector<char>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<int, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {1, 0}, {0, 1}, {0, -1}
+        };
+        int cc = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!visited[i][j] && arr[i][j] == '1'){
+                    cc++;
+                    bfs(i, j, Q, visited, arr, movement);
+                }
+            }
+        }
+        return cc;
+    }
+};
+
+space O(N2) -- visited + O(N2) --> queue if all are 1
+time O(N2) + 9 * O(N2)
