@@ -793,7 +793,7 @@ class Solution {
 ------------------------------------------------------------------------
         (find eventual safe states)
 
-----one vector solution above question same some changes)
+----one vector solution above question same some changes) - dfs
 
 class Solution {
 public:
@@ -821,6 +821,42 @@ public:
         for(int i = 0; i < n; i++){
             if(!visited[i]){
                 dfs(i, ans, arr, visited);
+            }
+        }
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+-----bfs
+
+class Solution {
+public:
+
+    vector<int> eventualSafeNodes(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<int> out(n, 0), adj[n];
+        for(int i = 0; i < n; i++){
+            out[i] = arr[i].size();
+            for(auto it : arr[i]){
+                adj[it].push_back(i);
+            }
+        }
+        queue<int> Q;
+        for(int i = 0; i <n; i++){
+            if(!out[i]){
+                Q.push(i);
+            }
+        }
+        vector<int> ans;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            ans.push_back(f);
+            for(auto child : adj[f]){
+                if(--out[child] == 0){
+                    Q.push(child);
+                }
             }
         }
         sort(ans.begin(), ans.end());
