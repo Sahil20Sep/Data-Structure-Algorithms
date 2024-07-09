@@ -443,6 +443,9 @@ class Solution {
         for(auto it : adj[node]){
             if(!visited[it]){
                 flag |= dfs(it, node, adj, visited);
+                if(flag){
+                    return true;
+                }
             }else if(it != par){
                 return true;
             }
