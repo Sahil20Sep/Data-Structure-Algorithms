@@ -716,3 +716,79 @@ public:
         return true;
     }
 };
+
+-------------------------------------------------------------------------------------
+
+    (detect cycle in directed graph)
+
+---in the same path node have to visited again. called cycle
+
+class Solution {
+  public:
+  
+    bool dfs(int node, vector<bool> &visited, vector<bool> &path, vector<int> adj[]){
+        visited[node] = true;
+        path[node] = true;
+        for(auto child : adj[node]){
+            if(!visited[child]){
+                if(dfs(child, visited, path, adj)){
+                    return true;
+                }
+            }else if(path[child]) {
+                return true;
+            }
+        }
+        path[node] = false;
+        return false;
+    }
+  
+    bool isCyclic(int n, vector<int> adj[]) {
+        vector<bool> visited(n, false), path(n, false);
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                if(dfs(i, visited, path, adj)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+time is n + e (because of directed graph)
+
+-----1 vvector solution
+
+class Solution {
+  public:
+  
+    bool dfs(int node, vector<int> &visited, vector<int> adj[]){
+        visited[node] = 2;
+        for(auto child : adj[node]){
+            if(!visited[child]){
+                if(dfs(child, visited, adj)){
+                    return true;
+                }
+            }else if(visited[child] == 2){
+                return true;
+            }
+        }
+        visited[node] = 1;
+        return false;
+    }
+  
+    bool isCyclic(int n, vector<int> adj[]) {
+        vector<int> visited(n, 0);
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                if(dfs(i, visited, adj)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+------------------------------------------------------------------------
+
