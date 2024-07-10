@@ -1235,3 +1235,92 @@ class Solution {
         return dist;
     }
 };
+
+--------------------------------------------------------------------------------
+		(word ladder return shortest length)
+
+----
+
+class Solution {
+public:
+    int ladderLength(string start, string end, vector<string>& arr) {
+        int n = arr.size();
+        set<string> ms;
+        for(auto it : arr){
+            ms.insert(it);
+        }
+        queue<pair<string, int>> Q;
+        Q.push({start, 0});
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            string temp = f.first;
+            int d = f.second;
+            if(temp == end){
+                return d + 1;
+            }
+            for(int i = 0; i < temp.size(); i++){
+                string store = temp;
+                for(int j = 0; j < 26; j++){
+                    store[i] = (j + 'a');
+                    if(ms.find(store) != ms.end()){
+                        Q.push({store, d + 1});
+                        ms.erase(store);
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+};
+
+-------------II -- return complete path
+
+class Solution {
+public:
+    vector<vector<string>> findSequences(string start, string end, vector<string>& arr) {
+        vector<vector<string>> ans;
+        set<string> ms(arr.begin(), arr.end());
+        if(ms.find(end) == ms.end() || start.size() != end.size()){
+            return {};
+        }
+        queue<vector<string>> Q;
+        Q.push({start});
+        vector<string> used;
+        used.push_back(start);
+        int level = 0;
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            if(f.size() > level){
+                level++;
+                for(auto it : used){
+                    ms.erase(it);
+                }
+                used.clear();
+            }
+            string s = f.back();
+            if(s == end){
+                ans.push_back(f);
+                continue;
+            }
+            for(int i = 0; i < s.size(); i++){
+                string original = s;
+                for(int j = 0; j < 26; j++){
+                    original[i] = (j + 'a');
+                    if(ms.find(original) != ms.end()){
+                        used.push_back(original);
+                        f.push_back(original);
+                        Q.push(f);
+                        f.pop_back();
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+----optimized
+
+
