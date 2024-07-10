@@ -1555,4 +1555,46 @@ class Solution {
     }
 };
 
+---------------------------------------------------------------------------------
+
+		(shortest path in binary maze)
+
+class Solution {
+  public:
+    int shortestPath(vector<vector<int>> &arr, pair<int, int> sou, pair<int, int> des) {
+        int z = sou.first, w = sou.second;
+        int l = des.first, r = des.second;
+        if(arr[z][w] == 0 || arr[l][r] == 0){
+            return -1;
+        }
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dist(n, vector<int> (m, 1e9));
+        dist[z][w] = 0;
+        set<pair<int, pair<int, int>>> ms;
+        ms.insert({0, {z, w}});
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        while(ms.size()){
+            auto f = *ms.begin();
+            ms.erase(f);
+            int d = f.first;
+            int i = f.second.first;
+            int j = f.second.second;
+            for(auto it : movement){
+                int x = it.first + i;
+                int y = it.second + j;
+                if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 1 && 1 + dist[i][j] < dist[x][y]){
+                    if(dist[x][y] != 1e9){
+                        ms.erase({dist[x][y], {x, y}});
+                    }
+                    dist[x][y] = 1 + dist[i][j];
+                    ms.insert({dist[x][y], {x, y}});
+                }
+            }
+        }
+        return dist[l][r] == 1e9 ? -1 : dist[l][r];
+    }
+};
+
 
