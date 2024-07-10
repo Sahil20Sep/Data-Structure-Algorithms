@@ -1640,3 +1640,46 @@ public:
         return -1;
     }
 };
+
+--------------------------------------------------------------------------------------------------------------------
+
+		(path with minimum efforts)
+
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        set<pair<int, pair<int, int>>> ms;
+        ms.insert({0, {0, 0}});
+        vector<vector<int>> dist(n, vector<int> (m, 1e9));
+        dist[0][0] = 0;
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        while(ms.size()){
+            auto f = *ms.begin();
+            ms.erase(f);
+            int d = f.first;
+            int i = f.second.first;
+            int j = f.second.second;
+            if(i == n - 1 && j == m - 1){
+                return d;
+            }
+            for(auto it : movement){
+                int x = i + it.first;
+                int y = j + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m){
+                    int take = max(d, abs(arr[i][j] - arr[x][y]));
+                    if(take < dist[x][y]){
+                        if(dist[x][y] != 1e9){
+                            ms.erase({dist[x][y], {x, y}});
+                        }
+                        dist[x][y] = take;
+                        ms.insert({dist[x][y], {x, y}});
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+};
