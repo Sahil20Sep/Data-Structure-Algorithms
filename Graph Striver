@@ -1597,4 +1597,6 @@ class Solution {
     }
 };
 
+in this case all edges are unit you can also omit set and do perfom like bfs only queue will also work.
+
 
