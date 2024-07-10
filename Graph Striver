@@ -1599,4 +1599,44 @@ class Solution {
 
 in this case all edges are unit you can also omit set and do perfom like bfs only queue will also work.
 
+----queue solution (unit weight & queue is in linear order fashion)
 
+class Solution {
+public:
+    int shortestPathBinaryMatrix(vector<vector<int>>& arr) {
+        int n = arr.size();
+        if(arr[0][0] == 1 || arr[n - 1][n - 1] == 1){
+            return -1;
+        }
+        vector<vector<int>> dist(n, vector<int> (n, 1e9));
+        dist[0][0] = 0;
+        queue<pair<int, pair<int, int>>> ms;
+        ms.push({0, {0, 0}});
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}, 
+            {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+        };
+        while(ms.size()){
+            auto f = ms.front();
+            ms.pop();
+            int d = f.first;
+            int i = f.second.first;
+            int j = f.second.second;
+            if(i == n - 1 && j == n - 1){
+                return d + 1;
+            }
+            for(auto it : movement){
+                int x = it.first + i;
+                int y = it.second + j;
+                if(x >= 0 && x < n && y >= 0 && y < n && arr[x][y] == 0 && 1 + dist[i][j] < dist[x][y]){
+                    dist[x][y] = 1 + dist[i][j];
+                    if(x == n - 1 && y == n - 1){
+                        return dist[x][y] + 1;
+                    }
+                    ms.push({dist[x][y], {x, y}});
+                }
+            }
+        }
+        return -1;
+    }
+};
