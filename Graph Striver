@@ -1386,3 +1386,122 @@ public:
     }
 };
 
+------------------------------------------------------------------
+
+		(dijkstra algo)
+
+class Solution
+{
+	public:
+
+    vector<int> dijkstra(int n, vector<vector<int>> adj[], int src)
+    {
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> PQ;
+        PQ.push({0, src});
+        while(PQ.size()){
+            auto f= PQ.top();
+            PQ.pop();
+            int d = f.first;
+            int node = f.second;
+            for(auto it : adj[node]){
+                int wt = it[1];
+                int child = it[0];
+                if(wt + d < dist[child]){
+                    dist[child] = wt + d;
+                    PQ.push({dist[child], child});
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+------- (using visited array)
+
+class Solution
+{
+	public:
+
+    vector<int> dijkstra(int n, vector<vector<int>> adj[], int src)
+    {
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> PQ;
+        PQ.push({0, src});
+        vector<bool> visited(n, false);
+        while(PQ.size()){
+            auto f= PQ.top();
+            PQ.pop();
+            int d = f.first;
+            int node = f.second;
+            if(visited[node]){
+                continue;
+            }
+            visited[node] = true;
+            dist[node] = d;
+            for(auto it : adj[node]){
+                int wt = it[1];
+                int child = it[0];
+                if(wt + d < dist[child]){
+                    PQ.push({wt + d, child});
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+------
+
+not working for negative weight cycle and because going for forewere.
+
+E * logV
+
+same above code use queue working fine but take another time when any node get shortest dis again caluculate the child shortest dist based on this.
+
+-----set (to save time, erase redudent pair 
+
+class Solution
+{
+	public:
+
+    vector<int> dijkstra(int n, vector<vector<int>> adj[], int src)
+    {
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        set<pair<int, int>> ms;
+        ms.insert({0, src});
+        while(ms.size()){
+            auto f= *ms.begin();
+            ms.erase(ms.begin());
+            int d = f.first;
+            int node = f.second;
+            for(auto it : adj[node]){
+                int wt = it[1];
+                int child = it[0];
+                if(wt + d < dist[child]){
+                    if(dist[child] != 1e9){
+                        ms.erase({dist[child], child});
+                    }
+                    dist[child] = d + wt;
+                    ms.insert({dist[child], child});
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+--------------why not queue
+
+take a unnessacy path and time cosuming
+
+V ( log(heap size) + ne * log(heapsize))
+|
+|
+to V * v * 2 logV
+v2 --> E * logV
+
+
