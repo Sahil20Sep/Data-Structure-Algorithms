@@ -1683,3 +1683,8 @@ public:
         return -1;
     }
 };
+
+time is e * logV
+
+e = n*m*4
+v = n*m
