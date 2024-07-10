@@ -1504,4 +1504,55 @@ V ( log(heap size) + ne * log(heapsize))
 to V * v * 2 logV
 v2 --> E * logV
 
+---------------------------------------------------------------------------------------------------------
+
+		(find the shortest path using dijskra) using parent vector solution - backtrack
+
+class Solution {
+  public:
+    vector<int> shortestPath(int n, int m, vector<vector<int>>& edges) {
+        vector<pair<int, int>> adj[n + 1];
+        for(auto it : edges){
+            int u = it[0], v = it[1], wt = it[2];
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
+        }
+        set<pair<int, int>> ms;
+        ms.insert({0, 1});
+        vector<int> dist(n + 1, 1e9);
+        vector<int> par(n + 1, -1);
+        dist[1] = 0;
+        while(ms.size()){
+            auto f = *ms.begin();
+            ms.erase(f);
+            int d = f.first;
+            int node = f.second;
+            for(auto it : adj[node]){
+                int wt = it.second, child = it.first;
+                if(wt + d < dist[child]){
+                    if(dist[child] != 1e9){
+                        ms.erase({dist[child], child});
+                    }
+                    par[child] = node;
+                    dist[child] = d + wt;
+                    ms.insert({dist[child], child});
+                }
+            }
+        }
+        if(par[n] == -1){
+            return {-1};
+        }
+        vector<int> path;
+        int temp = n;
+        while(par[n] != -1){
+            path.push_back(n);
+            n = par[n];
+        }
+        path.push_back(n);
+        reverse(path.begin(), path.end());
+        path.insert(path.begin(), dist[temp]);
+        return path;
+    }
+};
+
 
