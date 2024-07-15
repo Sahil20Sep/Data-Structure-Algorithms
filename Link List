@@ -1,0 +1,266 @@
+difference between array and linklist
+
+where is used? --> stack and queue
+
+real life example --> brower --> search --> takeyouforward --> take probblem --> leetcode / also do back tracking (double link list)
+singly link list --> todo list
+
+Node* y = new Node();
+cout << y // give the address
+cout << y.data // gives error
+cout << y->data // gives y data
+cout << y.next // gives error
+cout << y-> next // give next address
+
+because here y is ptr so use ->
+
+Node y = Node();
+y is object
+cout << y // give error
+cout << y -> data // gives error
+cout << y.data // gives data
+
+because here y is object so use .
+
+32 bit architecture --> ptr take 4 byte
+64 bit architecture --> ptr take 8 byte
+
+never ever change the head pointer take temp pointer.
+
+-----------------------------------------------------------
+
+    (array to linklist)
+
+simple question
+
+  (traverse in linklist) --> O(N) time
+
+-------------------------------------------------------
+
+
+length of linklist O(N) time
+
+-------------------------------------------------------
+
+search in link list
+
+-------------------------------------------------------
+
+      (delete a node)
+
+---head
+
+if head is null return null;
+create temp = head;
+head = head -> next;
+delete temp;
+
+return head;
+
+---tail
+
+if(head is null or head -> next == nULl) return null;
+while(temp -> next -> next)
+
+delete(temp -> next)
+temp -> next = NULL;
+
+---delete kth element in linklist
+
+write the logic for head
+
+store current and prev node ;
+
+prev -> next = prev -> next -> next;
+
+----delete input val node
+
+-------------------------------------------------------
+
+        (insert)
+
+----head
+
+temp -> next = head;
+return temp; // do not change the head.
+
+----tail
+
+head == null return new Node(5);
+
+while(temp -> next)
+
+----in betwween
+
+if(head == NULL ) and k == 1 then insert o/w return null;
+
+if(k == 1) temp -> next = head;
+
+temp -> next = new Node();
+return head;
+
+if(k >= 2)
+  while(temp)
+  cnt++
+  if(cnt == k - 1)
+    x = new node;
+    x -> next = temp -> next;
+    temp -> next = x;
+
+----insert before value
+
+head == NULL return null;
+
+if(head -> val == givenVal)
+
+while(temp -> next)
+  cnt++
+  if(temp -> next -> data == GiveVal)
+    x = new node;
+    x -> next = temp -> next;
+    temp -> next = x;
+
+if value was not there in linklist return not present.
+
+----------------------------------------------------------------
+          doubly link list real time is browers
+
+---struct
+val
+next
+prev
+
+----array into double linklist
+
+new node-> back = prev;
+prev -> next = new Node;
+prev = new node;
+return head;
+
+--------------------------------------------------------------------------
+          (delete a node)
+
+---head of the linklist
+
+head == null || head -> next = null return null
+
+prev = head;
+head = head -> nexxt;
+head -> prev = null;
+prev -> next = null;
+delete(prev)
+return head;
+
+----tail 
+
+while(tail-> next)
+
+
+prev = teil -> back;
+prev -> next = null;
+tail -> back = null
+
+-----kth element   (k 1 to n)
+
+head = null return null
+
+directly traverse to k node
+
+then 
+
+take prev 
+take next
+left = temp -> prev;
+right = temp -> next;
+
+if(left == null and right == null) return null // single node 
+if(left == null) // head
+if(right == null) // tail
+
+left -> next = right;
+right -> prev = left;
+
+temp -> next = null;
+temp -> prev = null;
+
+delete(temp)
+return head;
+
+------delete give node
+
+
+prev = temp -> prev;
+next = temp -> next;
+
+if(next == NULL)  //tail
+  prev -> next = null;
+  temp -> back = null
+  free(temp);
+
+prev -> next = next;
+front -> prev = prev;
+
+temp -> next = temp-> back = null;
+
+-----------------------------------------------------------
+
+          (insert the node) - before the node
+
+----before head
+
+new node
+
+new node -> next = head;
+head -> prev = newNode;
+return new Node;
+
+----before tail
+
+single node // same as before head call just
+
+> 1 node;
+
+whiel(teil-> next)
+
+prev = tail -> pev
+new node(val, tail, prev)
+prev -> nexxt = new node
+tail -> back = new node;
+
+------before kth element
+
+itrerate throught k
+
+if(k=1) before head will be called.
+
+while(temp != null)
+cnt++
+if(cnt == k)
+break;
+
+temp is current now. // before this 
+
+prev = temp -> pev
+new node(val, temp, prev)
+prev -> nexxt = new node
+tail -> back = new node;
+
+------before the node
+
+prev = node -> pev
+new node(val, node, prev)
+prev -> next = neww node
+node -> back = new node
+
+-----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
