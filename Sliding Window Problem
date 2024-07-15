@@ -607,3 +607,100 @@ public:
         return ans;
     }
 };
+
+-------------------------------------------------------------------------------------------------------
+
+                (trapping rain water)
+
+----brute force
+
+class Solution {
+public:
+    int trap(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            int val = i;
+            for(int j = i - 1; j >= 0; j--){
+                if(arr[j] > arr[val]){
+                    val = j;
+                }
+            }
+            if(val == i){
+                continue;
+            }
+            int val2 = i;
+            for(int j = i + 1; j < n; j++){
+                if(arr[j] > arr[val2]){
+                    val2 = j;
+                }
+            }
+            if(val2 == i){
+                continue;
+            }
+            // cout << i << " " << ans << endl;
+            ans += min(arr[val], arr[val2]) - arr[i];
+            // cout << i << " " << ans << endl;
+
+        }
+        return ans;
+    }
+};
+
+----better (pref and suff array)
+
+class Solution {
+public:
+    int trap(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        vector<int> pref(n, -1), suff(n, -1);
+        for(int i = 0; i < n; i++){
+            if(i == 0){
+                pref[i] = arr[i];
+            }else{
+                pref[i] = max(arr[i], pref[i - 1]);
+            }
+        }
+        for(int i = n - 1; i >= 0; i--){
+            if(i == n - 1){
+                suff[i] = arr[i];
+            }else{
+                suff[i] = max(arr[i], suff[i + 1]);
+            }
+        }
+        for(int i = 0; i < n; i++){
+            ans += min(pref[i], suff[i]) - arr[i];
+        }
+        return ans;
+    }
+};
+
+------two pointer approch
+
+class Solution {
+public:
+    int trap(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        int l = 0, r = n - 1, leftMost = -1, rightMost = -1;
+        while(l <= r){
+            if(arr[l] <= arr[r]){
+                if(arr[l] >= leftMost){
+                    leftMost = arr[l];
+                }else{
+                    ans += leftMost - arr[l];
+                }
+                l++;
+            }else{
+                if(arr[r] >= rightMost){
+                    rightMost = arr[r];
+                }else{
+                    ans += rightMost - arr[r];
+                }
+                r--;
+            }
+        }
+        return ans;
+    }
+};
