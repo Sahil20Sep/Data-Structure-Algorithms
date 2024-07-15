@@ -1286,5 +1286,59 @@ public:
     }
 };
 
+----------------------------------------------------------------------------------------------
 
-                    
+                    (sliding window maximum)
+
+-----O(2N) solution using deque
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& arr, int k) {
+        deque<int> DQ;
+        int n = arr.size();
+        vector<int> ans;
+        for(int i = 0; i < n; i++){
+            if(!DQ.empty() && DQ.front() == i - k){
+                DQ.pop_front();
+            }
+            while(!DQ.empty() && arr[DQ.back()] <= arr[i]){
+                DQ.pop_back();
+            }
+            DQ.push_back(i);
+            if(i >= k - 1){
+                ans.push_back(arr[DQ.front()]);
+            }
+        }
+        return ans;
+    }
+};
+
+---------------------------------------------------------------------------------------------------
+
+                    (largest rectangle in histogram) use of one stack
+
+class Solution {
+public:
+
+    int largestRectangleArea(vector<int>& arr) {
+        int n = arr.size();
+        stack<int> st;
+        int maxArea = 0;
+        for(int i = 0; i <= n; i++){
+            while(!st.empty() && (i == n || arr[i] <= arr[st.top()])){
+                int height = arr[st.top()];
+                st.pop();
+                int width;
+                if(st.empty()){
+                    width = i - (-1) - 1;
+                }else{
+                    width = i - st.top() - 1;
+                }
+                maxArea = max(maxArea, height * width);
+            }
+            st.push(i);
+        }
+        return maxArea;
+    }
+};
