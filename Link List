@@ -769,6 +769,85 @@ q1. how we sure that they will collind?
 
 q2. if collaid how we sure that this is a starting node of cycle.
 
+------------------------------------------------------------------------------
+
+        (delete a occureance in doubly link lits)
+
+----simple
+
+do tranversel and change the links
+
+temp = head
+while(temp)
+    if(temp -> data == give val)
+        if(temp == head)
+            head = head -> next;
+        prev = temp -> prev;
+        next = temp -> next;
+        if(next)
+        next -> prev = prev; 
+        if(prev)
+        prev -> next = next;
+        delete temp;
+        temp = next;
+    else 
+    temp = temp-> next;
+
+n time and 1 space
+
+--------------------------------------------------------------------------
+distinct number
+            (find the sum of parit in sorted doubly link list)
+
+-----brute force
+
+temp1 --
+
+    temp2 --> temp -> next;
+
+    if(val1 + val2 == sum)  // basically check for evenry pari
+
+n2 and 1
+
+-----better 
+
+put into array and apply two pointer logic
+
+---optimal
+
+first = head
+end = traverse till end and then apply pointer logic
+
+while(l -> val < r -> val)
+    // two pointer
+
+find tail n
+while loop n
+
+over all 2n time and 1 in space
+
+------------------------------------------------------------------------------------
+
+        (remove duplicates in dll)
+
+----brute fforce
+
+take the advantage of contiguous
+
+----optimal
+temp = head
+while(temp && temp -> next){
+    int nextNode = temp -> next;
+    while(nextNode && nextNode ->val = temp -> val){
+        Node* duplicate = nextNode;
+        nexNode = nextNode-> nexxt;
+        free(duplicate);
+
+    temp -> next = nextNode;
+    if(nextNode) nextNode -> prev = temp;
+    temp = temp -> next;
+
+return head;
 
 
 
