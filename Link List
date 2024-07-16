@@ -976,3 +976,157 @@ n1 + n2
 
 reuse the node 1 in space
 
+-------------------------------------------------------------------------
+
+        (flattern a link list)
+
+----brute force
+
+take the data and sort this make the linklist
+
+n * m + n*m log(n*m) + n*m
+
+sapce n * m * 2  new link list and array
+
+-----better
+
+reuse the link list and use sorrting property
+
+Node* mergeTwoFlattenList(Node* head1, Node* head2){
+    Node* dummyNode = new Node(-1);
+    Node* temp = dummyNode;
+    Node* a = head1;
+    Node* b = head2;
+    while(a && b){
+        if(a -> data <= b -> data){
+            temp -> bottom = a;
+            temp = a;
+            a = a -> bottom;
+        }else{
+            temp -> bottom = b;
+            temp = b;
+            b = b -> bottom;
+        }
+        temp -> next = NULL;
+    }
+    if(a) temp -> bottom = a;
+    if(b) temp -> bottom = b;
+    return dummyNode -> bottom;
+}
+
+Node *flatten(Node *head) {
+    if(head == NULL || head -> next == NULL){
+        return head;
+    }
+    Node* newHead = flatten(head -> next);
+    return mergeTwoFlattenList(head, newHead);
+}
+
+space is take horizontal only n
+time is n * 2m 
+
+---------------------------------------------------------------------------
+
+        (merge K sorted link list)
+
+----brute
+
+take data, store into array and sort then 
+
+converty array to link list 
+return head;
+
+-----better
+
+same as above solution make some changes.
+
+(n1 + n2) + (n1 + n2 + n3) + (n1 + n2 + n3 + n4)  .... time 
+n + 2n + 3n +  ... Kn
+k * (k + 1) / 2 * n
+
+power of cubes
+
+lass Solution {
+public:
+
+    ListNode* mergeTwoSortedLinkedList(ListNode* a, ListNode* b){
+        if(a == NULL && b == NULL){
+            return NULL;
+        }
+        if(a == NULL) return b;
+        if(b == NULL) return a;
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* temp = dummyNode;
+        ListNode* head1 = a;
+        ListNode* head2 = b;
+        while(head1 != NULL && head2 != NULL){
+            if(head1 -> val <= head2 -> val){
+                temp -> next = head1;
+                head1 = head1 -> next;
+            }else{
+                temp -> next = head2;
+                head2 = head2 -> next;
+            }
+            temp = temp -> next;
+        }
+        if(head1) temp -> next = head1;
+        if(head2) temp -> next = head2;
+        return dummyNode -> next;
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& arr) {
+        int n = arr.size();
+        if(n == 0){
+            return NULL;
+        }
+        if(n == 1){
+            return arr[0];
+        }
+        ListNode* head = arr[0];
+        for(int i = 1; i < n; i++){
+            head = mergeTwoSortedLinkedList(head, arr[i]);
+        }
+        return head;
+    }
+};
+
+----optimal
+
+min-head pq
+
+class Solution {
+public:
+
+    ListNode* mergeKLists(vector<ListNode*>& arr) {
+        int n = arr.size();
+        if(n == 0){
+            return NULL;
+        }
+        if(n == 1){
+            return arr[0];
+        }
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* temp = dummyNode;
+        priority_queue<pair<int, ListNode*>, vector<pair<int, ListNode*>>, greater<pair<int, ListNode*>>> PQ;
+        for(int i = 0; i < n; i++){ // n * logN
+            if(arr[i] != NULL){
+                PQ.push({arr[i] -> val, arr[i]});
+            }
+        }
+        while(PQ.size()){ // total number of node
+            auto f = PQ.top();
+            PQ.pop();
+            temp -> next = f.second;
+            temp = temp -> next;
+            if(f.second -> next){
+                PQ.push({f.second -> next -> val, f.second -> next}); //  logN
+            }
+        }
+        return dummyNode -> next;
+    }
+};
+
+k * logk + n* k * logk
+space at a time only K elemtn is there.
+
+
