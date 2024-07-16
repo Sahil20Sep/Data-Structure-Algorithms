@@ -765,6 +765,10 @@ while(temp !+ NULL)
 return null
 return null; // liner no cycle present
 
+q1. how we sure that they will collind?
+
+q2. if collaid how we sure that this is a starting node of cycle.
+
 
 
 
