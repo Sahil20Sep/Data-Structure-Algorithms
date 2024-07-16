@@ -849,6 +849,62 @@ while(temp && temp -> next){
 
 return head;
 
+--------------------------------------------------------------------------
+
+        (reverse in k size)
+
+class Solution {
+public:
+
+    ListNode* findKthNode(ListNode* temp, int k){
+        k--;
+        while(temp && k > 0){
+            k--;
+            temp = temp -> next;
+        }
+        return temp;
+    }
+
+    ListNode* reverseLinkList(ListNode* head){
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        ListNode* newHead = reverseLinkList(head -> next);
+        ListNode* front = head -> next;
+        front -> next = head;
+        head -> next = NULL;
+        return newHead;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode* prev = NULL;
+        ListNode* temp = head;
+        while(temp != NULL){
+            ListNode* store = temp;
+            ListNode* KthNode = findKthNode(store, k);
+            if(KthNode == NULL){
+                if(prev){
+                    prev -> next = temp;
+                }
+                break;
+            }
+            ListNode* nextNode = KthNode -> next;
+            KthNode -> next = NULL;
+            reverseLinkList(temp);
+            if(temp == head){
+                head = KthNode;
+            }else{
+                prev -> next = KthNode;
+            }
+            prev = temp;
+            temp = nextNode;
+        }
+        return head;
+    }
+};
+
+n + n kth node + reverse
+
 
 
 
