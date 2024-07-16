@@ -459,8 +459,311 @@ space is 1.
 -------------------------------------------------------------------------------------------
 
 
+            (delete N th node from last)
+
+take count / length
+
+now delete from start = length - N th node
+
+if(N == N)return head ->next;
+delete(head);cnt--
+if(cnt == 0)
+deleteNode = temp -> next;
+temp ->next  = temp -> next -> next;
+delte(deleteNode)
+
+----optimized
+
+slow and fast pointer
+first N step only fast
+and slow and fast
+slow -> next = slow -> next -> next;
+
+--------------------------------------------------------------------------------------------
+            (reverse link list)
+
+---brute force datareplacement
+
+stack and do data replacement;
+reverse interms of data.
+2n and n
+
+----optimmized
+
+store temp -> next;
+temp -> next = prev
+prev = temp;
+temp = store;
+
+---recursive
+
+head null head -> next null return head
+
+newHead = func(head -> next)
+front = head -> next;
+front -> next = head;
+head -> next = null
+
+-----------------------------------------
+
+    (check palindrome)
+
+----brute
+
+save in stack
+
+and none by one compare if not match return false o/w return true;
+
+2n and n
+
+------
+
+slow and fast pointer to find bich ka element
+
+while(fast -> next && fast -> next -> next)
+
+newhead = reverse(slow -> next)
+
+first= head;
+second = newHead;
+
+while(second){
+    compare
+    not match reverse(newHead) false
+
+revere(newHead
+reutn true;
+
+time is 2n 
+space 1
+
+------------------------------------------------------------
+        (add 1 to ll)
+
+-----
+
+first reverse the linklist
+
+now take carry 1 and run loop and change the data.
+if(sum < 10){
+    break;
+
+if(carry == 1)
+    new Node(1);
+    node -> next = head;
+    new head = newnode
+    return new node
+
+reverse(head)
+return head
+
+3n and 1
+
+-----use recursion
+
+if(head == null)
+return 1
+
+sum = data + func(head-> next)
+if(sum < 10)
+    data = sum
+    return 0;
+
+data = 0;
+return 1;
+
+main
+
+func() --> carry1 
+
+new node(1)
+
+new node -> next = head;
+return new node;
+
+---------------------------------------------------
+
+        (find the intersection of two linklist)
+
+----brute force
+
+use map
+
+make true
+
+again traverse head2 and check exists or not if return true
+
+time n * logN + n * logN
+spce max(n1, n2)
+
+-------better
+
+find the l1
+fine the l2
+
+return func()
+
+func(small, large, l2 - l1
+or
+func(small, large, l1 - l2)
+
+func{
+    while(d) temp -> next d=--
+
+    if(t1 != t2){
+
+return t1;
+
+-----optimal
+
+when temp1 is null become head of l2 link list
+
+when tem2 is null become head of l1 link list
+
+and while(tem1 != temp2)
+    return temp1
+
+return false;
+
+if(head1 == null || head2 == null)
+    return null
+
+t1 = head1 , t2 = head2
+
+while(t1 != t2) // head1 == head2 for that condition
+
+t1 -> next t2 -> next
+if(t1 == t2) return t1
+if(!t1) t1 =head2;
+if(!t2) t2 = head1;
+
+return t1
+
+each of node travelr in null if not colliede (n1 + n2)
+
+--------------------------------------------------------------------------------
+
+    middle of node
 
 
+----brute 
+
+find the length and middle node (n/2) + 1
+
+n + n/2 time
+1
+
+----tortoise and hare
+
+while(fast && fast -> nxt)
+
+return slow
+
+n/2 , 1
+
+---------------------------------------------------------------------------------
+
+        (detect cycle)
+
+----brute force
+
+if(map.find(exitss)) --> return true
+map
+
+
+return false;
+
+2*logN * N
+N
+
+----better (tortioise and hare)
+
+slow = head, fast = head;
+
+while(fast && fast -> next)
+    if(slow == fast) return true
+return false
+
+n, 1
+
+why 1 step and why 2 step
+
+d % 1 == 0
+bount toward to 0.
+
+-------------------------------------------------------------------------
+
+        (length of loop)
+
+----brute force
+
+hash<node, timer>
+
+if(again visted)
+return new timer - hash[node] // length of cycle
+
+2*logN * N
+N
+----optimized
+
+same as above approch
+
+if(slow == fast) return findLen(slow, fast)
+
+findlen
+    fast = fast-> enxt;
+    cnt = 1;
+    while(slow != fast){
+        cnt++;
+
+return cnt // length
+
+-------------------------------------------------------------------------
+
+            Delete the middle node
+
+-----brute force
+
+find out n
+
+reach at n/2 th node and change the link and delte the n/2 + 1 node. // middle node.
+
+n + n/2
+1
+
+-----optimal
+
+take a third prev variable with starndard totois algorithms.
+
+-----optimal
+check for head == null and head => nex t= null
+
+skip one time slow will be reach before the middle node. just a slit modification.
+
+n/2 , 1
+
+----------------------------------------------------------------------------
+
+        (staring node in cycle)
+
+----brute
+
+hasing
+
+if(has.find== true) return node;
+hash[node] = 1
+
+n * logN
+N
+
+------optimal
+
+while(temp !+ NULL)
+    if(slow == fast)
+        retun func(head, fast; head == fast return fast;
+
+return null
+return null; // liner no cycle present
 
 
 
