@@ -903,7 +903,7 @@ public:
     }
 };
 
-n + n kth node + reverse
+n + n kth node + reverse + (out side loop) --> n/ k
 
 
 
