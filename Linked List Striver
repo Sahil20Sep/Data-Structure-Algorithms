@@ -28,7 +28,8 @@ because here y is object so use .
 never ever change the head pointer take temp pointer.
 
 -----------------------------------------------------------
-
+    singly link list
+--------------------------------------------------------
     (array to linklist)
 
 simple question
