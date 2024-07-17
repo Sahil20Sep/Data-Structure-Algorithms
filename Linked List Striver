@@ -480,6 +480,35 @@ first N step only fast
 and slow and fast
 slow -> next = slow -> next -> next;
 
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        if(head == NULL){
+            return NULL;
+        }
+        ListNode* slow = head;
+        ListNode* fast = head;
+        int cnt = n;
+        while(cnt > 0){
+            cnt--;
+            fast = fast -> next;
+        }
+        if(fast == NULL){
+            //head node
+            return head -> next;
+        }
+        while(fast -> next){
+            slow = slow -> next;
+            fast = fast -> next;
+        }
+        ListNode* store = slow -> next;
+        slow -> next = slow -> next -> next;
+        store -> next = NULL;
+        delete(store);
+        return head;
+    }
+};
+
 --------------------------------------------------------------------------------------------
             (reverse link list)
 
