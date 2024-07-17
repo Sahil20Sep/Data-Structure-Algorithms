@@ -1,9 +1,11 @@
 ancestors --> parent, grandparent, ettc..
 
+-------------------------------------------------------------------------------------------------------------------------------------------
+
 full binary tree -- > all node have 0 or 2 children
 no. of leaf node = 1 + no. of internal Node
 
----------check whether full binary tree or not--------------
+---------check whether full binary tree or not
 
 bool isFullTree (struct Node* root)
 {
