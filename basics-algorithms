@@ -1,37 +1,32 @@
-                (sieve of erathonis)
+----------------------------------------------------------------------------
 
-class Solution
-{
-public:
-    vector<int> sieveOfEratosthenes(int n)
-    {
-        vector<bool> mark(n + 1, true);
-        
-        mark[0] = mark[1] = false;
-        
-        vector<int> ans;
-        
-        for(int start = 2; start <= n; start++){ --> also put start * start
-            
-            if(mark[start] == true){
-                
-                ans.push_back(start);
-                
-                for(int ers = start + start; ers <= n; ers += start){ --> also put start * start
-                    
-                    mark[ers] = false;
-                    
-                }
-            }
-        }
-        
-        return ans;
-    }
-};
+    (exxtrack the digit and coutn the digit)
 
-time complexity --> n (1/2 + 1/3 + 1/4 + 1/5 + ... + 1) --> O(NlogN);
+while(n > 0)
+n%10  
+store.push_back(n%10);
+n/10
+cnt++;
 
-but when i use mark[start] = true --> n (1/2 + 1/3 + 1/7 + 1/ 11 ++ ...) --> O(Nlog(Log(N)))
+-------------------------------------------------------------------------------
+
+      reverse a number
+
+low = 0, high = n - 1
+
+temp = arr[low]
+arr[low] = arr[high]
+arr[high] = temp
+
+-----------------------------------------------------------------------------
+
+palindrome check
+
+low = 0 high n - 1
+while Low < high
+arr[low] == arr[high] 
+
+else return false
 
 --------------------------------------------------------------------------------------------------------------
 
@@ -100,4 +95,73 @@ b == 0 return a
 
 complexity logfi (min(a, b))
 
-base is changing if it is constant thenw e can write 10, 2 as a base.
+base is changing if it is constant then e can write 10, 2 as a base.
+
+----------------------------------------------------------------------------------
+
+  give prime number in the range of 1 to N
+
+---brute 
+
+2 -> N
+
+  Check(i) // is prime number sqrt(N) approch
+
+n * sqrt(N) --> tiime complexity
+
+------------better
+
+prime[n + 1, true]
+prime[0] = false;
+prime[1] = false;
+
+for(2 -> N)
+
+  if(prime[i] == true
+    for(j = 2 * i; j <= n j += i prime[j] false
+
+2 -> n 
+  if true --> print
+
+-----optima
+
+for 2 -> i*i <= n
+    inside loop
+    for j = i * il j <= n; j+= i
+
+N log(logN)
+
+prime harmonic series
+space N
+
+---------------------------------------------------------------
+
+    L to R -- count the number 
+
+brute 
+for 1 to query size
+for L to R
+  if(j is prime)
+      cnt++;
+
+Q * r-l +1 * sqrt(N)
+
+---better
+
+precomputeation of prime number N loglogN + q * r - l + 1
+ 
+for 1 to q
+  for l to r
+    if(prime[j] == true) cnt++;
+
+-----------opptimal - prefix sum
+
+precompute the prime array and prefix array
+
+for 1 to q
+  l, r
+  here handle some case 
+  cnt += pref[r] - pre[l -1];
+
+time N loglogN + N + Q
+  
