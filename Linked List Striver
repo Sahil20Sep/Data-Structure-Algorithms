@@ -621,6 +621,48 @@ return head
 
 3n and 1
 
+class Solution
+{
+    Node* reverseLinkList(Node* temp){
+        if(temp == NULL || temp -> next == NULL){
+            return temp;
+        }
+        Node* newHead = reverseLinkList(temp -> next);
+        Node* aage = temp -> next;
+        aage -> next = temp;
+        temp -> next = NULL;
+        return newHead;
+    }
+    
+    public:
+    Node* addOne(Node *head) 
+    {
+        Node* newHead = reverseLinkList(head);
+        Node* temp = newHead;
+        int carry = 1;
+        while(temp != NULL && carry > 0){
+            int sum = carry;
+            if(temp) sum += temp -> data;
+            if(sum < 10){
+                temp -> data = sum;
+                carry = 0;
+                break;
+            }
+            carry = 1;
+            temp -> data = 0;
+            temp = temp -> next;
+        }
+        if(carry){
+            Node* node = new Node(1);
+            node -> next = newHead;
+            newHead = node;
+            return newHead;
+        }
+        head = reverseLinkList(newHead);
+        return head;
+    }
+};
+
 -----use recursion
 
 if(head == null)
@@ -642,6 +684,30 @@ new node(1)
 
 new node -> next = head;
 return new node;
+
+class Solution
+{
+    
+    int func(Node* head){
+        if(head == NULL) return 1;
+        int sum = head -> data + func(head -> next);
+        head -> data = sum % 10;
+        return sum < 10 ? 0 : 1;
+    }
+    
+    public:
+    Node* addOne(Node *head) 
+    {
+        int carry = func(head);
+        if(carry){
+            Node* node = new Node(1);
+            node -> next = head;
+            head = node;
+            return head;
+        }
+        return head;
+    }
+};
 
 ---------------------------------------------------
 
