@@ -227,10 +227,271 @@ class Solution
 tiime 2n + nlogN
 space = n + 3 * n
 
+--------------------------------------------------------------------------
+
+          remove the minimum interval so that no overlapping interval exists
+
+class Solution {
+public:
+
+    static bool comp(vector<int> &a, vector<int> &b){
+        return a[1] < b[1];
+    }
+
+    int eraseOverlapIntervals(vector<vector<int>>& arr) {
+        int n = arr.size();
+        sort(arr.begin(), arr.end(), comp);
+        int lastTime = arr[0][1];
+        int maxNonOverlappingInterval = 1;
+        for(int i = 1; i < n; i++){
+            if(arr[i][0] >= lastTime){
+                maxNonOverlappingInterval++;
+                lastTime = arr[i][1];
+            }
+        }
+        return n - maxNonOverlappingInterval;
+    }
+};
+
+n + nLogN
 
 
+-------------------------------------------------------------------------------
 
+        add pair into array and make sure that it's not overlap 
 
+----brute force
+
+figure out the left segment and right segement and insert the overlapping interval with min(all left) and max(all right).
+
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& arr, vector<int>& newInterval) {
+        int n = arr.size();
+        vector<vector<int>> result;
+        int i = 0;
+        while(i < n && arr[i][1] < newInterval[0]){
+            result.push_back(arr[i]);
+            i++;
+        }
+        while(i < n && arr[i][0] <= newInterval[1]){
+            newInterval[0] = min(arr[i][0], newInterval[0]);
+            newInterval[1] = max(arr[i][1], newInterval[1]);
+            i++;
+        }
+        result.push_back(newInterval);
+        while(i < n){
+            result.push_back(arr[i++]);
+        }
+        return result;
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
+minimum number of railway platform needed for all train
+
+-----brute force
+
+take one interval and see how many other interval are intersect with this interval. check for every interval and maximum is your answer.
+
+take 4 condition
+
+--------optimized
+
+class Solution{
+    public:
+    
+    int findPlatform(int arr[], int dep[], int n)
+    {
+        sort(arr, arr + n);
+        sort(dep, dep + n);
+        int cnt = 0;
+        int i= 0, j= 0, maxCount = 1;
+        while( i < n && j < n ){
+            if(arr[i] <= dep[j]){
+                cnt++;
+                i++;
+            }else{
+                cnt--;
+                j++;
+            }
+            maxCount = max(maxCount, cnt);
+        }
+        return maxCount ;
+    }
+};
+
+----------------------------------------------------------------------
+
+    (valid paranthesis checker)
+
+())( -- > at a time cnt == -1 edge case.
+
+brute force -- recursion
+
+trying out all combination * with empty, ( and ).
+
+memoize it n2 and n2.
+
+-----2 vaariable
+
+class Solution {
+public:
+    bool checkValidString(string s) {
+        int n = s.size();
+        int minCount = 0;
+        int maxCount = 0;
+        for(int i = 0; i < n;i++){
+            if(s[i] == '('){
+                minCount++;
+                maxCount++;
+            }else if(s[i] == ')'){
+                minCount--;
+                maxCount--;
+            }else{
+                minCount--;
+                maxCount++;
+            }
+            if(minCount < 0){
+                minCount = 0;
+            }
+            if(maxCount < 0){
+                return false;
+            }
+        }
+        return minCount == 0;
+    }
+};
+
+-----------------------------------------------------------------------
+
+    candy
+
+-----brute
+
+class Solution {
+public:
+    int candy(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> left(n, 0), right(n, 0);
+        left[0] = right[n - 1] = 1;
+        for(int i = 1; i < n; i++){
+            if(arr[i] > arr[i - 1]){
+                left[i] = left[i - 1] + 1;
+            }else{
+                left[i] = 1;
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            if(arr[i] > arr[i + 1]){
+                right[i] = right[i + 1] + 1;
+            }else{
+                right[i] = 1;
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < n;i++){
+            ans += max(right[i], left[i]);
+        }
+        return ans;
+    }
+};
+
+-----eleminate one vector
+
+class Solution {
+public:
+    int candy(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> left(n, 0), right(n, 0);
+        left[0] = right[n - 1] = 1;
+        for(int i = 1; i < n; i++){
+            if(arr[i] > arr[i - 1]){
+                left[i] = left[i - 1] + 1;
+            }else{
+                left[i] = 1;
+            }
+        }
+        int ans = left[n - 1];
+        left[n - 1] = 1;
+        for(int i = n - 2; i >= 0; i--){
+            int store = left[i];
+            if(arr[i] > arr[i + 1]){
+                left[i] = left[i + 1] + 1;
+            }else{
+                left[i] = 1;
+            }
+            ans += max(left[i], store);
+        }
+        return ans;
+    }
+};
+
+------------------slop
+
+class Solution {
+public:
+    int candy(vector<int>& arr) {
+        int n = arr.size();
+        int i = 1;
+        int sum = n;
+        while(i < n){
+            if(arr[i - 1] == arr[i]){
+                i++;
+                continue;
+            }
+            int peak = 0;
+            while(i < n && arr[i] > arr[i - 1]){
+                peak++;
+                sum += peak;
+                i++;
+            }
+            int down = 0;
+            while(i < n && arr[i - 1] > arr[i]){
+                down++;
+                sum += down;
+                i++;
+            }
+            sum -= min(peak, down);
+        }
+        return sum;
+    }
+};
+
+-----------------------------------------------------------------------------------
+
+      Fractional knap shake
+
+class Solution {
+  public:
+  
+    static bool comp(Item item1, Item item2){
+        double a = (double)item1.value / (double)item1.weight;
+        double b = (double)item2.value / (double)item2.weight;
+        return a > b;
+    }
+  
+    double fractionalKnapsack(int w, Item arr[], int n) {
+        sort(arr, arr + n, comp);
+        double totalValue = 0;
+        int totalWeight = w;
+        for(int i = 0; i < n; i++){
+            int val = arr[i].value;
+            int ww = arr[i].weight;
+            if(ww <= totalWeight){
+                totalValue += val;
+                totalWeight -= ww;
+            }else{
+                totalValue += (double)(((double) val / (double) ww) * (double) totalWeight);
+                break;
+            }
+        }
+        return totalValue;
+    }
+};
+
+n + nLogN
 
 
 
