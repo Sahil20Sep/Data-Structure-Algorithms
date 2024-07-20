@@ -1203,56 +1203,29 @@ public:
 class Solution {
 public:
     vector<int> asteroidCollision(vector<int>& arr) {
-        
         int n = arr.size();
-
         stack<int> st;
-
         for(int i = 0; i < n; i++){
-
-            if(st.empty()){
-
+            if(arr[i] > 0){
                 st.push(arr[i]);
-                continue;
-
-            }
-
-            int curr = arr[i];
-
-            while(!st.empty() && st.top() > 0 && curr < 0 && st.top() < abs(curr)){
-
-                st.pop();
-
-            }
-
-            if(!st.empty() && st.top() > 0 && curr < 0){
-
-                if(st.top() == abs(curr)){
-
+            }else{
+                while(st.size() && st.top() > 0 && st.top() < abs(arr[i])){
                     st.pop();
-
                 }
-
-                continue;
-
+                if(st.size() && st.top() == abs(arr[i])){
+                    st.pop();
+                }
+                else if(st.size() == 0 || st.top() < 0){
+                    st.push(arr[i]);
+                }
             }
-
-            st.push(curr);
-            
         }
-
-        vector<int> ans;
-
+        vector<int> ans(st.size());
+        int t = st.size() - 1;
         while(st.size()){
-
-            ans.push_back(st.top());
-
+            ans[t--] = st.top();
             st.pop();
-
         }
-
-        reverse(ans.begin(), ans.end());
-
         return ans;
     }
 };
@@ -1264,57 +1237,31 @@ public:
 class Solution {
 public:
     string removeKdigits(string s, int k) {
-
         int n = s.size();
-
-        string ans = "";
-
-        if(n == k){
-
-            ans.push_back('0');
-            return ans;
-
-        }
-
         stack<char> st;
-
-        for(int i = 0; i < n; i++){
-
-            while(!st.empty() && k > 0 && st.top() > s[i]){
-
+        for(int i = 0; i <n; i++){
+            while(st.size() && k > 0 && (st.top() - '0') > (s[i] - '0')){
                 st.pop();
                 k--;
-
             }
-
             st.push(s[i]);
-
         }
-
         while(k > 0){
-
+            st.pop();
             k--;
+        }
+        if(st.empty()) return "0";
+        string res = "";
+        while(st.size()){
+            res += st.top();
             st.pop();
-
         }
-
-        while(!st.empty()){
-
-            ans.push_back(st.top());
-            st.pop();
-
+        while(res.size() && res.back() == '0'){
+            res.pop_back();
         }
-
-        while(ans.back() == '0'){
-
-            ans.pop_back();
-
-        }
-
-        reverse(ans.begin(), ans.end());
-
-        return ans.empty() ? "0" : ans;
-        
+        if(res.size() == 0) return "0";
+        reverse(res.begin(), res.end());
+        return res;
     }
 };
 
@@ -1523,5 +1470,83 @@ public:
             st.push(i);
         }
         return maxArea;
+    }
+};
+
+----------------------------------------------------------------------------------------------------
+
+        LRU
+
+struct Node{
+    int key;
+    int val;
+    Node* prev;
+    Node* next;
+    Node(int k, int v){
+        key = k;
+        val = v;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+class LRUCache {
+public:
+
+    Node* head ;
+    Node* tail ;
+
+    int cap;
+
+    unordered_map<int, Node*> hash;
+
+    LRUCache(int capacity) {
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
+        head -> next = tail;
+        tail -> prev = head;
+        cap = capacity;
+    }
+
+    void addNode(Node* node){ // time is O(1)
+        Node* temp = head -> next;
+        head -> next = node;
+        node -> next = temp;
+        node -> prev = head;
+        temp -> prev = node;
+    }
+
+    void deleteNode(Node* node){ // time is O(1)
+        Node* prev_of_node = node -> prev;
+        Node* next_of_node = node -> next;
+        prev_of_node -> next = next_of_node;
+        next_of_node -> prev = prev_of_node;
+        node -> next = NULL;
+        node -> prev = NULL;
+    }
+    
+    int get(int key) { // tiime is O(1) best case and worse case O(N)
+        if(hash.find(key) == hash.end()){
+           return -1;
+        }
+        Node* address = hash[key];
+        int res = address -> val;
+        deleteNode(address);
+        addNode(address);
+        hash[key] = head -> next;
+        return res;
+    }
+    
+    void put(int key, int value) { // tiime is O(1) best case and worse case O(N)
+        if(hash.find(key) != hash.end()){
+            Node* address = hash[key];
+            deleteNode(address);
+        }
+        else if(hash.size() == cap){
+            hash.erase(tail -> prev -> key);
+            deleteNode(tail -> prev);
+        }
+        addNode(new Node(key, value));
+        hash[key] = head -> next;
     }
 };
