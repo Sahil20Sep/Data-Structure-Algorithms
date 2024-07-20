@@ -1,1 +1,236 @@
+                assign cookies
+
+
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        int n = g.size(), m = s.size();
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        int l = 0, r = 0;
+        while(l < n && r < m){
+            if(g[l] <= s[r]){
+                l++;
+            }
+            r++;
+        }
+        return l;
+    }
+};
+
+time nLogN + mLogM + 
+
+------------------------------------------------------------------------------------
+
+        lemonade change
+
+class Solution {
+public:
+    bool lemonadeChange(vector<int>& arr) {
+        int n = arr.size();
+        int five = 0, ten = 0;
+        for(int i = 0; i < n; i++){
+            if(arr[i] == 5){
+                five++;
+            }else if(arr[i] == 10){
+                if(five){
+                    five--;
+                    ten++;
+                }else{
+                    return false;
+                }
+            }else{
+                if(ten && five){
+                    ten--;
+                    five--;
+                }else if(five >= 3){
+                    five -= 3;
+                }else{
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+
+--------------------------------------------------------------------------------
+
+        SJF algorithms
+
+class Solution {
+  public:
+    long long solve(vector<int>& arr) {
+        int n = arr.size();
+        long long timer = 0, waitingTime = 0;
+        sort(arr.begin(), arr.end());
+        for(int i = 0; i < n; i++){
+            waitingTime += timer;
+            timer += arr[i];
+        }
+        return waitingTime / (n * 1LL);
+    }
+};
+
+------------------------------------------------------------------------------------
+
+          jump game
+
+class Solution {
+public:
+    bool canJump(vector<int>& arr) {
+        int n = arr.size();
+        int i = 0, maxIndex = 0;
+        while(i < n){
+            if(maxIndex < i){
+                break;
+            }
+            maxIndex = max(maxIndex, i + arr[i]);
+            i++;
+        }
+        return i == n;
+    }
+};
+
+------------------------------------------------------------------------------------
+
+        Jump game - II
+
+---brute force  try out all possible ways (recursion)
+
+
+class Solution {
+public:
+
+    int func(int i, vector<int> &arr, vector<int> &dp){
+        int n = arr.size();
+        if(i >= n - 1) return 0;
+        if(dp[i] != -1) return dp[i];
+        int minJump = 1e9;
+        for(int j = 1; j <= arr[i]; j++){
+            minJump = min(minJump, 1 + func(i + j, arr, dp));
+        }
+        return dp[i] = minJump;
+    }
+
+    int jump(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> dp(n, -1);
+        return func(0, arr, dp);
+    }
+};
+
+n * max(element of array)
+
+-----------------------------------greddy
+
+class Solution {
+public:
+
+    int jump(vector<int>& arr) {
+        int n = arr.size();
+        int jumpTaken = 0, l = 0, r = 0;
+        while(r < n - 1){
+            int furthestIndex = 0;
+            for(int i = l; i <= r; i++){
+                furthestIndex = max(furthestIndex, i + arr[i]);
+            }
+            l = r + 1;
+            r = furthestIndex;
+            jumpTaken++;
+        }
+        return jumpTaken;
+    }
+};
+
+------------------------------------------------------------------------------
+
+      max profit with deadline -- apply dsu
+
+class Solution 
+{
+    private:
+    
+    static bool comp(Job job1, Job job2){
+        return job1.profit > job2.profit;
+    }
+    
+    public:
+  
+    vector<int> JobScheduling(Job arr[], int n) 
+    { 
+        sort(arr, arr + n, comp);
+        int totalProfit = 0;
+        int jobPerform = 0;
+        vector<int> mark(n + 1, -1);
+        for(int i = 0; i < n; i++){
+            Job obj = arr[i];
+            int id = obj.id;
+            int dead = obj.dead;
+            int profit = obj.profit;
+            for(int j = dead; j >= 1; j--){
+                if(mark[j] == -1){
+                    mark[j] = id;
+                    totalProfit += profit;
+                    jobPerform++;
+                    break;
+                }
+            }
+        }
+        return {jobPerform, totalProfit};
+    } 
+};
+
+
+------------------------------------------------------------------------------
+
+            (n meeting in one room)
+
+struct Meet{
+    int start;
+    int end;
+    int pos;
+};
+
+class Solution
+{
+    private:
+    static bool comp(Meet meet1, Meet meet2){
+        return meet1.end < meet2.end;
+    }
+    
+    public:
+    int maxMeetings(int start[], int end[], int n)
+    {
+        Meet arr[n];
+        for(int i = 0; i < n; i++){
+            arr[i].start = start[i];
+            arr[i].end = end[i];
+            arr[i].pos = i;
+        }
+        sort(arr, arr + n, comp);
+        int lastTime = arr[0].end;
+        vector<int> order;
+        order.push_back(arr[0].pos);
+        int numberOfMeetingPerform = 1;
+        for(int i = 1; i < n; i++){
+            if(arr[i].start > lastTime){
+                lastTime = arr[i].end;
+                numberOfMeetingPerform++;
+                order.push_back(arr[i].pos);
+            }
+        }
+        return numberOfMeetingPerform;
+    }
+};
+
+
+
+
+
+
+
+
+
+
 
