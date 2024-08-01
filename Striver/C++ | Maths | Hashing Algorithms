@@ -1,3 +1,164 @@
+-----------------------------------------------------------------------
+
+            C++ stl
+
+std:: --> hectic
+include all library
+
+-----pair
+
+pair<int, int>
+pair<int, pair<int, int>>
+pair<int,int> arr[]
+
+----vector
+
+v.push_back
+v.emplace_back
+
+vector<int> v(10);
+v.push_back(1) --> works, always dynamic in size even you declare the size of the vector.
+
+v[0], v.back(), v.at(0)
+
+vector<int>::itreator it = v.begin();
+cout << *it
+
+v.rbegin() --> points to reverse the vector and first element
+v.rend() --> points to reverse the vector and lastelement + 1
+
+auto it : v
+auto it = v.begin, it != v.end it++
+
+v.erase(v.begin + 1)
+v.erase(v.begin + 2, v.begin + 4)
+
+v.insert(v.begin, 100) --> 100, 1, 1
+v.insert(v.begin + 1, 2, 10) --> 100, 10, 10, 1, 1
+
+v.insert(v.begin, copy.begin, copy.end); 50, 50, 100, 10, 10, 1,1 
+
+v.size
+v.pop_back
+v.clear
+v1.swap(v2)
+v.empty() 
+
+-------deque
+
+dq.front
+dq.back
+
+same push and pop
+
+-------stack LIFO
+
+push, pop, top, size, empty
+
+s.swap(t)
+
+-------queue FIFO
+
+push, front, pop, size, empty
+
+q.back --> gives last guy
+q.front --> gives first guy
+pop --> delete the front
+
+------priority queue (max heap and min heap)
+
+push , pop --> logN
+top --> 1
+
+push, top, pop --> maximum at top
+
+priority_queue<int, vector<int> , greater<int>> PQ --> minimum element at top
+
+-----set
+
+sorted, unique
+
+auto it = ms.find(3) --> if not present return ms.end();
+
+st.erase(int) --> erase it LogN
+
+st.count(int) --> either 0 or 1.
+
+auto it = ms.find(3);
+ms.erase(it) --> 1 time
+
+auto it = ms.find(2);
+auto it = ms.find(5);
+ms.erase(it1, it2) --> 2,3,4 will erase
+
+auto it = ms.lower_bound(2)
+auto it = ms.upper_bound(2)
+
+everything in logN complexity
+
+-----multiset
+
+sorted, not unique
+
+ms.erase(1) --> all occurace will delted
+ms.erase(ms.find(1)) --> erase one occurance only
+
+ms.count(1)
+
+-----unorder_set
+
+random order, but unique element
+time complexity --> 1
+lower bound and upper bound not work
+
+-----map
+
+key in sorted order and key
+
+for(auto it : map) cout << it.first << " " << it.second << endl;
+
+auto it = map.find(3) --> if not there return it as mp.end();
+cout << *it.seconnd;
+
+auto it = map.lower_bound(2)
+auto it = map.upper_bound(2)
+
+-----multimap
+
+sorted and duplicated
+
+-----unordered_map
+
+random order and unique
+
+----------------------------------------------------------------------------
+
+                basic algo
+
+-----sort
+
+sort(a, a + n);
+sort(a.begin, a.end);
+sort(a, a+n, greater<int>);
+
+sort(v.begin, v.end, comp);
+
+bool comp()
+
+----bits
+
+__builtin_popcount(n) --> number of 1's in that number.
+__builtin_popcountll(n) --> if number is long long
+
+-----permutation
+
+start from the sorted guy if you want all permutation;
+next_permutation(s.begin(), s.end());
+
+-----max min
+
+*max_element
+
 ----------------------------------------------------------------------------
 
     (exxtrack the digit and coutn the digit)
