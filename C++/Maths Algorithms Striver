@@ -165,3 +165,63 @@ for 1 to q
 
 time N loglogN + N + Q
   
+-----------------------------------------------------------------------------------------------
+
+                hashing
+
+------brute force
+
+for every integer 
+        iterate through arr
+            cnt++; // if matches
+
+-----------better
+
+max element array declareed and itreate through array, make increment in hash array.
+
+what ?
+
+1e15? --> not working in array
+
+---for int
+inside main for array u can declared only 1e6
+global array 1e7
+
+---for bool
+inside main for bool 1e7
+global 1e8
+
+character hasing is also possible by arr[26];
+ch - 'a'
+
+also pick arr[256] --> no need to subtract 
+arr[ch]++;
+
+integer hasing in array is not possible for int
+character hasing in array is possible always 256 number only
+
+--------
+
+map hashing
+
+space require is less compare to array hashing
+sorted order
+if not there ==> 0
+
+map --> best, ava, worse --> logN --> time
+key is any int, doublee , string, pair<int, int>..
+
+unordered_map --> best, ava --> 1 , wrost --> N is number of element in map
+key is only int, double , char , sting
+
+why worse case --N --> internal collision
+
+division method --> 28 --> linklist
+folding method
+mid square method
+
+all of index is place at the same key  then collision happens.
+
+
+
+
