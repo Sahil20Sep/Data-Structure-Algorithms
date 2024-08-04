@@ -1,0 +1,50 @@
+            1508
+
+class Solution {
+public:
+
+    int mod = 1e9 + 7;
+
+    pair<int, int> checkHavingSubarray(vector<int> &arr, int n, int givenSum){
+        int low = 0, high = 0, windowSum = 0, countSubArray = 0, totalSum = 0, runningSum = 0;
+        while(high < n){
+            windowSum += arr[high];
+            runningSum += 1LL * (high - low + 1) * arr[high];
+            while(windowSum > givenSum){
+                runningSum -= windowSum;
+                windowSum -= arr[low];
+                low++;
+            }
+            totalSum = (totalSum + runningSum) % mod;
+            countSubArray += (high - low + 1);
+            high++;
+        }
+        return {totalSum, countSubArray};
+    }
+
+    int binarySearch(vector<int> &arr, int n, int subArrayNeed){
+        int low = 1e9 + 7, high;
+        for(auto it : arr){
+            if(it < low){
+                low = it;
+            }
+            high += it;
+        }
+        while(low <= high){
+            int mid = (low + high) >> 1;
+            if(checkHavingSubarray(arr, n, mid).second < subArrayNeed){
+                low = mid + 1; // ans
+            }else{
+                high = mid - 1;
+            }
+        }
+        auto ans = checkHavingSubarray(arr, n, low);
+        int totalSum = ans.first;
+        int totalSubArray = ans.second;
+        return (totalSum - low * (totalSubArray - subArrayNeed)) % mod;
+    }
+
+    int rangeSum(vector<int>& arr, int n, int left, int right) {
+        return binarySearch(arr, n, right) - binarySearch(arr, n, left - 1);
+    }
+};
