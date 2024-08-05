@@ -353,9 +353,19 @@ also use revese func(low < high) make swap and low++, high--
 
 -----------------------------------------------------------------------------------------
 
-move all zero to the end
+in Rotation of array 
 
--------brute force
+better approch will be in O(N + K) and optimal is in O(N).
+
+-----------------------------------------------------------------------------------------
+
+				move all zero to the end
+
+--------brute force
+
+sorting will not work (because it will change the order)
+
+-------better O(2N)
 
 class Solution {
 public:
@@ -386,53 +396,31 @@ public:
     }
 };
 
-----------optimal O(X) + O(N - X)
-
+----------optimal O(N)
 class Solution {
 public:
     void moveZeroes(vector<int>& arr) {
-        
-        int n = arr.size();
-
-        int low = -1;
-
-        for(int i = 0; i < n; i++){
-            if(arr[i] == 0){
-                low = i;
-                break;
-            }
-        }
-
-        if(low == -1){
-            return;
-        }
-
-        int high = low + 1;
-
+        int low = 0, high = 0, n = arr.size();
         while(high < n){
-
-            if(arr[high]){
-
-                swap(arr[low], arr[high]);
-                low++;
+            if(arr[high] == 0){
                 high++;
-
             }else{
-
-                high++;
-
+                swap(arr[low++], arr[high++]);
             }
-        }
-
+        };
     }
 };
 
 
 -----------------------------------------------------------------------------------------
 
-find union of array
+			linear search
 
------------brute force is insert into a set and print
+-----------------------------------------------------------------------------------------
+
+				find union two sorted array 
+
+-----------brute force is insert into a set and print (nLogN + MlogM + (N + M)Log(n + m) // worse case not duplicate element)
 
 ------------optimal time O(N  +  M)
 
@@ -533,6 +521,9 @@ vector<int> findArrayIntersection(vector<int> &arr1, int n, vector<int> &arr2, i
 
 ------------------also use hash
 
+second array insert into map mLogM
+check with first array freq-- NlogM
+
 --------------------optimal time --> O(n + m) space --> O(1)
 
 vector<int> findArrayIntersection(vector<int> &a, int n, vector<int> &b, int m)
@@ -562,7 +553,7 @@ vector<int> findArrayIntersection(vector<int> &a, int n, vector<int> &b, int m)
 
 -----------------------------------------------------------------------------------------
 
-first missing number 
+			first missing number 
 
 -----------brute force  
 
@@ -669,7 +660,7 @@ public:
 
 -----------------------------------------------------------------------------------------
 
-Single Number
+				Single Number
 
 --------------brute forces run n2 loop
 
