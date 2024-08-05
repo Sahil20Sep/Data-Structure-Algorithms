@@ -22,7 +22,6 @@ Welcome to the Data Structures and Algorithms repository! This repository contai
   - [Graph Algorithms](#graph-algorithms)
   - [Backtracking](#backtracking)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
