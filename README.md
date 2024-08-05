@@ -32,110 +32,106 @@ This repository is a collection of various data structures and algorithms implem
 
 ### Arrays
 
-Arrays are a fundamental data structure consisting of a collection of elements, each identified by an array index.
-
-- [Array Implementation](./arrays/array_implementation.md)
-- [Array Operations](./arrays/array_operations.md)
+- Introduction to Arrays
+- Types of Arrays
+- Basic Operations (Insertion, Deletion, Traversal)
+- Multi-dimensional Arrays
 
 ### Linked Lists
 
-Linked lists are a linear data structure where each element is a separate object, linked using pointers.
-
-- [Singly Linked List](./linked_lists/singly_linked_list.md)
-- [Doubly Linked List](./linked_lists/doubly_linked_list.md)
+- Singly Linked List
+- Doubly Linked List
+- Circular Linked List
+- Basic Operations (Insertion, Deletion, Traversal, Search)
 
 ### Stacks
 
-A stack is a linear data structure that follows the Last In First Out (LIFO) principle.
-
-- [Stack Implementation](./stacks/stack_implementation.md)
-- [Stack Operations](./stacks/stack_operations.md)
+- Introduction to Stacks
+- Stack Operations (Push, Pop, Peek)
+- Applications of Stacks (Expression Evaluation, Backtracking)
 
 ### Queues
 
-A queue is a linear data structure that follows the First In First Out (FIFO) principle.
-
-- [Queue Implementation](./queues/queue_implementation.md)
-- [Queue Operations](./queues/queue_operations.md)
+- Introduction to Queues
+- Queue Operations (Enqueue, Dequeue, Front, Rear)
+- Types of Queues (Circular Queue, Priority Queue, Deque)
 
 ### Trees
 
-Trees are hierarchical data structures consisting of nodes, with a single node as the root.
-
-- [Binary Tree](./trees/binary_tree.md)
-- [Binary Search Tree](./trees/binary_search_tree.md)
-- [AVL Tree](./trees/avl_tree.md)
+- Introduction to Trees
+- Binary Tree
+- Binary Search Tree
+- AVL Tree
+- Tree Traversal (Inorder, Preorder, Postorder)
+- Applications of Trees
 
 ### Graphs
 
-Graphs are a collection of nodes connected by edges.
-
-- [Graph Representation](./graphs/graph_representation.md)
-- [Graph Traversals](./graphs/graph_traversals.md)
+- Introduction to Graphs
+- Graph Representation (Adjacency Matrix, Adjacency List)
+- Graph Traversals (BFS, DFS)
+- Applications of Graphs
 
 ### Heaps
 
-A heap is a special tree-based data structure that satisfies the heap property.
-
-- [Min Heap](./heaps/min_heap.md)
-- [Max Heap](./heaps/max_heap.md)
+- Introduction to Heaps
+- Min Heap
+- Max Heap
+- Heap Operations (Insertion, Deletion, Heapify)
 
 ### Hash Tables
 
-A hash table is a data structure that maps keys to values for highly efficient lookup.
-
-- [Hash Table Implementation](./hash_tables/hash_table_implementation.md)
-- [Collision Handling](./hash_tables/collision_handling.md)
+- Introduction to Hash Tables
+- Hash Functions
+- Collision Handling (Chaining, Open Addressing)
 
 ## Algorithms
 
 ### Sorting Algorithms
 
-Sorting algorithms are used to arrange data in a particular order.
-
-- [Bubble Sort](./sorting_algorithms/bubble_sort.md)
-- [Merge Sort](./sorting_algorithms/merge_sort.md)
-- [Quick Sort](./sorting_algorithms/quick_sort.md)
+- Bubble Sort
+- Selection Sort
+- Insertion Sort
+- Merge Sort
+- Quick Sort
+- Heap Sort
 
 ### Searching Algorithms
 
-Searching algorithms are designed to retrieve information stored within some data structure.
-
-- [Linear Search](./searching_algorithms/linear_search.md)
-- [Binary Search](./searching_algorithms/binary_search.md)
+- Linear Search
+- Binary Search
 
 ### Dynamic Programming
 
-Dynamic programming is a method for solving complex problems by breaking them down into simpler subproblems.
-
-- [Fibonacci Series](./dynamic_programming/fibonacci_series.md)
-- [Knapsack Problem](./dynamic_programming/knapsack_problem.md)
+- Introduction to Dynamic Programming
+- Fibonacci Series
+- Knapsack Problem
+- Longest Common Subsequence
+- Matrix Chain Multiplication
 
 ### Greedy Algorithms
 
-Greedy algorithms make locally optimal choices at each step to find a global optimum.
-
-- [Activity Selection](./greedy_algorithms/activity_selection.md)
-- [Huffman Coding](./greedy_algorithms/huffman_coding.md)
+- Introduction to Greedy Algorithms
+- Activity Selection Problem
+- Huffman Coding
+- Kruskal's Algorithm
+- Prim's Algorithm
 
 ### Graph Algorithms
 
-Graph algorithms are used to solve problems related to graph theory.
-
-- [Dijkstra's Algorithm](./graph_algorithms/dijkstras_algorithm.md)
-- [Kruskal's Algorithm](./graph_algorithms/kruskals_algorithm.md)
+- Dijkstra's Algorithm
+- Bellman-Ford Algorithm
+- Floyd-Warshall Algorithm
+- Topological Sort
+- Minimum Spanning Tree (Kruskal, Prim)
 
 ### Backtracking
 
-Backtracking is a method for finding all (or some) solutions to computational problems.
-
-- [N-Queens Problem](./backtracking/n_queens_problem.md)
-- [Sudoku Solver](./backtracking/sudoku_solver.md)
+- Introduction to Backtracking
+- N-Queens Problem
+- Sudoku Solver
+- Subset Sum Problem
 
 ## Contributing
 
-Contributions are welcome! Please read the [contributing guidelines](./CONTRIBUTING.md) before making any changes.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+Contributions are welcome! Please read the contributing guidelines before making any changes.
