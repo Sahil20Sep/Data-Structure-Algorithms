@@ -900,6 +900,25 @@ maximum subarray sum
 ----------better is O(N^2)
 
 ------------optimal (kadana's algorithms)
+---just sum
+class Solution {
+public:
+    int maxSubArray(vector<int>& arr) {
+        int n = arr.size(), sum = 0, ans = INT_MIN;
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            if(sum >= ans){
+                ans = sum;
+            }
+            if(sum < 0){
+                sum = 0;
+            }
+        }
+        return ans;
+    }
+};
+
+----subarray print
 
 class Solution {
 public:
@@ -994,6 +1013,10 @@ public:
 
     }
 };
+
+Complexity
+Time Complexity: The time complexity is determined by the next_permutation algorithm, which is typically O(N) or O(N log N), where N is the size of the array. It performs a series of swaps and reversals to generate the next permutation.
+Space Complexity: The space complexity is O(1) as the algorithm modifies the input array in place without using additional data structures.
 
 -----------optimal
 
