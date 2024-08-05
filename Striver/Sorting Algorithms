@@ -1,0 +1,185 @@
+approch to interview:
+
+explain the intution (what low and high signify, explain base case, devide and conquer, how to merge, use sorted array two pointer approches)
+explain worst, best, avg case time complexity with example
+why time complexity is this (merge sort, quick sort).
+write psude code for that.
+
+quick sort: duplicate senario, parittion index intution, base case, devide each level into two part
+
+------------------------------------------------------------------------------------
+          selection sort
+
+class Solution
+{
+    public:
+    int select(int arr[], int i, int n)
+    {
+        int mini = i;
+        
+        for(int j = i; j <= n - 1; j++){
+            
+            if(arr[j] < arr[mini]){
+                
+                mini = j;
+                
+            }
+        }
+        
+        return mini;
+        
+    }
+     
+    void selectionSort(int arr[], int n)
+    {
+        for(int i = 0; i <= n - 2; i++){
+            
+            int mini = select(arr, i, n);
+            
+            swap(arr[i], arr[mini]);
+            
+        }
+    }
+};
+
+-----------------------------------------------------------------------------------
+
+            bubble sort
+
+class Solution
+{
+    public:
+    void bubbleSort(int arr[], int n)
+    {
+        for(int i = n - 1; i >= 1; i--){
+            
+            for(int j = 0; j <= i - 1; j++){
+                
+                if(arr[j] > arr[j + 1]){
+                    
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    
+                }
+            }
+        }
+    }
+};
+
+------------------------------------------------------------------------------------------
+
+              insertion sort
+
+class Solution
+{
+    public:
+    
+    void insert(int arr[], int i)
+    {
+        int j = i;
+        
+        while(j > 0 && arr[j - 1] > arr[j]){
+            
+            int temp = arr[j - 1];
+            arr[j - 1] = arr[j];
+            arr[j] = temp;
+            
+            j--;
+            
+        }
+    }
+    
+    public:
+     
+    void insertionSort(int arr[], int n)
+    {
+        for(int i = 1; i <= n - 1; i++){
+            
+            insert(arr, i);
+            
+        }
+    }
+};
+
+-------------------------------------------------------------------------------------
+
+                merge sort
+
+class Solution
+{
+    public:
+    void merge(int arr[], int l, int mid, int r)
+    {
+        vector<int> temp;
+        int a = l, b = mid + 1;
+        while(a <= mid && b <= r){
+            if(arr[a] <= arr[b]){
+                temp.push_back(arr[a++]);
+            }else{
+                temp.push_back(arr[b++]);
+            }
+        }
+        while(a <= mid){
+            temp.push_back(arr[a++]);
+        }
+        while(b <= r){
+            temp.push_back(arr[b++]);
+        }
+        int idx = 0;
+        for(int i = l; i <= r; i++){
+            arr[i] = temp[idx++];
+        }
+    }
+    public:
+    void mergeSort(int arr[], int l, int r)
+    {
+        if(l >= r){
+            return;
+        }
+        int mid = (l + r) >> 1;
+        mergeSort(arr, l, mid);
+        mergeSort(arr, mid + 1, r);
+        
+        merge(arr, l, mid, r);
+    }
+};
+
+---------------------------------------------------------------------------------------
+
+          quick sort
+
+class Solution
+{
+    public:
+    //Function to sort an array using quick sort algorithm.
+    void quickSort(int arr[], int low, int high)
+    {
+        if(low >= high){
+            return;
+        }
+        int mid = partition(arr, low, high);
+        
+        quickSort(arr, low, mid - 1);
+        quickSort(arr, mid + 1, high);
+    }
+    
+    public:
+    int partition (int arr[], int low, int high)
+    {
+        int i = low, j = high;
+        while(i < j){
+            while(i <= high && arr[i] <= arr[low]){
+                i++;
+            }
+            while(j >= low && arr[j] > arr[low]){
+                j--;
+            }
+            if(i < j){
+                swap(arr[i], arr[j]);
+            }
+        }
+        swap(arr[low], arr[j]);
+        return j;
+    }
+};
