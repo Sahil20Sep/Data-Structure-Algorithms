@@ -1,0 +1,2323 @@
+In int main array can be declare maximum to 1e6
+
+but in globally array can be declare maximum to 1e7
+
+-----------------------------------------------------------------------------------------
+
+Largest Element in Array
+
+--------Brute nlogn
+
+class Solution
+{
+public:
+    int largest(vector<int> &arr, int n)
+    {
+        sort(arr.begin(), arr.end());
+        return arr[n - 1];
+    }
+};
+
+---------Optimal only N
+
+class Solution
+{
+public:
+    int largest(vector<int> &arr, int n)
+    {
+        int maxi = arr[0];
+        
+        for(int i = 1; i < n; i++){
+            
+            if(arr[i] > maxi){
+                
+                maxi = arr[i];
+                
+            }
+        }
+        
+        return maxi;
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+second largest 
+
+-------------brute nlogn
+
+sort and print arr[n - 2]
+
+---------------better 2*n
+
+class Solution{
+public:	
+
+	int print2largest(int arr[], int n) {
+
+        int mx = arr[0];
+        
+        for(int i = 1; i <= n - 1; i++){
+            
+            if(arr[i] > mx){
+                
+                mx = arr[i];
+            }
+        }
+        
+        int second_mx = -1;
+        
+        for(int i = 0; i <= n - 1; i++){
+            
+            if(arr[i] > second_mx && arr[i] != mx){
+                
+                second_mx = arr[i];
+                
+            }
+        }
+        
+        return second_mx;
+        
+	}
+};
+
+--------optimal only N
+
+class Solution{
+public:	
+
+	int print2largest(int arr[], int n) {
+
+        int mx = arr[0], second_mx = -1;
+        
+        for(int i = 1; i <= n - 1; i++){
+            
+            if(arr[i] > mx){
+                
+                second_mx = mx;
+                mx = arr[i];
+                
+            }
+            
+            if(arr[i] < mx){
+                
+                if(arr[i] > second_mx){
+                    
+                    second_mx = arr[i];
+                    
+                }
+            }
+                
+        }
+        
+        return second_mx;
+        
+	}
+};
+
+same as second mininimum
+
+-----------------------------------------------------------------------------------------
+
+check array is sorted or not
+
+---- optimal N
+
+class Solution {
+  public:
+    bool arraySortedOrNot(int arr[], int n) {
+        
+        for(int i = 1; i <= n - 1; i++){
+            
+            if(arr[i - 1] > arr[i]){
+                
+                return false;
+                
+            }
+        }
+        
+        return true;
+        
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+check rotated array is sorted or not
+
+-------Optimal N
+
+class Solution {
+public:
+    bool check(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int cnt = 0;
+
+        for(int i = 0; i < n; i++){
+
+            if(arr[i] > arr[(i + 1) % n] && ++cnt > 1){
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+remove duplicate from the array
+
+-------------- brute O(n * logn + ms.size())
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        if(n == 1){
+
+            return 1;
+
+        }
+
+        set<int> ms;
+
+        for(auto it : arr){
+
+            ms.insert(it);
+
+        }
+
+        int idx = 0;
+
+        for(auto it : ms){
+
+            arr[idx] = it;
+            idx++;
+            
+        }
+
+        return (int)ms.size();
+
+    }
+};
+
+-----------------optimmal
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        if(n == 1){
+
+            return 1;
+
+        }
+
+        int slow = 0, fast = 0;
+
+        while(fast < n){
+
+            if(arr[slow] == arr[fast]){
+
+                fast++;
+
+            }else{
+
+                slow++;
+                arr[slow] = arr[fast];
+                fast++;
+
+            }
+        }
+
+        return slow + 1;
+
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+Left rotate by one elememt
+
+#include <bits/stdc++.h> 
+vector<int> rotateArray(vector<int>& arr, int n) {
+
+    int temp = arr[0];
+
+    for(int i = 1; i <= n - 1; i++){
+
+        arr[i - 1] = arr[i];
+
+    }
+
+    arr[n - 1] = temp;
+
+    return arr;
+
+}
+
+-----------------------------------------------------------------------------------------
+
+left rotate by D element
+
+brute force----------------
+
+k = k % n;
+
+    vector<int> store;
+
+    for(int i = 0; i < k; i++){
+        store.push_back(arr[i]);
+    }
+
+    for(int i = k; i < n; i++){
+
+        arr[i - k] = arr[i];
+
+    }
+
+    for(int i = n - k; i < n; i++){
+
+        arr[i] = store[i - (n - k)];
+
+    }
+
+    for(auto it : arr){
+
+        cout << it << " ";
+    }
+
+----------optimal
+
+
+reverse(arr.begin(), arr.begin() + k);
+
+    reverse(arr.begin() + k, arr.end());
+
+    reverse(arr.begin(), arr.end());
+
+
+-----------------------------------------------------------------------------------------
+
+right rotate by D element
+
+-------------brute force
+
+class Solution {
+public:
+    void rotate(vector<int>& arr, int k) {
+
+        int n = arr.size();
+
+        k = k % n;
+
+        vector<int> temp;
+
+        for(int i = n - k; i < n; i++){
+
+            temp.push_back(arr[i]);
+        }
+
+        for(int i = n - k - 1; i >= 0; i--){
+
+            arr[i + k] = arr[i];
+
+        }
+
+        for(int i = 0; i < k; i++){
+
+            arr[i] = temp[i];
+        }
+    }
+};
+
+----------optimal
+
+reverse(arr.begin(), arr.begin() + n - k);
+
+        reverse(arr.begin() + n - k, arr.end());
+
+        reverse(arr.begin(), arr.end());
+
+also use revese func(low < high) make swap and low++, high--
+
+-----------------------------------------------------------------------------------------
+
+move all zero to the end
+
+-------brute force
+
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        
+        vector<int> temp;
+
+        int n = nums.size();
+
+        for(int i = 0; i < nums.size(); i++){
+
+            if(nums[i] != 0){
+
+                temp.push_back(i);
+            }
+        }
+
+        for(int i =0; i < temp.size(); i++){
+
+            nums[i] = nums[temp[i]];
+
+        }
+
+        for(int i = temp.size(); i < n; i++){
+            nums[i] = 0;
+        }
+
+    }
+};
+
+----------optimal O(X) + O(N - X)
+
+class Solution {
+public:
+    void moveZeroes(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int low = -1;
+
+        for(int i = 0; i < n; i++){
+            if(arr[i] == 0){
+                low = i;
+                break;
+            }
+        }
+
+        if(low == -1){
+            return;
+        }
+
+        int high = low + 1;
+
+        while(high < n){
+
+            if(arr[high]){
+
+                swap(arr[low], arr[high]);
+                low++;
+                high++;
+
+            }else{
+
+                high++;
+
+            }
+        }
+
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+find union of array
+
+-----------brute force is insert into a set and print
+
+------------optimal time O(N  +  M)
+
+class Solution{
+    public:
+    
+    vector<int> findUnion(int arr1[], int arr2[], int n, int m)
+    {
+        
+        int i = 0, j = 0;
+        
+        vector<int> ans;
+        
+        while(i < n && j < m){
+            
+            if(arr1[i] <= arr2[j]){
+                
+                if(ans.empty() || ans.back() != arr1[i]){
+                    
+                    ans.push_back(arr1[i]);
+                    
+                }
+                
+                i++;
+                
+            }else{
+                
+                if(ans.empty() || ans.back() != arr2[j]){
+                    
+                    ans.push_back(arr2[j]);
+                    
+                }
+                
+                j++;
+                
+            }
+        }
+        
+        while(i < n){
+            
+            if(ans.empty() || ans.back() != arr1[i]){
+                ans.push_back(arr1[i]);
+            }
+            
+            i++;
+            
+        }
+        
+        while(j < m){
+            
+            if(ans.empty() || ans.back() != arr2[j]){
+                
+                ans.push_back(arr2[j]);
+                
+            }
+            
+            j++;
+        }
+        
+        return ans;
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+intersection of two sorted arr
+
+-----------brute force
+
+vector<int> findArrayIntersection(vector<int> &arr1, int n, vector<int> &arr2, int m)
+{
+	
+	vector<bool> visited(m, false);
+
+	vector<int> ans;
+
+	for(int i = 0; i < arr1.size(); i++){
+
+		for(int j = 0; j < arr2.size(); j++){
+
+			if(arr1[i] == arr2[j] && visited[j] == false){
+
+				visited[j] = true;
+				ans.push_back(arr1[i]);
+				break;
+
+			}
+
+			if(arr2[j] > arr1[i]){
+				break;
+			}
+		}
+	}
+
+	return ans;
+}
+
+------------------also use hash
+
+--------------------optimal time --> O(n + m) space --> O(1)
+
+vector<int> findArrayIntersection(vector<int> &a, int n, vector<int> &b, int m)
+{
+	
+	vector<int> ans;
+
+	int i = 0, j = 0;
+
+	while(i < n && j < m){
+
+		if(a[i] == b[j]){
+			ans.push_back(a[i]);
+			i++;
+			j++;
+		}else if(a[i] < b[j]){
+			i++;
+		}else{
+			j++;
+		}
+
+	}
+
+	return ans;
+
+}
+
+-----------------------------------------------------------------------------------------
+
+first missing number 
+
+-----------brute force  
+
+iterater throught 1 to N 
+	iterater through arr and see is their or not
+if(yes) check for next
+return number;
+
+------------better
+
+class Solution {
+public:
+    int missingNumber(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        unordered_map<int, bool> hash;
+
+        for(int i = 0; i < n; i++){
+
+            hash[arr[i]] = true;
+
+        }
+
+        for(int i = 0; i <= n; i++){
+
+            if(!hash[i]){
+                return i;
+            }
+        }
+
+        return 0;
+
+    }
+};
+
+----------------optimal -- sum
+
+class Solution {
+public:
+    int missingNumber(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int sum = n * (n + 1) >> 1;
+
+        for(auto it : arr){
+
+            sum -= it;
+
+        }
+
+        return sum;
+
+    }
+};
+
+---------------- optimal xor
+
+class Solution {
+public:
+    int missingNumber(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int xor1 = 0;
+
+        for(auto it : arr){
+            xor1 = xor1 ^ it;
+        }
+
+        int xor2 = 0;
+
+        for(int i = 1; i <= n; i++){
+            xor2 = xor2 ^ i;
+        }
+
+        return xor1 ^ xor2;
+
+    }
+};
+
+so, here xor is better because n == 1e5 when sum is too large to store in long --> get extra memory use
+
+class Solution {
+public:
+    int missingNumber(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int xor1 = 0;
+
+        for(int i = 0; i < n; i++){
+
+            xor1 = xor1 ^ arr[i];
+            xor1 = xor1 ^ (i + 1);
+
+        }
+
+        return xor1;
+
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+Single Number
+
+--------------brute forces run n2 loop
+
+--------------better use hash size of maxi element and increase the counter which gives 1 is answer
+
+use hash map then insert take O(N Log(Map.size)) and map.size == (n >> 1) + 1;
+space is map.size
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        
+        int n = nums.size();
+
+        map<int, int> hash;
+
+        for(auto it : nums){
+
+            hash[it]++;
+
+        }
+
+        for(auto it : hash){
+
+            if(it.second == 1){
+
+                return it.first;
+
+            }
+        }
+
+        return 0;
+
+    }
+};
+
+--------------optimal is xor
+
+-----------------------------------------------------------------------------------------
+
+		(SUBARRAY WITH SUM == K)
+
+----------------better for (>= 0)
+---------------optimal for (negetive, positive and 0)
+
+class Solution{
+    public:
+    int lenOfLongSubarr(int arr[],  int n, int k) 
+    { 
+        
+        map<int, int> hash;
+        
+        int sum = 0, len = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            sum += arr[i];
+            
+            if(sum == k){
+                
+                len = max(len, i + 1);
+                
+            }
+            
+            int rem = sum - k;
+            
+            if(hash.find(rem) != hash.end()){
+                
+                len = max(len, i - hash[rem]);
+                
+            }
+            
+            if(hash.find(sum) == hash.end()){
+                
+                hash[sum] = i;
+                
+            }
+            
+        }
+        
+        return len;
+        
+    } 
+
+};
+
+----------------optimal for >= 0
+
+int longestSubarrayWithSumK(vector<int> a, long long k) {
+    int i = 0, j = 0;
+    long long sum = 0;
+    int length = 0;
+    int n = a.size();
+    while(j < n){
+        sum += a[j];
+        j++;
+        while(sum > k){
+            sum -= a[i];
+            i++;
+        }
+        if(sum == k){
+            length = max(length, j - i);
+        }
+    }
+    return length;
+}
+
+------------------------------------------------------------------------------------------------------------
+
+		(how many subarray which sum == k)
+
+---------optimal
+
+class Solution {
+public:
+    int subarraySum(vector<int>& arr, int k) {
+        
+        int n = arr.size();
+
+        int sum = 0;
+        int ans = 0;
+
+        map<int, int> hash;
+
+        hash[0] = 1;
+
+        for(int i = 0; i < n; i++){
+
+            sum += arr[i];
+
+            if(hash[sum - k] > 0){
+
+                ans += hash[sum - k];
+
+            }
+
+            hash[sum]++;
+        }
+
+        return ans;
+
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+	sort 0 1 and 2 (dutch national flag alorithms)
+
+-----------brute is sortingg
+
+----------better cnt1, cnt2, cnt3
+
+-----------optimal
+
+class Solution {
+public:
+    void sortColors(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int low = 0, mid = 0, high = n - 1;
+
+        while(mid <= high){
+
+            if(arr[mid] == 0){
+
+                swap(arr[low], arr[mid]);
+
+                low++;
+                mid++;
+
+            }else if(arr[mid] == 1){
+
+                mid++;
+
+            }else{
+
+                swap(arr[mid], arr[high]);
+
+                high--;
+            }
+        }
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+majority element (moor's voting algorithms)
+
+----------brute
+
+take two nested loop and count
+
+----------better
+
+hashing
+
+----------optimal
+
+class Solution {
+public:
+    int majorityElement(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int cnt = 0, el;
+
+        for(auto it : arr){
+
+            if(cnt == 0){
+
+                cnt = 1;
+                el = it;
+
+            }else if(it == el){
+
+                cnt++;
+
+            }else{
+
+                cnt--;
+
+            }
+        }
+
+        return el;
+
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+maximum subarray sum
+
+-----------brute is O(N^3)
+
+----------better is O(N^2)
+
+------------optimal (kadana's algorithms)
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int sum = 0, ans = INT_MIN;
+
+	int start = -1, fi_start = -1, end_start = -1;
+
+        for(int i = 0; i < n; i++){
+
+	    if(sum == 0) start = i;
+
+            sum += arr[i];
+
+            if(sum > ans){
+		fi_start = start, fi_end = i;
+                ans = sum;
+            }
+
+            if(sum < 0){
+
+                sum = 0;
+
+            }
+
+        }
+
+        return ans;
+
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+rearrange by positive and negetive 
+
+----------brute is take two vector and ...
+
+-------- optimal (pos and neg pointer and move by 2)
+
+class Solution {
+public:
+    vector<int> rearrangeArray(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int pos = 0, neg = 1;
+
+        vector<int> ans(n);
+
+        for(int i = 0; i < n; i++){
+
+            if(arr[i] > 0){
+
+                ans[pos] = arr[i];
+                pos += 2;
+
+            }else{
+
+                ans[neg] = arr[i];
+                neg += 2;
+
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+---------optimal is brute force in the case of when positive and negetive are not same
+
+take two vector and store, for minimum length run above bruteforce code and then idx = 2 * min set all element
+
+-----------------------------------------------------------------------------------------
+
+Next permutation
+----------brute
+
+generrate all permutation by recursion and i just do linear search and print next
+
+------better
+
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        
+        next_permutation(nums.begin(), nums.end());
+
+    }
+};
+
+-----------optimal
+
+class Solution {
+public:
+    void nextPermutation(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        int idx = -1;
+
+        for(int i = n - 2; i >= 0; i--){
+
+            if(arr[i] < arr[i + 1]){
+                idx = i;
+                break;
+            }
+
+        }
+
+        if(idx == -1){
+
+            reverse(arr.begin(), arr.end());
+            return ;
+            
+        }
+
+        for(int i = n - 1; i > idx; i--){
+
+            if(arr[i] > arr[idx]){
+                swap(arr[idx], arr[i]);
+                break;
+            }
+
+        }
+
+        reverse(arr.begin() + idx + 1, arr.end());
+
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+leaders in array
+
+-----------brute force do linear search on right side array if i get > then break;;
+
+-----------optimal
+
+class Solution{
+    public:
+    vector<int> ans;
+    vector<int> leaders(int arr[], int n){
+    
+        int mx = INT_MIN;
+        
+        for(int i = n - 1; i >= 0; i--){
+            
+            if(arr[i] >= mx){
+                
+                ans.push_back(arr[i]);
+                mx = arr[i];
+                
+            }
+        }
+        
+        reverse(ans.begin(), ans.end());
+        
+        return ans;
+        
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+longest consicutive sequnces
+
+brute is ------------linear search
+
+better is -----track of last smaller and is last smaller + 1 == arr i then cnt++ and also sort the arr
+
+class Solution{
+  public:
+    
+    int findLongestConseqSubseq(int arr[], int n)
+    {
+        sort(arr, arr + n);
+        
+        int last_smaller = arr[0], ans = 1, cnt = 1;
+        
+        for(int i = 1; i <= n - 1; i++){
+            
+            if(arr[i] == (last_smaller + 1)){
+                cnt++;
+                last_smaller = arr[i];
+            }
+            else if(arr[i] == (last_smaller)){
+                
+            }
+            else{
+                cnt = 1;
+                last_smaller = arr[i];
+            }
+            
+            ans = max(ans, cnt);
+        }
+        
+        return ans;
+    }
+};
+
+---------optimal
+
+class Solution{
+  public:
+    
+    int findLongestConseqSubseq(int arr[], int n)
+    {
+        
+        set<int> ms;
+        
+        for(int i = 0; i < n; i++){
+            ms.insert(arr[i]);
+        }
+        
+        int ans = 1;
+        
+        for(int i = 0; i < n; i++){
+            
+            int it = arr[i];
+            
+            if(ms.find(it - 1) == ms.end()){
+                
+                int cnt = 1;
+                
+                while(ms.find(++it) != ms.end()){
+                    
+                    cnt++;
+                    
+                }
+                
+                ans = max(ans, cnt);
+                
+            }
+            
+        }
+        
+        return ans;
+        
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+set matrix to zero
+
+-----------bruteforce
+
+convert to -1 technique and again iterate through mattrix
+
+---------------better
+
+use row visited and column visited and aggain start iterting with || condition
+
+--------------------optimal
+
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& arr) {
+        
+        int m = arr.size(), n = arr[0].size();
+
+        // first column = arr[0][..]
+        // first row = arr[..][0]
+
+        int col = 1;
+
+        for(int i = 0; i < m; i++){
+
+            for(int j = 0; j < n; j++){
+
+                if(arr[i][j] == 0){
+
+                    arr[i][0] = 0;
+
+                    if(j != 0){
+                        arr[0][j] = 0;
+                    }else{
+                        col = 0;
+                    }
+
+                }
+            }
+        }
+
+        for(int i = 1; i < m; i++){
+
+            for(int j = 1; j < n; j++){
+
+                if(arr[0][j] == 0 || arr[i][0] == 0){
+                    arr[i][j] = 0;
+                }
+
+            }
+        }
+
+        if(arr[0][0] == 0){
+
+            for(int i = 0; i < n; i++){
+                arr[0][i] = 0;
+            }
+
+        }
+
+        if(col == 0){
+
+            for(int i = 0; i < m; i++){
+
+                arr[i][0] = 0;
+            }
+        }
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+rotate image 
+
+brute force ----------------
+
+new[j][n - 1- i] = arr[i][j]
+
+optimal--------------
+
+class Solution {
+public:
+    void rotate(vector<vector<int>>& arr) {
+        
+        int n = arr.size();
+
+        for(int i = 1; i < n; i++){
+
+            for(int j = 0; j < i; j++){
+
+                swap(arr[i][j], arr[j][i]);
+
+            }
+        }
+
+        for(int i = 0; i < n; i++){
+
+            reverse(arr[i].begin(), arr[i].end());
+        }
+
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+Spiral Matrix
+
+optimal----------
+
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& arr) {
+        
+        int n = arr.size(), m = arr[0].size();
+
+        int top = 0, bottam = n - 1, left = 0, right = m - 1;
+
+        vector<int> ans;
+
+        while(left <= right && top <= bottam){
+
+            for(int i = left; i <= right; i++){
+
+                ans.push_back(arr[top][i]);
+
+            }
+
+            top++;
+
+            for(int i = top; i <= bottam; i++){
+
+                ans.push_back(arr[i][right]);
+
+            }
+
+            right--;
+
+            if(top <= bottam){
+
+                for(int i = right; i >= left; i--){
+
+                    ans.push_back(arr[bottam][i]);
+
+                }
+
+                bottam--;
+
+            }
+
+            if(left <= right){
+
+                for(int i = bottam; i >= top; i--){
+
+                    ans.push_back(arr[i][left]);
+
+                }
+
+                left++;
+                
+            }
+
+        }
+
+        return ans;
+
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+pascal tringle
+
+to find row and column element
+
+just return r-1 C c-1
+
+to calculate factiral ncr ....
+
+-----------------------entire row
+
+int ans = 1;
+
+for(int i = 1; i < n; i++){
+
+    ans = ans * (n - i);
+    ans = ans / i;
+}
+
+-------------------entire tringle
+
+class Solution {
+public:
+
+    vector<int> func(int row, int n){
+
+        vector<int> ans;
+
+        ans.push_back(1);
+
+        int cnt = 1;
+
+        for(int i = 1; i < row; i++){
+
+            cnt = cnt * (row - i);
+            cnt = cnt / i;
+
+            ans.push_back(cnt);
+        }
+
+        return ans;
+    }
+
+    vector<vector<int>> generate(int n) {
+        
+        vector<vector<int>> ans;
+
+        for(int i = 1; i <= n; i++){
+
+            ans.push_back(func(i, n));
+
+        }
+
+        return ans;
+    }
+};
+
+------------
+
+class Solution {
+public:
+    vector<vector<int>> generate(int n) {
+        vector<vector<int>> dp(n);
+        for(int i = 0; i < n; i++){
+            dp[i].resize(i + 1, 1);
+            for(int j = 1; j < i; j++){
+                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+            }
+        }
+        return dp;
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+majority elementII (> n/3 times)
+
+-----------brute force
+
+O(N^2) check for every element
+
+------------better
+
+hashing and iterrate through map
+
+-----------optimal
+
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& arr) {
+
+        int n = arr.size();
+        
+        vector<int> ans;
+
+        int cnt1 = 0, cnt2 = 0;
+
+        int ele1 = INT_MIN, ele2 = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            if(cnt1 == 0 && arr[i] != ele2){
+
+                cnt1 = 1;
+                ele1 = arr[i];
+
+            }else if(cnt2 == 0 && arr[i] != ele1){
+
+                cnt2 = 1;
+                ele2 = arr[i];
+
+            }else if(arr[i] == ele1){
+
+                cnt1++;
+
+            }else if(arr[i] == ele2){
+
+                cnt2++;
+
+            }else{
+
+                cnt1--; cnt2--;
+
+            }
+        }
+
+        cnt1 = 0, cnt2 = 0;
+
+        for(auto it : arr){
+
+            if(it == ele1){
+                cnt1++;
+            }
+            if(it == ele2){
+                cnt2++;
+            }
+
+        }
+
+        if(cnt1 > (n / 3)){
+            ans.push_back(ele1);
+        }
+
+        if(cnt2 > (n / 3)){
+            ans.push_back(ele2);
+        }
+
+        return ans;
+
+    }
+};
+
+
+-----------------------------------------------------------------------------------------
+
+3sum
+
+----------------brute force
+
+run three loop and i + j + k == 0 then sort and insert into set
+
+------------------better using hashing
+
+just keep between element in hash
+
+looking for thrid element 
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& arr) {
+
+        int n = arr.size();
+
+        set<vector<int>> ff;
+
+        for(int i = 0; i < n; i++){
+
+            set<int> ms;
+
+            for(int j = i + 1; j < n; j++){
+
+                int find = -(arr[i] + arr[j]);
+
+                if(ms.find(find) != ms.end()){
+
+                    vector<int> temp = {arr[i], arr[j], find};
+
+                    sort(temp.begin(), temp.end());
+
+                    ff.insert(temp);
+
+                }
+
+                ms.insert(arr[j]);
+            }
+        }
+
+        vector<vector<int>> ans(ff.begin(), ff.end());
+
+        return ans;
+
+    }
+};
+
+------------optimal
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& arr) {
+
+        sort(arr.begin(), arr.end());
+
+        int n = arr.size();
+
+        vector<vector<int>> ans;
+
+        for(int i = 0; i < n - 2; i++){
+
+            if(i == 0 || (i > 0 && arr[i] != arr[i - 1])){
+
+                int slow = i + 1, fast = n - 1;
+                int sum = -arr[i];
+
+                while(slow < fast){
+
+                    if(arr[slow] + arr[fast] == sum){
+
+                        ans.push_back({arr[i], arr[slow], arr[fast]});
+
+                        while(slow < fast && arr[slow] == arr[slow + 1]){
+
+                            slow++;
+
+                        }
+
+                        while(slow < fast && arr[fast] == arr[fast - 1]){
+
+                            fast--;
+
+                        }
+
+                        slow++; fast--;
+
+                    }else if(arr[slow] + arr[fast] < sum){
+
+                        slow++;
+
+                    }else{
+                        
+                        fast--;
+
+                    }
+                }
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+4sum
+
+-----------------brute force
+
+run 4 loop and put into the set 
+
+----------------better
+
+same as 3sum better
+
+-----------------optimal
+
+above
+
+------------------------------------------------------------------------------------------
+
+subarray with given Xor
+
+----------brute force
+
+take all subarray and take xor
+
+-----------better
+
+int Solution::solve(vector<int> &arr, int target) {
+    
+    int total_xor = 0, ans = 0, n = arr.size();
+    
+    map<int, int> hash;
+    
+    for(int i = 0; i < n; i++){
+        
+        total_xor = total_xor ^ arr[i];
+        
+        if(total_xor == target){
+            
+            ans++;
+            
+        }
+        
+        int find = total_xor ^ target;
+        
+        if(hash[find] > 0){
+            
+            ans += hash[find];
+            
+        }
+        
+        hash[total_xor]++;
+        
+    }
+    
+    return ans;
+}
+
+------------------------------------------------------------------------------------------
+
+merging interval
+
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& arr) {
+        
+        int n = arr.size();
+
+        sort(arr.begin(), arr.end());
+
+        vector<vector<int>> ans;
+
+        for(int i = 0; i < n; i++){
+
+            int start = arr[i][0];
+            int end = arr[i][1];
+
+            if(!ans.empty() && start <= ans.back()[1]){
+
+                ans.back()[1] = max(end, ans.back()[1]);
+                continue;
+
+            }
+
+            ans.push_back({start, end});
+        }
+
+        return ans;
+
+    }
+};
+
+------------------------------------------------------------------------------------------
+
+merge two sorted array
+
+-------------brute force
+
+class Solution {
+public:
+    void merge(vector<int>& arr1, int m, vector<int>& arr2, int n) {
+        
+        int slow = 0, fast = 0;
+
+        vector<int> arr3;
+
+        while(slow < m && fast < n){
+
+            if(arr1[slow] <= arr2[fast]){
+
+                arr3.push_back(arr1[slow]);
+                slow++;
+
+            }else{
+
+                arr3.push_back(arr2[fast]);
+                fast++;
+
+            }
+        }
+
+        while(slow < m){
+
+            arr3.push_back(arr1[slow++]);
+
+        }
+
+        while(fast < n){
+
+            arr3.push_back(arr2[fast++]);
+
+        }
+
+        for(int i = 0; i < (n + m); i++){
+
+            arr1[i] = arr3[i];
+
+        }
+
+    }
+};
+
+-----------better
+
+class Solution {
+public:
+    void merge(vector<int>& arr1, int m, vector<int>& arr2, int n) {
+        
+        int slow = m - 1, fast = 0;
+
+        while(slow >= 0 && fast < n){
+
+            if(arr1[slow] > arr2[fast]){
+
+                swap(arr1[slow], arr2[fast]);
+
+                slow--; fast++;
+
+            }else{
+                
+                break;
+
+            }
+        }
+
+        sort(arr1.begin(), arr1.begin() + m);
+
+        sort(arr2.begin(), arr2.begin() + n);
+
+        int idx = 0;
+
+        for(int i = m; i < (m + n); i++){
+
+            arr1[i] = arr2[idx++];
+
+        }
+
+    }
+};
+
+---------opptimal 
+
+we use gap method which is ceil of length of 2 array / 2. and we reduce the gap and swap the two element and break the loop when gap == 1.
+
+
+------------------------------------------------------------------------------------------
+
+find missing and reapeting 
+
+--------------brute force
+
+for(int i = 1; i <= n; i++){
+
+	for(int j = 0; j < n;j ++ and count missing and reaping
+
+---------------better
+
+also using hasing
+
+-----------optimal (math)
+
+class Solution{
+public:
+    vector<int> findTwoElement(vector<int> arr, int n) {
+        
+        long long sum_n2 = n * (n + 1) * (2 * n + 1) / 6;
+        
+        long long sum_n = n * (n + 1) >> 1;
+        
+        long long sum_arr_n = 0, sum_arr_n2 = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            sum_arr_n += arr[i];
+            
+            sum_arr_n2 += ((long long)arr[i] * (long long)arr[i]);
+            
+        }
+        
+        long long val1 = sum_arr_n - sum_n;
+        
+        long long val2 = sum_arr_n2 - sum_n2;
+        
+        long long val3 = val2 / val1;
+        
+        return { (val1 + val3) / 2 , (val3 - val1) / 2 };
+    }
+};
+
+------optimal(xor)
+
+class Solution{
+public:
+    vector<int> findTwoElement(vector<int> arr, int n) {
+        
+        int xr = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            xr = xr ^ (i + 1);
+            
+            xr = xr ^ (arr[i]);
+            
+        }
+        
+        int bitNo = 0;
+        
+        while(1){
+            
+            if(((1 << bitNo) & xr) == 1){
+                break;
+            }
+            
+            bitNo++;
+            
+        }
+        
+        int zero = 0, one = 0;
+        
+        for(int i = 0; i < n; i++){
+            
+            if(((1 << bitNo) & arr[i]) == 1){
+                one = one ^ arr[i];
+            }else{
+                zero = zero ^ arr[i];
+            }
+            
+        }
+        
+        for(int i = 1; i <= n; i++){
+            
+            if((1 << bitNo) & (i + 1) == 1){
+                one = one ^ (i + 1);
+            }else{
+                zero = zero ^ (i + 1);
+            }
+            
+        }
+        
+        int cnt = 0;
+        
+        for(auto it : arr){
+            if(it == zero){
+                cnt++;
+            }
+        }
+        
+        if(cnt == 1){
+            return {one, zero};
+        }
+        
+        return {zero, one};
+    }
+};
+
+------------------------------------------------------------------------------------------
+
+count inversions
+
+---------------brute forces
+
+run 2 loops and get cnt++;
+
+-----------------optimal
+
+class Solution{
+  public:
+  
+    long long merge(long long arr[], long long low, long long mid, long long high){
+        
+        long long left = low, right = mid + 1;
+        
+        vector<long long> temp;
+        
+        long long cnt = 0;
+        
+        while(left <= mid && right <= high){
+            
+            if(arr[left] <= arr[right]){
+                
+                temp.push_back(arr[left]);
+                left++;
+                
+            }else{
+                
+                temp.push_back(arr[right]);
+                right++;
+                
+                cnt += (mid - left + 1);
+                
+            }
+            
+        }
+        
+        while(left <= mid){
+            
+            temp.push_back(arr[left++]);
+            
+        }
+        
+        while(right <= high){
+            
+            temp.push_back(arr[right++]);
+            
+        }
+        
+        for(long long i = low; i <= high; i++){
+            
+            arr[i] = temp[i - low];
+            
+        }
+        
+        return cnt;
+        
+    }
+  
+    
+    long long mergeSort(long long arr[], long long low, long long high){
+        
+        if(low >= high){
+            return 0LL;
+        }
+        
+        long long cnt = 0;
+        
+        long long mid = (low + high) >> 1;
+        
+        cnt += mergeSort(arr, low, mid);
+        cnt += mergeSort(arr, mid + 1, high);
+        
+        cnt += merge(arr, low, mid, high);
+        
+        return cnt;
+    }
+    
+  
+    long long int inversionCount(long long arr[], long long N)
+    {
+        return mergeSort(arr, 0, N - 1);
+    }
+
+};
+
+------------------------------------------------------------------------------------------
+
+reverse pair
+
+-------------bruter force
+
+run 2 for loop and cnt++;
+
+---------------optimal
+
+class Solution {
+public:
+
+    void merge(vector<int> &arr, int low, int mid, int high){
+
+        vector<int> temp;
+
+        int left = low, right = mid + 1;
+
+        while(left <= mid && right <= high){
+
+            if(arr[left] <= arr[right]){
+
+                temp.push_back(arr[left++]);
+
+            }else{
+
+                temp.push_back(arr[right++]);
+
+            }
+
+        }
+
+        while(left <= mid){
+
+            temp.push_back(arr[left++]);
+
+        }
+
+        while(right <= high){
+
+            temp.push_back(arr[right++]);
+
+        }
+
+        for(int i = low; i <= high; i++){
+
+            arr[i] = temp[i - low];
+
+        }
+
+    }
+
+    int countPair(vector<int> &arr, int low, int mid, int high){
+
+        int j = mid + 1, cnt = 0;
+
+        for(int i = low; i <= mid; i++){
+
+            while(j <= high && arr[i] > (long long)arr[j] * 2LL){
+
+                j++;
+
+            }
+
+            cnt += j - (mid + 1);
+
+        }
+
+        return cnt;
+
+    }
+
+    int mergeSort(vector<int> &arr, int low, int high){
+
+        if(low >= high){
+
+            return 0;
+
+        }
+
+        int cnt = 0;
+
+        int mid = (low + high) >> 1;
+
+        cnt += mergeSort(arr, low, mid);
+
+        cnt += mergeSort(arr, mid + 1, high);
+
+        cnt += countPair(arr, low, mid, high);
+
+        merge(arr, low, mid, high);
+
+        return cnt;
+    }
+
+    int reversePairs(vector<int>& arr) {
+
+        int n = arr.size();
+        
+        return mergeSort(arr, 0, n - 1);
+
+    }
+};
+
+------------------------------------------------------------------------------------------
+
+ Count of Smaller Numbers After Self
+
+class Solution {
+public:
+
+    void merge(vector<pair<int, int>> &arr, int low, int mid, int high, vector<int> &count){
+
+        int j = mid + 1;
+
+        for(int i = low; i <= mid; i++){
+
+            while(j <= high && arr[i].first > arr[j].first){
+
+                j++;
+
+            }
+
+            count[arr[i].second] += j - (mid + 1);
+
+        }
+
+        vector<pair<int, int>> temp;
+
+        int left = low, right = mid + 1;
+
+        while(left <= mid && right <= high){
+
+            if(arr[left].first <= arr[right].first){
+
+                temp.push_back({arr[left].first, arr[left].second});
+
+                left++;
+
+            }else{
+
+                temp.push_back({arr[right].first, arr[right].second});
+
+                right++;
+            }
+
+        }
+
+        while(left <= mid){
+
+            temp.push_back({arr[left].first, arr[left].second});
+
+            left++;
+
+        }
+
+        while(right <= high){
+
+            temp.push_back({arr[right].first, arr[right].second});
+
+            right++;
+
+        }
+
+        for(int i = low; i <= high; i++){
+
+            arr[i] = temp[i - low];
+
+        }
+    }
+
+    void mergeSort(vector<pair<int, int>> &arr, int low, int high, vector<int> &count){
+
+        if(low >= high){
+
+            return ;
+
+        }
+
+        int mid = (low + high) >> 1;
+
+        mergeSort(arr, low, mid, count);
+        mergeSort(arr, mid + 1, high, count);
+
+        merge(arr, low, mid, high, count);
+
+    }
+
+    vector<int> countSmaller(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        vector<int> count(n, 0);
+
+        vector<pair<int, int>> vp(n);
+
+        for(int i = 0; i < n; i++){
+
+            vp[i] = {arr[i], i};
+
+        }
+
+        mergeSort(vp, 0, n - 1, count);
+
+        return count;
+
+    }
+};
+
+
+------------------------------------------------------------------------------------------
+
+merge sort on prefix sum
+
+class Solution {
+public:
+
+    int merge(vector<long long> &sum, int low, int mid, int high, int lower, int upper){
+
+        int cnt = 0;
+
+        int lower_boundry = mid + 1, upper_boundry = mid + 1;
+
+        for(int i = low; i <= mid; i++){
+
+            while(lower_boundry <= high && sum[lower_boundry] - sum[i] < lower){
+
+                lower_boundry++;
+
+            }
+
+            while(upper_boundry <= high && sum[upper_boundry] - sum[i] <= upper){
+
+                upper_boundry++;
+
+            }
+
+            cnt += (upper_boundry - lower_boundry);
+
+        }
+
+        vector<long long> temp;
+
+        int left = low, right = mid + 1;
+
+        while(left <= mid && right <= high){
+
+            if(sum[left] <= sum[right]){
+
+                temp.push_back(sum[left++]);
+
+            }else{
+
+                temp.push_back(sum[right++]);
+
+            }
+
+        }
+
+        while(left <= mid){
+
+            temp.push_back(sum[left++]);
+
+        }
+
+        while(right <= high){
+
+            temp.push_back(sum[right++]);
+
+        }
+
+        for(int i = low; i <= high; i++){
+
+            sum[i] = temp[i - low];
+
+        }
+
+        return cnt;
+
+    }         
+
+    int mergeSort(vector<long long> &sum, int low, int high, int lower, int upper){
+
+        if(low > high){
+
+            return 0;
+
+        }
+
+        if(low == high){
+
+            if(lower <= sum[low] && sum[low] <= upper){
+
+                return 1;
+
+            }
+
+            return 0;
+
+        }
+
+        int cnt = 0;
+
+        int mid = (low + high) >> 1;
+
+        cnt += mergeSort(sum, low, mid, lower, upper);
+
+        cnt += mergeSort(sum, mid + 1, high, lower, upper);
+
+        cnt += merge(sum, low, mid, high, lower, upper);
+
+        return cnt;
+
+    }
+
+    int countRangeSum(vector<int>& nums, int lower, int upper) {
+        
+        int n = nums.size();
+
+        vector<long long> sum(n, 0LL);
+
+        sum[0] = nums[0];
+
+        for(int i = 1; i < n; i++){
+
+            sum[i] = sum[i - 1] + nums[i];
+
+        }
+
+        return mergeSort(sum, 0, n - 1, lower, upper);
+
+    }
+};
+
+
+------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+
+
+
+
