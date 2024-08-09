@@ -2397,3 +2397,100 @@ public:
 
     }
 };
+
+---------------------------------------------------------------------------------------
+
+		maximum product of subarray
+
+-----brute force N3
+
+generate all subarray and implement maximum product
+
+-----brute force N2
+
+generate all subarray during do product
+
+-----optimal N
+
+do some observation 
+1. all positive element (multiply all of them)
+2. even negative element (multiply all of them)
+3. odd negative element (answer will be either pref multiplication or suff multiplication)
+4. zero (seperate array)
+
+------- 2N
+
+class Solution {
+public:
+    int maxProduct(vector<int>& arr) {
+        int n = arr.size();
+        double ans = INT_MIN;
+        double pref = 1, suff = 1;
+        for(int i = 0; i < n; i++){
+            if(pref == 0){
+                pref = 1;
+            }
+            pref = pref * arr[i];
+            if(pref > ans){
+                ans = pref;
+            }
+        }
+        for(int i = n - 1; i >= 0; i--){
+            if(suff == 0){
+                suff = 1;
+            }
+            suff = suff * arr[i];
+            if(suff > ans){
+                ans = suff;
+            }
+        }
+        return ans;
+    }
+};
+
+-----N
+
+class Solution {
+public:
+    int maxProduct(vector<int>& arr) {
+        int n = arr.size();
+        double ans = INT_MIN;
+        double pref = 1, suff = 1;
+        for(int i = 0; i < n; i++){
+            if(pref == 0){
+                pref = 1;
+            }
+            if(suff == 0){
+                suff = 1;
+            }
+            pref = pref * arr[i];
+            suff = suff * arr[n - 1 - i];
+            ans = max({ans, pref, suff});
+        }
+        return ans;
+    }
+};
+
+----below approch is not intutive. (do not tell to intervieer)
+
+class Solution {
+public:
+    int maxProduct(vector<int>& v) {
+        int n = v.size();
+        int mx = v[0] == 0 ? 1 : v[0];
+        int mn = v[0] == 0 ? 1 : v[0];
+        int ans = v[0];
+        for(int i = 1; i < n; i++){
+            if(v[i] < 0){
+                swap(mn, mx);
+            }
+            mx = max(mx * v[i], v[i]);
+            mn = min(mn * v[i], v[i]);
+            ans = max(ans, mx);
+            if(v[i] == 0){
+                mx = 1; mn = 1;
+            }
+        }
+        return ans;
+    }
+};
