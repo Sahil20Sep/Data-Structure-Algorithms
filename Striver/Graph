@@ -1,0 +1,1690 @@
+-----------------------------------------------------------------------------------------
+
+    (intro)
+
+node, vertex
+
+directed cyclic/acyclic ggraph
+undirected cyclic/acuclic graph
+
+indgree --> number of incoming edge
+outdegree --> number of outgoint edge
+
+for undirected graph sum of total indegree = 2 * #ofedges
+
+1 2 3 4 is path
+then edges exits between adjecent node and do not repeat the visted node in path.
+
+edges also contain weight if not then consider as 1.
+
+if there is at least one cycle in graph callled cyclic graph.
+
+--------------------------------------------------------------------------------------------
+
+      (representation)
+
+matrix
+mat[n +1][n + 1];
+mat[i][j] = 1 // represent i and j are connected
+
+not usefull take O(N^2)
+
+adj list
+vector<int> adj[n + 1];
+
+take only O(2E) space --> for undirected graph
+take only (E) space --> for directed graph
+
+---- about wt
+
+mat[i][j] = wt;
+
+in list we store pair adj[u].push_back({v,wt}];
+
+-------------------------------------------------------------------------------------
+
+        (connected componets)
+
+maintain visited array 
+
+run loop for 1 to n and check !vis[n] --> run_traversal(i);
+
+------------------------------------------------------------------------------------
+
+        (bfs)
+
+---run for directed and undirected both
+
+class Solution {
+  public:
+    vector<int> bfsOfGraph(int n, vector<int> adj[]) {
+        vector<int> visited(n, false);
+        visited[0] = true;
+        queue<int> Q;
+        Q.push(0);
+        vector<int> bfs;
+        while(!Q.empty()){
+            int node = Q.front();
+            Q.pop();
+            bfs.push_back(node);
+            for(auto it : adj[node]){
+                if(!visited[it]){
+                    visited[it] = true;
+                    Q.push(it);
+                }
+            }
+        }
+        return bfs;
+    }
+};
+
+space is O(2N) time is for directed O(N +E) and for undirected O(N + 2E).
+
+----------------------------------------------------------------------------------------
+
+            (dfs striver)
+
+class Solution {
+  public:
+  
+    void dfs(int node, vector<int> &ans, vector<int> adj[], vector<int> &visited){
+        visited[node] = true;
+        ans.push_back(node);
+        for(auto it : adj[node]){
+            if(!visited[it]){
+                dfs(it, ans, adj, visited);
+            }
+        }
+    }
+  
+    vector<int> dfsOfGraph(int n, vector<int> adj[]) {
+        vector<int> visited(n, false);
+        vector<int> ans;
+        dfs(0, ans, adj, visited);
+        return ans;
+    }
+};
+
+space complexity O(N) + O(N) + recursion stack space O(N) if queue graph.
+time complexity O(N + 2E)
+
+--------------------------------------------------------------------------------------
+
+                    (Number of Provinces)
+----
+class Solution {
+public:
+
+    void dfs(int node, vector<int> adj[], vector<int> &visited){
+        visited[node] = true;
+        for(auto it : adj[node]){
+            if(!visited[it]){
+                dfs(it, adj, visited);
+            }
+        }
+    }
+
+    int findCircleNum(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<int> adj[n + 1];
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if(arr[i][j] && i != j){
+                    adj[i + 1].push_back(j + 1);
+                    adj[j + 1].push_back(i + 1);
+                }
+            }
+        }
+        int cc = 0;
+        vector<int> visited(n + 1, false);
+        for(int i = 1; i <= n; i++){
+            if(!visited[i]){
+                cc++;
+                dfs(i, adj, visited);
+            }
+        }
+        return cc;
+    }
+};
+
+space O(N) recursion stack space and O(N) visited
+time O(N) + O(v + 2e)
+
+---------------------------------------------------------------------
+
+            (cc in matrix)
+
+---bfs
+
+class Solution {
+public:
+
+    void bfs(int i, int j, queue<pair<int, int>> &Q, vector<vector<bool>> &visited, vector<vector<char>> &arr, vector<pair<int, int>> &movement){
+        int n = arr.size(), m = arr[0].size();
+        visited[i][j] = true;
+        Q.push({i, j});
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            for(auto it : movement){
+                int x = f.first + it.first;
+                int y = f.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == '1'){
+                    Q.push({x, y});
+                    visited[x][y] = true;
+                }
+            }
+        }
+    }
+
+    int numIslands(vector<vector<char>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<int, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {1, 0}, {0, 1}, {0, -1}
+        };
+        int cc = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!visited[i][j] && arr[i][j] == '1'){
+                    cc++;
+                    bfs(i, j, Q, visited, arr, movement);
+                }
+            }
+        }
+        return cc;
+    }
+};
+
+space O(N2) -- visited + O(N2) --> queue if all are 1
+time O(N2) + 9 * O(N2)
+
+--------------------------------------------------------------------------
+
+        (flood fill)
+
+class Solution {
+public:
+
+    void bfs(int i, int j, queue<pair<int, int>> &Q, vector<vector<bool>> &visited, vector<vector<char>> &arr, vector<pair<int, int>> &movement){
+        int n = arr.size(), m = arr[0].size();
+        visited[i][j] = true;
+        Q.push({i, j});
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            for(auto it : movement){
+                int x = f.first + it.first;
+                int y = f.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == '1'){
+                    Q.push({x, y});
+                    visited[x][y] = true;
+                }
+            }
+        }
+    }
+
+    int numIslands(vector<vector<char>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<int, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {1, 0}, {0, 1}, {0, -1}
+        };
+        int cc = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!visited[i][j] && arr[i][j] == '1'){
+                    cc++;
+                    bfs(i, j, Q, visited, arr, movement);
+                }
+            }
+        }
+        return cc;
+    }
+};
+
+time 4 * n * m
+space n * m
+
+---------------------------------------------------------------------------------------
+
+            (orange rotting)
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> arr = grid;
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<pair<int, int>, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        int one = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 2){
+                    Q.push({{i, j}, 0});
+                    visited[i][j] = true;
+                }else if(arr[i][j] == 1){
+                    one++;
+                }
+            }
+        }
+        if(one == 0){
+            return 0;
+        }
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        int second = 0;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            int time = f.second;
+            if(time > second) second = time;
+            for(auto it : movement){
+                int x = f.first.first + it.first;
+                int y = f.first.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == 1){
+                    Q.push({{x, y}, time + 1});
+                    one--;
+                    visited[x][y] = true;
+                }
+            }
+        }
+        return one ? -1 : second;
+    }
+};
+
+-----
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> arr = grid;
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<int, int>> Q;
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        int one = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 2){
+                    Q.push({i, j});
+                    visited[i][j] = true;
+                }else if(arr[i][j] == 1){
+                    one++;
+                }
+            }
+        }
+        if(one == 0){
+            return 0;
+        }
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        int second = 0;
+        while(Q.size()){
+            int len = Q.size();
+            second++;
+            while(len--){
+                auto f = Q.front();
+                Q.pop();
+                for(auto it : movement){
+                    int x = f.first + it.first;
+                    int y = f.second + it.second;
+                    if(x >= 0 && x < n && y >= 0 && y < m && !visited[x][y] && arr[x][y] == 1){
+                        Q.push({x, y});
+                        one--;
+                        visited[x][y] = true;
+                    }
+                }
+            }
+        }
+        return one ? -1 : second - 1;
+    }
+};
+
+-----
+
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> arr = grid;
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<pair<int, int>, int>> Q;
+        int one = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 2){
+                    Q.push({{i, j}, 0});
+                }else if(arr[i][j] == 1){
+                    one++;
+                }
+            }
+        }
+        if(one == 0){
+            return 0;
+        }
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        int second = 0;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            int time = f.second;
+            if(time > second) second = time;
+            for(auto it : movement){
+                int x = f.first.first + it.first;
+                int y = f.first.second + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 1){
+                    Q.push({{x, y}, time + 1});
+                    one--;
+                    arr[x][y] = 2;
+                }
+            }
+        }
+        return one ? -1 : second;
+    }
+};
+
+----------------------------------------------------------------------------------------------
+
+                (detect cycle -bfs)
+
+class Solution {
+  public:
+  
+    bool bfs(int i, vector<int> adj[], vector<bool> &visited){
+        queue<pair<int, int>> Q;
+        Q.push({i, -1});
+        visited[i] = true;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            int node = f.first;
+            int par = f.second;
+            for(auto it : adj[node]){
+                if(!visited[it]){
+                    visited[it] = true;
+                    Q.push({it, node});
+                }else if(par != it){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+  
+    bool isCycle(int n, vector<int> adj[]) {
+        vector<bool> visited(n, false);
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                if(bfs(i, adj, visited)){
+                    return true;
+                }
+            }
+        }        
+        return false;
+    }
+};
+
+time n + n * 2*e
+space 2n
+
+-------------dfs
+
+class Solution {
+  public:
+  
+    bool dfs(int node, int par, vector<int> adj[], vector<bool> &visited){
+        visited[node] = true;
+        bool flag = false;
+        for(auto it : adj[node]){
+            if(!visited[it]){
+                flag |= dfs(it, node, adj, visited);
+                if(flag){
+                    return true;
+                }
+            }else if(it != par){
+                return true;
+            }
+        }
+        return flag;
+    }
+  
+    bool isCycle(int n, vector<int> adj[]) {
+        vector<bool> visited(n, false);
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                if(dfs(i, -1, adj, visited)){
+                    return true;
+                }
+            }
+        }        
+        return false;
+    }
+};
+
+-------------------------------------------------------------------------------------
+
+            (minimum distance to all 0 to 1)
+
+---maru
+
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> level(n, vector<int> (m, 1e9));
+        queue<pair<int, int>> Q;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == 0){
+                    Q.push({i, j});
+                    level[i][j] = 0;
+                }
+            }
+        } 
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, 1}, {1, 0}, {0, -1}
+        };
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            int i = f.first;
+            int j = f.second;
+            for(auto it : movement){
+                int x = it.first + i;
+                int y = it.second + j;
+                if(x >= 0 && x < n && y >= 0 && y < m && 1 + level[i][j] < level[x][y]){
+                    level[x][y] = 1 + level[i][j];
+                    Q.push({x, y});
+                }
+            }
+        }  
+        return level; 
+    }
+};
+
+---striver soluton is use visited and when we pop then mark as ij = dist;
+
+-----------------------------------------------------------------------------------------
+
+            (make o to x)
+
+class Solution {
+public:
+    void solve(vector<vector<char>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        queue<pair<int, int>> Q;
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 || i == n - 1 || j == 0 || j == m - 1){
+                    if(arr[i][j] == 'O'){
+                        Q.push({i, j});
+                        arr[i][j] = '#';
+                        while(Q.size()){
+                            auto f = Q.front();
+                            Q.pop();
+                            for(auto it : movement){
+                                int x = f.first + it.first;
+                                int y = f.second + it.second;
+                                if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 'O'){
+                                    Q.push({x, y});
+                                    arr[x][y] = '#';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(arr[i][j] == '#'){
+                    arr[i][j] = 'O';
+                }else{
+                    arr[i][j] = 'X';
+                }
+            }
+        }
+    }
+};
+
+----------------------------------------------------------------------------------------
+
+            (number of enclaves - same as above problem)
+
+class Solution {
+public:
+    int numEnclaves(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        queue<pair<int, int>> Q;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 || i == n - 1 || j == 0 || j == m - 1){
+                    if(arr[i][j] == 1){
+                        Q.push({i, j});
+                        arr[i][j] = 2;
+                        while(Q.size()){
+                            auto f = Q.front();
+                            Q.pop();
+                            for(auto it : movement){
+                                int x = it.first + f.first;
+                                int y = it.second + f.second;
+                                if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 1){
+                                    arr[x][y] = 2;
+                                    Q.push({x, y});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m ;j++){
+                if(arr[i][j] == 1){
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------
+
+            (nnumber of distict island)
+
+class Solution {
+  public:
+    int countDistinctIslands(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<bool>> visited(n, vector<bool> (m, false));
+        queue<pair<int, int>> Q;
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {1, 0}, {0, -1}, {0, 1}  
+        };
+        set<vector<pair<int, int>>> ms;
+        vector<pair<int, int>> store;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(!visited[i][j] && arr[i][j]){
+                    Q.push({i, j});
+                    store.push_back({0, 0});
+                    visited[i][j] = true;
+                    while(!Q.empty()){
+                        auto f = Q.front();
+                        Q.pop();
+                        for(auto it : movement){
+                            int x = f.first + it.first;
+                            int y = f.second + it.second;
+                            if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 1 && !visited[x][y]){
+                                Q.push({x, y});
+                                store.push_back({x - i, y - j});
+                                visited[x][y] = true;
+                            }
+                        }
+                    }
+                    ms.insert(store);
+                    store.clear();
+                }
+            }
+        }
+        return (int)ms.size();
+    }
+};
+
+time n * m * log(n*m) + 4 * n * m
+
+-----------------------------------------------------------------------------------------
+
+                    (check bipertite graph or not)
+
+
+class Solution {
+public:
+
+    bool dfs(int node, int par, vector<vector<int>> &arr, vector<int> &visited){
+        if(par == -1){
+            visited[node] = 1;
+        }else{
+            visited[node] = visited[par] == 2 ? 1 : 2;
+        }
+        for(auto child : arr[node]){
+            if(!visited[child]){
+                if(dfs(child, node, arr, visited)){
+                    return true;
+                }
+            }else if(visited[child] == visited[node]){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool isBipartite(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<int> visited(n, 0);
+        for(int i = 0; i <n; i++){
+            if(!visited[i]){
+                if(dfs(i, -1, arr, visited)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+
+----bfs
+
+class Solution {
+public:
+
+    bool isBipartite(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<int> visited(n, 0);
+        queue<int> Q;
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                Q.push(i);
+                visited[i] = 1;
+                while(Q.size()){
+                    auto f = Q.front();
+                    Q.pop();
+                    for(auto child : arr[f]){
+                        if(!visited[child]){
+                            Q.push(child);
+                            visited[child] = visited[f] == 2 ? 1 : 2;
+                        }else if(visited[f] == visited[child]){
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+};
+
+-------------------------------------------------------------------------------------
+
+    (detect cycle in directed graph)
+
+---in the same path node have to visited again. called cycle
+
+class Solution {
+  public:
+  
+    bool dfs(int node, vector<bool> &visited, vector<bool> &path, vector<int> adj[]){
+        visited[node] = true;
+        path[node] = true;
+        for(auto child : adj[node]){
+            if(!visited[child]){
+                if(dfs(child, visited, path, adj)){
+                    return true;
+                }
+            }else if(path[child]) {
+                return true;
+            }
+        }
+        path[node] = false;
+        return false;
+    }
+  
+    bool isCyclic(int n, vector<int> adj[]) {
+        vector<bool> visited(n, false), path(n, false);
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                if(dfs(i, visited, path, adj)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+time is n + e (because of directed graph)
+
+-----1 vvector solution
+
+class Solution {
+  public:
+  
+    bool dfs(int node, vector<int> &visited, vector<int> adj[]){
+        visited[node] = 2;
+        for(auto child : adj[node]){
+            if(!visited[child]){
+                if(dfs(child, visited, adj)){
+                    return true;
+                }
+            }else if(visited[child] == 2){
+                return true;
+            }
+        }
+        visited[node] = 1;
+        return false;
+    }
+  
+    bool isCyclic(int n, vector<int> adj[]) {
+        vector<int> visited(n, 0);
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                if(dfs(i, visited, adj)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+------------------------------------------------------------------------
+        (find eventual safe states)
+
+----one vector solution above question same some changes) - dfs
+
+class Solution {
+public:
+
+    bool dfs(int node, vector<int> &ans, vector<vector<int>> &arr, vector<int> &visited){
+        visited[node] = 2;
+        for(auto child : arr[node]){
+            if(!visited[child]){
+                if(dfs(child, ans, arr, visited)){
+                    return true;
+                }
+            }else if(visited[child] == 2){
+                return true;
+            }
+        }
+        visited[node] = 1;
+        ans.push_back(node);
+        return false;
+    }
+
+    vector<int> eventualSafeNodes(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<int> visited(n, 0);
+        vector<int> ans;
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                dfs(i, ans, arr, visited);
+            }
+        }
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+-----bfs
+
+class Solution {
+public:
+
+    vector<int> eventualSafeNodes(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<int> out(n, 0), adj[n];
+        for(int i = 0; i < n; i++){
+            out[i] = arr[i].size();
+            for(auto it : arr[i]){
+                adj[it].push_back(i);
+            }
+        }
+        queue<int> Q;
+        for(int i = 0; i <n; i++){
+            if(!out[i]){
+                Q.push(i);
+            }
+        }
+        vector<int> ans;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            ans.push_back(f);
+            for(auto child : adj[f]){
+                if(--out[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+-------------------------------------------------------------------------------------
+
+            (topo logical sort)
+
+if there is edge between u and v then u must be apper before v in array.
+
+only apply on DAG.
+
+topo is working only for directed acyclic graph.
+
+not for directed cyclic graph.
+
+----dfs
+
+use stack
+
+class Solution
+{
+	public:
+
+	void dfs(int node, vector<int> adj[], vector<bool> &visited, stack<int> &st){
+	    visited[node] = true;
+	    for(auto child : adj[node]){
+	        if(!visited[child]){
+	            dfs(child, adj, visited, st);
+	        }
+	    }
+	    st.push(node);
+	}
+	
+	vector<int> topoSort(int n, vector<int> adj[]) 
+	{
+	    vector<int> ans;
+	    vector<bool> visited(n, false);
+	    stack<int> st;
+	    for(int i = 0; i < n; i++){
+	        if(!visited[i]){
+	            dfs(i, adj, visited, st);
+	        }
+	    }
+	    while(st.size()){
+	        ans.push_back(st.top());
+	        st.pop();
+	    }
+	    return ans;
+	}
+};
+
+TIME V + e AND space is 2N
+
+-----bfs
+
+vector<int> topoSort(int n, vector<int> adj[]) 
+	{
+	    vector<int> ans, indegree(n, 0);
+	    for(int i = 0; i < n; i++){
+	        for(auto it : adj[i]){
+	            indegree[it]++;
+	        }
+	    }
+	    queue<int> Q;
+	    for(int i = 0; i < n; i++){
+	        if(indegree[i] == 0){
+	            Q.push(i);
+	        }
+	    }
+	    while(Q.size()){
+	        auto f = Q.front();
+	        Q.pop();
+	        ans.push_back(f);
+	        for(auto child : adj[f]){
+	            indegree[child]--;
+	            if(indegree[child] == 0){
+	                Q.push(child);
+	            }
+	        }
+	    }
+	    return ans;
+	}
+
+v + e and 2n space
+
+-----------------------------------------------------------------------------------
+
+		(cycle detection in directed grpah - bfs, topo)
+
+class Solution {
+  public:
+  
+    bool isCyclic(int n, vector<int> adj[]) {
+        vector<int> in(n, 0);
+        int cnt = 0;
+        for(int i = 0; i < n; i++){
+            for(auto it : adj[i]){
+                in[it]++;
+            }
+        }
+        queue<int> Q;
+        for(int i = 0; i < n; i++){
+            if(in[i] == 0){
+                Q.push(i);
+            }
+        }
+        while(Q.size()){
+            auto f= Q.front();
+            cnt++;
+            Q.pop();
+            for(auto child : adj[f]){
+                in[child]--;
+                if(in[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        return cnt == n ? false : true;
+    }
+};
+
+--------------------------------------------------------------------------------------------------------
+
+----course schedule -I
+
+class Solution {
+public:
+    bool canFinish(int n, vector<vector<int>>& arr) {
+        vector<int> in(n, 0), adj[n];
+        for(auto it : arr){
+            in[it[0]]++;
+            adj[it[1]].push_back(it[0]);
+        }
+        queue<int> Q;
+        for(int i = 0; i < n; i++){
+            if(in[i] == 0){
+                Q.push(i);
+            }
+        }
+        int cnt = 0;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            cnt++;
+            for(auto child : adj[f]){
+                if(--in[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        return cnt == n ? true : false;
+    }
+};
+
+------------course schedule II
+
+class Solution {
+public:
+    vector<int> findOrder(int n, vector<vector<int>>& arr) {
+        vector<int> in(n, 0), adj[n];
+        for(auto it : arr){
+            in[it[0]]++;
+            adj[it[1]].push_back(it[0]);
+        }
+        queue<int> Q;
+        for(int i = 0; i < n; i++){
+            if(in[i] == 0){
+                Q.push(i);
+            }
+        }
+        vector<int> topo;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            topo.push_back(f);
+            for(auto child : adj[f]){
+                if(--in[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        if(topo.size() == n){
+            return topo;
+        }
+        return {};
+    }
+};
+
+---------------------------------------------------------------------------
+
+		(alien dictonary) - topo sort
+
+class Solution{
+    public:
+    string findOrder(string dict[], int n, int k) {
+        vector<int> in(k, 0);
+        vector<int> adj[k];
+        for(int i = 0; i < n - 1; i++){
+            int l = dict[i].size();
+            int r = dict[i + 1].size();
+            for(int j = 0; j < min(l, r); j++){
+                if(dict[i][j] != dict[i + 1][j]){
+                    adj[dict[i][j] - 'a'].push_back(dict[i + 1][j] - 'a');
+                    in[dict[i + 1][j] - 'a']++;
+                    break;
+                }  
+            }
+        }
+        queue<int> Q;
+        for(int i = 0; i < k; i++){
+            if(in[i] == 0){
+                Q.push(i);
+            }
+        }
+        string ans = "";
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            ans += (f + 'a');
+            for(auto child : adj[f]){
+                if(--in[child] == 0){
+                    Q.push(child);
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+test case 1 abcd 
+	    abc  no order possible
+
+test case 2 
+abc
+bad
+abd 
+
+a < b < a --> cyclic dependancy
+
+-----------------------------------------------------------------------------------------------------------------
+
+		(shortest path in directed acylic graph --topo) -- bfs
+
+class Solution {
+  public:
+     vector<int> shortestPath(int n,int m, vector<vector<int>>& arr){
+        vector<pair<int, int>> adj[n];
+        vector<int> in(n, 0);
+        for(auto it : arr){
+            int u = it[0], v= it[1], wt = it[2];
+            in[v]++;
+            adj[u].push_back({v, wt});
+        }
+        vector<int> dist(n, 1e9);
+        queue<pair<int, int>> Q;
+        for(int i = 0; i < n; i++){
+            if(in[i] == 0){
+                if(i == 0){
+                    Q.push({i, 0});
+                }else{
+                    Q.push({i, 1e9});
+                }
+            }
+        }
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            int node = f.first;
+            int d = f.second;
+            dist[node] = d;
+            for(auto it : adj[node]){
+                int child = it.first, wt = it.second;
+                if(d + wt < dist[child]){
+                    dist[child] = d + wt;
+                }
+                if(--in[child] == 0){
+                    Q.push({child, dist[child]});
+                }
+            }
+        }
+        for(int i = 0; i < n; i++){
+            if(dist[i] == 1e9){
+                dist[i] = -1;
+            }
+        }
+        return dist;
+    }
+};
+
+
+------dfs
+
+class Solution {
+  public:
+  
+    void dfs(int node, vector<pair<int, int>> adj[], stack<int> &st, vector<bool> &visited){
+        visited[node] = true;
+        for(auto it : adj[node]){
+            int child = it.first;
+            int wt = it.second;
+            if(!visited[child]){
+                dfs(child, adj, st, visited);
+            }
+        }
+        st.push(node);
+    }
+    
+    vector<int> shortestPath(int n,int m, vector<vector<int>>& arr){
+        vector<pair<int, int>> adj[n];
+        for(auto it : arr){
+            int u = it[0], v= it[1], wt = it[2];
+            adj[u].push_back({v, wt});
+        }
+        stack<int> st;
+        vector<bool> visited(n, false);
+        for(int i = 0; i < n; i++){
+            if(!visited[i]){
+                dfs(i, adj, st, visited);
+            }
+        }
+        vector<int> dist(n, 1e9);
+        dist[0] = 0;
+        while(st.size()){
+            auto f = st.top();
+            st.pop();
+            for(auto it : adj[f]){
+                int child = it.first;
+                int wt = it.second;
+                if(dist[f] + wt < dist[child]){
+                    dist[child] = dist[f] + wt;
+                }
+            }
+        }
+        for(int i = 0; i < n;i++){
+            if(dist[i] == 1e9){
+                dist[i] = -1;
+            }
+        }
+        return dist;
+    }
+};
+
+------------------------------------------------------------------------------
+
+		(shortest dist in undirected graph with unit weigght)
+
+---simple bfs
+
+class Solution {
+  public:
+    vector<int> shortestPath(vector<vector<int>>& edges, int n,int m, int src){
+        vector<int> adj[n];
+        for(auto it : edges){
+            int u = it[0], v = it[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        vector<int> dist(n, -1);
+        queue<int> Q;
+        Q.push(src);
+        dist[src] = 0;
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            for(auto child : adj[f]){
+                if(dist[child] == -1){
+                    dist[child] = 1 + dist[f];
+                    Q.push(child);
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+--------------------------------------------------------------------------------
+		(word ladder return shortest length)
+
+----
+
+class Solution {
+public:
+    int ladderLength(string start, string end, vector<string>& arr) {
+        int n = arr.size();
+        set<string> ms;
+        for(auto it : arr){
+            ms.insert(it);
+        }
+        queue<pair<string, int>> Q;
+        Q.push({start, 0});
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            string temp = f.first;
+            int d = f.second;
+            if(temp == end){
+                return d + 1;
+            }
+            for(int i = 0; i < temp.size(); i++){
+                string store = temp;
+                for(int j = 0; j < 26; j++){
+                    store[i] = (j + 'a');
+                    if(ms.find(store) != ms.end()){
+                        Q.push({store, d + 1});
+                        ms.erase(store);
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+};
+
+-------------II -- return complete path
+
+class Solution {
+public:
+    vector<vector<string>> findSequences(string start, string end, vector<string>& arr) {
+        vector<vector<string>> ans;
+        set<string> ms(arr.begin(), arr.end());
+        if(ms.find(end) == ms.end() || start.size() != end.size()){
+            return {};
+        }
+        queue<vector<string>> Q;
+        Q.push({start});
+        vector<string> used;
+        used.push_back(start);
+        int level = 0;
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            if(f.size() > level){
+                level++;
+                for(auto it : used){
+                    ms.erase(it);
+                }
+                used.clear();
+            }
+            string s = f.back();
+            if(s == end){
+                ans.push_back(f);
+                continue;
+            }
+            for(int i = 0; i < s.size(); i++){
+                string original = s;
+                for(int j = 0; j < 26; j++){
+                    original[i] = (j + 'a');
+                    if(ms.find(original) != ms.end()){
+                        used.push_back(original);
+                        f.push_back(original);
+                        Q.push(f);
+                        f.pop_back();
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+----optimized
+
+class Solution {
+public:
+
+    void dfs(string start, string end, map<string, int> &hash, vector<vector<string>> &ans, vector<string> &temp){
+        temp.push_back(end);
+        if(end == start){
+            auto t = temp;
+            reverse(t.begin(), t.end());
+            ans.push_back(t);
+            temp.pop_back();
+        }else{
+            int n = end.size();
+            for(int i = 0; i < n; i++){
+                string s = end;
+                for(int j = 0; j < 26; j++){
+                    s[i] = j + 'a';
+                    if(hash.find(s) != hash.end() && hash[s] + 1 == hash[end]){
+                        dfs(start, s, hash, ans, temp);
+                    }
+                }
+            }
+            temp.pop_back();
+        }
+    }
+
+    vector<vector<string>> findLadders(string start, string end, vector<string>& arr) {
+        int n = arr.size();
+        map<string, int> hash;
+        set<string> ms(arr.begin(), arr.end());
+        if(ms.find(start) != ms.end()){
+            ms.erase(start);
+        }
+        queue<pair<string, int>> Q;
+        Q.push({start, 0});
+        while(!Q.empty()){
+            auto f = Q.front();
+            Q.pop();
+            string temp = f.first;
+            int d = f.second;
+            hash[temp] = d;
+            if(temp == end){
+                break;
+            }
+            for(int i = 0; i < temp.size(); i++){
+                string s = temp;
+                for(int j = 0; j < 26; j++){
+                    s[i] = (j + 'a');
+                    if(ms.find(s) != ms.end()){
+                        ms.erase(s);
+                        Q.push({s, d + 1});
+                    }
+                }
+            }
+        }
+        vector<string> temp;
+        vector<vector<string>> ans;
+        if(hash.find(end) != hash.end()){
+            dfs(start, end, hash, ans, temp);
+        }
+        return ans;
+    }
+};
+
+------------------------------------------------------------------
+
+		(dijkstra algo)
+
+class Solution
+{
+	public:
+
+    vector<int> dijkstra(int n, vector<vector<int>> adj[], int src)
+    {
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> PQ;
+        PQ.push({0, src});
+        while(PQ.size()){
+            auto f= PQ.top();
+            PQ.pop();
+            int d = f.first;
+            int node = f.second;
+            for(auto it : adj[node]){
+                int wt = it[1];
+                int child = it[0];
+                if(wt + d < dist[child]){
+                    dist[child] = wt + d;
+                    PQ.push({dist[child], child});
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+------- (using visited array)
+
+class Solution
+{
+	public:
+
+    vector<int> dijkstra(int n, vector<vector<int>> adj[], int src)
+    {
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> PQ;
+        PQ.push({0, src});
+        vector<bool> visited(n, false);
+        while(PQ.size()){
+            auto f= PQ.top();
+            PQ.pop();
+            int d = f.first;
+            int node = f.second;
+            if(visited[node]){
+                continue;
+            }
+            visited[node] = true;
+            dist[node] = d;
+            for(auto it : adj[node]){
+                int wt = it[1];
+                int child = it[0];
+                if(wt + d < dist[child]){
+                    PQ.push({wt + d, child});
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+------
+
+not working for negative weight cycle and because going for forewere.
+
+E * logV
+
+same above code use queue working fine but take another time when any node get shortest dis again caluculate the child shortest dist based on this.
+
+-----set (to save time, erase redudent pair 
+
+class Solution
+{
+	public:
+
+    vector<int> dijkstra(int n, vector<vector<int>> adj[], int src)
+    {
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        set<pair<int, int>> ms;
+        ms.insert({0, src});
+        while(ms.size()){
+            auto f= *ms.begin();
+            ms.erase(ms.begin());
+            int d = f.first;
+            int node = f.second;
+            for(auto it : adj[node]){
+                int wt = it[1];
+                int child = it[0];
+                if(wt + d < dist[child]){
+                    if(dist[child] != 1e9){
+                        ms.erase({dist[child], child});
+                    }
+                    dist[child] = d + wt;
+                    ms.insert({dist[child], child});
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+--------------why not queue
+
+take a unnessacy path and time cosuming
+
+V ( log(heap size) + ne * log(heapsize))
+|
+|
+to V * v * 2 logV
+v2 --> E * logV
+
+---------------------------------------------------------------------------------------------------------
+
+		(find the shortest path using dijskra) using parent vector solution - backtrack
+
+class Solution {
+  public:
+    vector<int> shortestPath(int n, int m, vector<vector<int>>& edges) {
+        vector<pair<int, int>> adj[n + 1];
+        for(auto it : edges){
+            int u = it[0], v = it[1], wt = it[2];
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
+        }
+        set<pair<int, int>> ms;
+        ms.insert({0, 1});
+        vector<int> dist(n + 1, 1e9);
+        vector<int> par(n + 1, -1);
+        dist[1] = 0;
+        while(ms.size()){
+            auto f = *ms.begin();
+            ms.erase(f);
+            int d = f.first;
+            int node = f.second;
+            for(auto it : adj[node]){
+                int wt = it.second, child = it.first;
+                if(wt + d < dist[child]){
+                    if(dist[child] != 1e9){
+                        ms.erase({dist[child], child});
+                    }
+                    par[child] = node;
+                    dist[child] = d + wt;
+                    ms.insert({dist[child], child});
+                }
+            }
+        }
+        if(par[n] == -1){
+            return {-1};
+        }
+        vector<int> path;
+        int temp = n;
+        while(par[n] != -1){
+            path.push_back(n);
+            n = par[n];
+        }
+        path.push_back(n);
+        reverse(path.begin(), path.end());
+        path.insert(path.begin(), dist[temp]);
+        return path;
+    }
+};
+
+---------------------------------------------------------------------------------
+
+		(shortest path in binary maze)
+
+class Solution {
+  public:
+    int shortestPath(vector<vector<int>> &arr, pair<int, int> sou, pair<int, int> des) {
+        int z = sou.first, w = sou.second;
+        int l = des.first, r = des.second;
+        if(arr[z][w] == 0 || arr[l][r] == 0){
+            return -1;
+        }
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dist(n, vector<int> (m, 1e9));
+        dist[z][w] = 0;
+        set<pair<int, pair<int, int>>> ms;
+        ms.insert({0, {z, w}});
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        while(ms.size()){
+            auto f = *ms.begin();
+            ms.erase(f);
+            int d = f.first;
+            int i = f.second.first;
+            int j = f.second.second;
+            for(auto it : movement){
+                int x = it.first + i;
+                int y = it.second + j;
+                if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == 1 && 1 + dist[i][j] < dist[x][y]){
+                    if(dist[x][y] != 1e9){
+                        ms.erase({dist[x][y], {x, y}});
+                    }
+                    dist[x][y] = 1 + dist[i][j];
+                    ms.insert({dist[x][y], {x, y}});
+                }
+            }
+        }
+        return dist[l][r] == 1e9 ? -1 : dist[l][r];
+    }
+};
+
+in this case all edges are unit you can also omit set and do perfom like bfs only queue will also work.
+
+----queue solution (unit weight & queue is in linear order fashion)
+
+class Solution {
+public:
+    int shortestPathBinaryMatrix(vector<vector<int>>& arr) {
+        int n = arr.size();
+        if(arr[0][0] == 1 || arr[n - 1][n - 1] == 1){
+            return -1;
+        }
+        vector<vector<int>> dist(n, vector<int> (n, 1e9));
+        dist[0][0] = 0;
+        queue<pair<int, pair<int, int>>> ms;
+        ms.push({0, {0, 0}});
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}, 
+            {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+        };
+        while(ms.size()){
+            auto f = ms.front();
+            ms.pop();
+            int d = f.first;
+            int i = f.second.first;
+            int j = f.second.second;
+            if(i == n - 1 && j == n - 1){
+                return d + 1;
+            }
+            for(auto it : movement){
+                int x = it.first + i;
+                int y = it.second + j;
+                if(x >= 0 && x < n && y >= 0 && y < n && arr[x][y] == 0 && 1 + dist[i][j] < dist[x][y]){
+                    dist[x][y] = 1 + dist[i][j];
+                    if(x == n - 1 && y == n - 1){
+                        return dist[x][y] + 1;
+                    }
+                    ms.push({dist[x][y], {x, y}});
+                }
+            }
+        }
+        return -1;
+    }
+};
+
+--------------------------------------------------------------------------------------------------------------------
+
+		(path with minimum efforts)
+
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        set<pair<int, pair<int, int>>> ms;
+        ms.insert({0, {0, 0}});
+        vector<vector<int>> dist(n, vector<int> (m, 1e9));
+        dist[0][0] = 0;
+        vector<pair<int, int>> movement = {
+            {-1, 0}, {0, -1}, {1, 0}, {0, 1}
+        };
+        while(ms.size()){
+            auto f = *ms.begin();
+            ms.erase(f);
+            int d = f.first;
+            int i = f.second.first;
+            int j = f.second.second;
+            if(i == n - 1 && j == m - 1){
+                return d;
+            }
+            for(auto it : movement){
+                int x = i + it.first;
+                int y = j + it.second;
+                if(x >= 0 && x < n && y >= 0 && y < m){
+                    int take = max(d, abs(arr[i][j] - arr[x][y]));
+                    if(take < dist[x][y]){
+                        if(dist[x][y] != 1e9){
+                            ms.erase({dist[x][y], {x, y}});
+                        }
+                        dist[x][y] = take;
+                        ms.insert({dist[x][y], {x, y}});
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+};
+
+time is e * logV
+
+e = n*m*4
+v = n*m
