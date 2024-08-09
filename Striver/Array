@@ -1971,6 +1971,8 @@ run 2 loops and get cnt++;
 
 -----------------optimal
 
+give the example of two sorted array.
+
 class Solution{
   public:
   
@@ -2049,6 +2051,9 @@ class Solution{
 
 };
 
+time --> O(NlogN)
+space --> O(N)
+
 ------------------------------------------------------------------------------------------
 
 reverse pair
@@ -2058,6 +2063,8 @@ reverse pair
 run 2 for loop and cnt++;
 
 ---------------optimal
+
+take 2 sorted array and run algo.
 
 class Solution {
 public:
@@ -2153,6 +2160,11 @@ public:
 
     }
 };
+
+time --> logN * (N + N)
+space --> N
+
+ask about the make the copy of the input or not.
 
 -----------------------------------------------------------------------------------------------
 
