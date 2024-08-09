@@ -1832,3 +1832,45 @@ public:
         return dist[dst] == 1e9 ? -1 : dist[dst];
     }
 };
+
+---------------------------------------------------------------------------------------------------------------
+
+				Network delay time
+
+-----djk
+
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& arr, int n, int k) {
+        vector<pair<int, int>> adj[n + 1];
+        for(auto it : arr){
+            int u = it[0], v = it[1], wt = it[2];
+            adj[u].push_back({v, wt});
+        }
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> PQ;
+        PQ.push({0, k});
+        vector<int> dist(n + 1, 1e9);
+        dist[k] = 0;
+        while(PQ.size()){
+            auto f = PQ.top();
+            PQ.pop();
+            int d = f.first;
+            int node = f.second;
+            for(auto it : adj[node]){
+                int child = it.first;
+                int wt = it.second;
+                if(wt + d < dist[child]){
+                    dist[child] = wt + d;
+                    PQ.push({wt + d, child});
+                }
+            }
+        }
+        int mini = dist[1];
+        for(int i = 2; i <= n; i++){
+            mini = max(mini, dist[i]);
+        }
+        return mini == 1e9 ? -1 : mini;
+    }
+};
+
+E * LogV (time commplexity)
