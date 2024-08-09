@@ -1744,3 +1744,91 @@ time is e * logV
 
 e = n*m*4
 v = n*m
+
+--------------------------------------------------------------------------------------------
+			chepest flight with atmost K stop
+
+----why not use priority queue
+----why not based on distance
+
+----why based on stop
+    5 	    5
+1 ----- 2 ---- 3
+ \2   2/ \1  1/
+  \   /   \  /
+    4       5
+
+k = 2
+src = 1, dst = 3
+
+there are 4 route 
+
+for node 5 dist[5] --> will be set to 5 (with 3 stop)
+for node 5 --> 5 + 1 --> will be set to 6 (with 2 stop) --> this is good. (but we already found the dist of 5 is 5 and 6 is greater than this.)
+
+that's why we use algo with base on stop and it's linear incraese in data structure so used queue rather than priority_queue.
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& arr, int src, int dst, int k) {
+        vector<pair<int, int>> adj[n];
+        for(auto it : arr){
+            int u = it[0], v = it[1], wt = it[2];
+            adj[u].push_back({v, wt});
+        }
+        queue<pair<int, pair<int, int>>> Q;
+        Q.push({0, {src, 0}});
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        while(Q.size()){
+            auto f = Q.front();
+            Q.pop();
+            int stop = f.first;
+            int node = f.second.first;
+            int d = f.second.second;
+            for(auto it : adj[node]){
+                int child = it.first;
+                int wt = it.second;
+                if(d + wt < dist[child] && stop <= k){
+                    dist[child] = d + wt;
+                    Q.push({stop + 1, {child, d + wt}});
+                }
+            }
+        }
+        return dist[dst] == 1e9 ? -1 : dist[dst];
+    }
+};
+
+--------below approch based on distance is not work.
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& arr, int src, int dst, int k) {
+        vector<pair<int, int>> adj[n];
+        for(auto it : arr){
+            int u = it[0], v = it[1], wt = it[2];
+            adj[u].push_back({v, wt});
+        }
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> Q;
+        Q.push({0, {src, 0}});
+        vector<int> dist(n, 1e9);
+        dist[src] = 0;
+        while(Q.size()){
+            auto f = Q.top();
+            Q.pop();
+            int d = f.first;
+            int node = f.second.first;
+            int stop = f.second.second;
+            cout << "d: " << d << " node: " << node << " stop: " << stop << endl;
+            for(auto it : adj[node]){
+                int child = it.first;
+                int wt = it.second;
+                if(d + wt < dist[child] && ((child != dst && stop < k) || (child == dst && stop <= k))){
+                    dist[child] = d + wt;
+                    Q.push({d + wt, {child, stop + 1}});
+                }
+            }
+        }
+        return dist[dst] == 1e9 ? -1 : dist[dst];
+    }
+};
