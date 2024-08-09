@@ -1919,3 +1919,47 @@ public:
 
 time complexity E logV
 
+--------------------------------------------------------------------------------------------
+
+			minimum multiplication to reach end
+
+class Solution {
+  public:
+    int minimumMultiplications(vector<int>& arr, int start, int end) {
+        int mod = 1e5;
+        if(start == end){
+            return 0;
+        }
+        vector<int> dist(1e5, 1e9);
+        dist[start] = 0;
+        queue<pair<int, int>> Q;
+        Q.push({0, start});
+        while(Q.size()){
+            auto f= Q.front();
+            Q.pop();
+            int d = f.first;
+            int node = f.second;
+            for(auto it : arr){
+                int child = (it * node) % mod;
+                if(d + 1 < dist[child]){
+                    dist[child] = d + 1;
+                    Q.push({d + 1, child});
+                    if(child == end){
+                        return dist[child];
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+};
+
+The outer loop (BFS) could potentially visit all 10^5 nodes.
+
+For each node, you could perform 𝑛 multiplications and mod operations.
+Therefore, the time complexity is 
+n * 1o^5
+
+and tell that we can not determine exact time complexity because it's completly depend on array.
+all 1e5 number will not produce, if we think about the hypothetical synario.
+
