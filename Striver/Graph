@@ -1874,3 +1874,48 @@ public:
 };
 
 E * LogV (time commplexity)
+
+-----------------------------------------------------------------------------------------------------------------
+
+			shortest distnace count path 0 to n - 1
+
+class Solution {
+public:
+    int countPaths(int n, vector<vector<int>>& arr) {
+        long long mod = 1e9 + 7;
+        vector<pair<long long, long long>> adj[n];
+        for(auto it : arr){
+            long long u = it[0], v = it[1], wt = it[2];
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
+        }
+        priority_queue<pair<long long, long long>, vector<pair<long long, long long>>, greater<pair<long long, long long>>> PQ;
+        PQ.push({0, 0});
+        vector<long long> path(n, 0);
+        path[0] = 1;
+        vector<long long> dist(n, 1e13);
+        dist[0] = 0;
+        while(PQ.size()){
+            auto f = PQ.top();
+            PQ.pop();
+            long long d = f.first;
+            long long node = f.second;
+            for(auto it : adj[node]){
+                long long child = it.first;
+                long long wt = it.second;
+                if(wt + d == dist[child]){
+                    path[child] = (path[child] + path[node]) % mod;
+                }
+                if(d + wt < dist[child]){
+                    dist[child] = d + wt;
+                    path[child] = path[node];
+                    PQ.push({d + wt, child});
+                }
+            }
+        }
+        return path[n - 1];
+    }
+};
+
+time complexity E logV
+
