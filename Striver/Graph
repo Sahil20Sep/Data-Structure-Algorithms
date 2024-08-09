@@ -1965,7 +1965,7 @@ all 1e5 number will not produce, if we think about the hypothetical synario.
 
 ------------------------------------------------------------------------------------------------------------
 
-		Bell man ford algorithms
+		Bell man ford algorithms (graph has negative edge weight and negative cycle)
 
 ---- to find the shortest distance from source node to all other node.
 ---- also handle negative cycle weight.
