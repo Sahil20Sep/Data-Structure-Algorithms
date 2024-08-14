@@ -48,3 +48,38 @@ public:
         return binarySearch(arr, n, right) - binarySearch(arr, n, left - 1);
     }
 };
+
+-----------------------------------------------------------------------------------------------
+
+                                    719. Find K-th Smallest Pair Distance
+
+class Solution {
+public:
+
+    bool check(int mid, vector<int> &arr, int k){
+        int countOfPair = 0, n = arr.size();
+        int j = 1;
+        for(int i = 0; i < n; i++){
+            while(j < n && arr[j] - arr[i] <= mid){
+                j++;
+            }
+            countOfPair += (j - i - 1);
+        }
+        return countOfPair >= k;
+    }
+
+    int smallestDistancePair(vector<int>& arr, int k) {
+        int n = arr.size();
+        sort(arr.begin(), arr.end());
+        int low = 0, high = arr[n - 1] - arr[0];
+        while(low <= high){
+            int mid = (low + high) >> 1;
+            if(check(mid, arr, k)){
+                high = mid - 1;
+            }else{
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+};
