@@ -1,0 +1,3950 @@
+    (fibonacci)
+
+class Solution {
+  public:
+    long long mod = 1e9 + 7;
+    long long func(int n, vector<long long> &dp){
+        if(n <= 1){
+            return n;
+        }
+        if(dp[n] != -1){
+            return dp[n];
+        }
+        return dp[n] = (func(n - 1, dp) + func(n - 2, dp)) % mod;
+    }
+  
+    long long int topDown(int n) {
+        vector<long long> dp(n + 1, -1);
+        return func(n, dp);
+    }
+    long long int bottomUp(int n) {
+        int prev2 = 0, prev1= 1;
+        for(int i = 2; i <= n; i++){
+            int cur = (prev1 + prev2) % mod;
+            prev2 = prev1;
+            prev1 = cur;
+        }
+        return prev1;
+    }
+};
+
+---------------------------------------------------------------------------------------------
+
+            (distinct way to climb stair)
+
+-----memo (use base case as i = 0 and i = 1 return 1;
+
+class Solution {
+public:
+
+    int func(int i, vector<int> &dp){
+        
+        if(i == 0 || i == 1){
+            return 1;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        return dp[i] = func(i - 1, dp) + func(i - 2, dp);
+    }
+
+    int climbStairs(int n) {
+        vector<int> dp(n + 1, -1);
+        return func(n, dp);
+    }
+};
+
+---tab
+
+class Solution {
+public:
+
+    int climbStairs(int n) {
+        vector<int> dp(n + 1, -1);
+        dp[0] = 1, dp[1] = 1;
+        for(int i = 2; i <= n; i++){
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+};
+
+-------opti
+
+class Solution {
+public:
+
+    int climbStairs(int n) {
+        int prev2 = 1, prev = 1;
+        for(int i = 2; i <= n; i++){
+            int cur = prev + prev2;
+            prev2 = prev;
+            prev = cur;
+        }
+        return prev;
+    }
+};
+
+----------------------------------------------------------------------------------
+        (min energy to reach n -1 index)
+
+----momo
+
+class Solution {
+  public:
+  
+    int func(int i, vector<int> &arr, vector<int> &dp){
+        if(i == 0){
+            return 0;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        int ans = 1e9;
+        if(i - 1 >= 0) ans = min(ans, func(i - 1, arr, dp) + abs(arr[i] - arr[i - 1]));
+        if(i - 2 >= 0) ans = min(ans, func(i - 2, arr, dp) + abs(arr[i] - arr[i - 2]));
+        return dp[i] = ans;
+    }
+  
+    int minimumEnergy(vector<int>& arr, int n) {
+        vector<int> dp(n, -1);
+        return func(n - 1, arr, dp);
+    }
+};
+
+-----tab
+
+int minimumEnergy(vector<int>& arr, int n) {
+    vector<int> dp(n, 1e9);
+    dp[0] = 0;
+    for(int i = 1; i < n; i++){
+        if(i - 1 >= 0) dp[i] = min(dp[i], dp[i - 1] + abs(arr[i] - arr[i - 1]));
+        if(i - 2 >= 0) dp[i] = min(dp[i], dp[i - 2] + abs(arr[i] - arr[i - 2]));
+    }
+    return dp[n - 1];
+}\
+
+---------opti
+
+int minimumEnergy(vector<int>& arr, int n) {
+        int prev2 = 0, prev1 = 0;
+        for(int i = 1; i < n; i++){
+            int ans = 1e9;
+            if(i - 1 >= 0) ans = min(ans, prev1 + abs(arr[i] - arr[i - 1]));
+            if(i - 2 >= 0) ans = min(ans, prev2 + abs(arr[i] - arr[i - 2]));
+            prev2 = prev1;
+            prev1 = ans;
+        }
+        return prev1;
+    }
+
+----------------------------------------------------------------------------------------------
+
+        (frog K jump)
+
+------memo
+
+class Solution {
+  public:
+  
+    int func(int i, int k, vector<int> &arr, vector<int> &dp){
+        if(i == 0){
+            return 0;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        int ans = 1e9 + 1;
+        for(int j = 1; j <= k; j++){
+            if(i - j >= 0){
+                ans = min(ans, func(i - j, k, arr, dp) + abs(arr[i] - arr[i - j]));
+            }
+        }
+        return dp[i] = ans;
+    }
+  
+    int minimizeCost(vector<int>& arr, int n, int k) {
+        vector<int> dp(n, -1);
+        return func(n - 1, k, arr, dp);
+    }
+};
+
+
+----------tab
+
+int minimizeCost(vector<int>& arr, int n, int k) {
+    vector<int> dp(n, -1);
+    dp[0] = 0;
+    for(int i = 1; i < n; i++){
+        int ans = 1e9 + 1;
+        for(int j = 1; j <= k; j++){
+            if(i - j >= 0){
+                ans = min(ans, dp[i - j] + abs(arr[i] - arr[i - j]));
+            }
+        }
+        dp[i] = ans;
+    }
+    return dp[n - 1];
+}
+
+--------space not require because worse case k = n take place, o/w take vector of k size and samelogic of above problem move by 1.
+
+
+--------------------------------------------------------------------------------------------
+
+        house robbar
+
+---memo
+
+class Solution {
+public:
+
+    int func(int i, vector<int> &arr, vector<int> &dp){
+        if(i < 0){
+            return 0;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        int ans = -1;
+        ans = max(ans, arr[i] + func(i - 2, arr, dp));
+        ans = max(ans, func(i - 1, arr, dp));
+        return dp[i] = ans;
+    }
+
+    int rob(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> dp(n, -1);
+        return func(n - 1, arr, dp);
+    }
+};
+
+-------tab
+
+int rob(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> dp(n, -1);
+    for(int i = 0; i < n; i++){
+        int ans = -1;
+        ans = max(ans, arr[i] + (i - 2 < 0 ? 0 : dp[i - 2]));
+        ans = max(ans, (i - 1 < 0 ? 0 : dp[i - 1]));
+        dp[i] = ans;
+    }
+    return dp[n - 1];
+}
+
+-------space
+
+int rob(vector<int>& arr) {
+    int n = arr.size();
+    int prev2 = 0, prev1 = 0;
+    for(int i = 0; i < n; i++){
+        int ans = -1;
+        ans = max(ans, arr[i] + (i - 2 < 0 ? 0 : prev2));
+        ans = max(ans, (i - 1 < 0 ? 0 : prev1));
+        prev2 = prev1;
+        prev1 = ans;
+    }
+    return prev1;
+}
+
+-----------------------------------------------------------------------
+        first and last are also adjecent.
+
+class Solution {
+public:
+
+    int func(vector<int>& arr) {
+        int n = arr.size();
+        int prev2 = 0, prev1 = 0;
+        for(int i = 0; i < n; i++){
+            int ans = -1;
+            ans = max(ans, arr[i] + (i - 2 < 0 ? 0 : prev2));
+            ans = max(ans, (i - 1 < 0 ? 0 : prev1));
+            prev2 = prev1;
+            prev1 = ans;
+        }
+        return prev1;
+    }
+
+    int rob(vector<int>& arr) {
+        int n = arr.size();
+        if(n == 1){
+            return arr[0];
+        }
+        vector<int> temp1(arr.begin(), arr.begin() + n - 1), temp2(arr.begin() + 1, arr.end());
+        return max(func(temp1), func(temp2));
+    }
+};
+
+----------------------------------------------------------------------------------
+
+        (ninja traning)
+
+-----memo
+
+class Solution {
+  public:
+  
+    int func(int i, int days, vector<vector<int>>& arr, vector<vector<int>>& dp){
+        if(i == 0){
+            int ans = -1;
+            for(int j = 0; j < 3; j++){
+                if(j != days){
+                    ans = max(ans, arr[i][j]);
+                }
+            }
+            return dp[i][days] = ans;
+        }
+        if(dp[i][days] != -1){
+            return dp[i][days];
+        }
+        int ans = -1;
+        for(int j = 0; j < 3; j++){
+            if(j != days){
+                ans = max(ans, arr[i][j] + func(i - 1, j, arr, dp));
+            }
+        }
+        return dp[i][days] = ans;
+    }
+  
+    int maximumPoints(vector<vector<int>>& arr, int n) {
+        vector<vector<int>> dp(n, vector<int> (4, -1));
+        return func(n - 1, 3, arr, dp);
+    }
+};
+
+-------tab
+
+int maximumPoints(vector<vector<int>>& arr, int n) {
+    vector<vector<int>> dp(n, vector<int> (4, -1));
+    dp[0][0] = max(arr[0][1], arr[0][2]);
+    dp[0][1] = max(arr[0][0], arr[0][2]);
+    dp[0][2] = max(arr[0][0], arr[0][1]);
+    dp[0][3] = max({arr[0][0], arr[0][1], arr[0][2]});
+    for(int i = 1; i < n; i++){
+        for(int days = 0; days <= 3; days++){
+            int ans = -1;
+            for(int j = 0; j < 3; j++){
+                if(j != days){
+                    ans = max(ans, arr[i][j] + dp[i - 1][j]);
+                }
+            }
+            dp[i][days] = ans;
+        }
+    }
+    return dp[n - 1][3];
+}
+
+-----space
+
+int maximumPoints(vector<vector<int>>& arr, int n) {
+    vector<int> prev(4, -1), curr(4, -1);
+    prev[0] = max(arr[0][1], arr[0][2]);
+    prev[1] = max(arr[0][0], arr[0][2]);
+    prev[2] = max(arr[0][0], arr[0][1]);
+    prev[3] = max({arr[0][0], arr[0][1], arr[0][2]});
+    for(int i = 1; i < n; i++){
+        for(int days = 0; days <= 3; days++){
+            int ans = -1;
+            for(int j = 0; j < 3; j++){
+                if(j != days){
+                    ans = max(ans, arr[i][j] + prev[j]);
+                }
+            }
+            curr[days] = ans;
+        }
+        prev = curr;
+    }
+    return prev[3];
+}
+
+-------------------------------------------------------------------------------------
+        (unique path top left to bottam right)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, int m, int n, vector<vector<int>> &dp){
+        if(i == 0 && j == 0){
+            return 1;
+        }
+        if(i < 0 || j < 0){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 0;
+        ans += func(i - 1, j, m, n, dp);
+        ans += func(i, j - 1, m, n, dp);
+        return dp[i][j] = ans;
+    }
+
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int> (n, -1));
+        return func(m - 1, n - 1, m, n, dp);
+    }
+};
+
+------- tab
+
+int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int> (n, -1));
+        dp[0][0] = 1;
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(i == 0 && j == 0){
+                    continue;
+                }
+                int ans = 0;
+                if(i - 1 >= 0) ans += dp[i - 1][j];
+                if(j - 1 >= 0) ans += dp[i][j - 1];
+                dp[i][j] = ans;
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+----space
+
+int uniquePaths(int m, int n) {
+        vector<int> prev(n, 0), curr(n, 0);
+        curr[0] = 1;
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(i == 0 && j == 0){
+                    continue;
+                }
+                int ans = 0;
+                if(i - 1 >= 0) ans += prev[j];
+                if(j - 1 >= 0) ans += curr[j - 1];
+                curr[j] = ans;
+            }
+            prev = curr;
+        }
+        return prev[n - 1];
+    }
+
+-----------------------------------------------------------------------------
+
+        (unique path with obstackle)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<vector<int>> &arr, vector<vector<int>> &dp){
+        if(i < 0 || j < 0){
+            return 0;
+        } 
+        if(arr[i][j]){
+            return dp[i][j] = 0;
+        }
+        if(i == 0 && j == 0){
+            return 1;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 0;
+        ans += func(i - 1, j, arr, dp);
+        ans += func(i, j - 1, arr, dp);
+        return dp[i][j] = ans;
+    }
+
+    int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, arr, dp);
+    }
+};
+
+-----tab
+
+int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dp(n, vector<int> (m, 0));
+        if(arr[0][0] == 0){
+            dp[0][0] = 1;
+        }
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 && j == 0) continue;
+                if(arr[i][j]){
+                    dp[i][j] = 0;
+                    continue;
+                }
+                int ans = 0;
+                if(i - 1 >= 0) ans += dp[i - 1][j];
+                if(j - 1 >= 0) ans += dp[i][j - 1];
+                dp[i][j] = ans;
+            }
+        }
+        return dp[n - 1][m - 1];
+    }
+
+------space
+
+int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<int> prev(m, 0), curr(m, 0);
+        if(arr[0][0] == 0){
+            curr[0] = 1;
+        }
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 && j == 0) continue;
+                if(arr[i][j]){
+                    curr[j] = 0;
+                    continue;
+                }
+                int ans = 0;
+                if(i - 1 >= 0) ans += prev[j];
+                if(j - 1 >= 0) ans += curr[j - 1];
+                curr[j] = ans;
+            }
+            prev = curr;
+        }
+        return prev[m - 1];
+    }
+
+----------------------------------------------------------------------------------
+
+    (minimum path sum -- right and bottam)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<vector<int>> &arr, vector<vector<int>> &dp){
+        int n = arr.size(), m = arr[0].size();
+        if(i == 0 && j == 0){
+            return dp[i][j] = arr[0][0];
+        }
+        if(i < 0 || j < 0){
+            return 1e9 + 1;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 1e9;
+        ans = min(ans, arr[i][j] + func(i - 1, j, arr, dp));
+        ans = min(ans, arr[i][j] + func(i, j - 1, arr, dp));
+        return dp[i][j] = ans;
+    }
+
+    int minPathSum(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, arr, dp);
+    }
+};
+
+-----tabular
+
+int minPathSum(vector<vector<int>>& arr) {
+    int n = arr.size(), m = arr[0].size();
+    vector<vector<int>> dp(n, vector<int> (m, 0));
+    dp[0][0] = arr[0][0];
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(i == 0 && j == 0){
+                continue;
+            }
+            int ans = 1e9;
+            if(i - 1 >= 0) ans = min(ans, arr[i][j] + dp[i - 1][j]);
+            if(j - 1 >= 0) ans = min(ans, arr[i][j] + dp[i][j - 1]);
+            dp[i][j] = ans;
+        }
+    }
+    return dp[n - 1][m - 1];
+}
+
+----space
+
+int minPathSum(vector<vector<int>>& arr) {
+    int n = arr.size(), m = arr[0].size();
+    vector<int> curr(m, 0), prev(m, 0);
+    curr[0] = arr[0][0];
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(i == 0 && j == 0){
+                continue;
+            }
+            int ans = 1e9;
+            if(i - 1 >= 0) ans = min(ans, arr[i][j] + prev[j]);
+            if(j - 1 >= 0) ans = min(ans, arr[i][j] + curr[j - 1]);
+            curr[j] = ans;
+        }
+        prev = curr;
+    }
+    return prev[m - 1];
+}
+
+------------------------------------------------------------------------------------------
+
+        (minimum path in trigular)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<vector<int>> &arr, vector<vector<int>> &dp){
+        int n = arr.size();
+        if(i == n - 1){
+            return dp[i][j] = arr[n - 1][j];
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 1e9;
+        ans = min(ans, func(i + 1, j, arr, dp) + arr[i][j]);
+        ans = min(ans, func(i + 1, j + 1, arr, dp) + arr[i][j]);
+        return dp[i][j] = ans;
+    }
+
+    int minimumTotal(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n);
+        for(int i = 0; i < n; i++){
+            dp[i].resize(i + 1, -1);
+        }
+        return func(0, 0, arr, dp);
+    }
+};
+
+-----tabaular
+
+int minimumTotal(vector<vector<int>>& arr) {
+    int n = arr.size();
+    vector<vector<int>> dp(n);
+    for(int i = 0; i < n; i++){
+        dp[i].resize(i + 1, 0);
+    }
+    for(int i = n - 1; i >= 0; i--){
+        for(int j = 0; j <= i; j++){
+            if(i == n - 1){
+                dp[n - 1][j] = arr[n - 1][j];
+                continue;
+            }
+            int ans = 1e9;
+            ans = min(ans, dp[i + 1][j] + arr[i][j]);
+            ans = min(ans, dp[i + 1][j + 1] + arr[i][j]);
+            dp[i][j] = ans;
+        }
+    }
+    return dp[0][0];
+}
+
+------space optimization
+
+int minimumTotal(vector<vector<int>>& arr) {
+    int n = arr.size();
+    vector<int> next(n, 0), curr(n, 0);
+    for(int i = n - 1; i >= 0; i--){
+        for(int j = 0; j <= i; j++){
+            if(i == n - 1){
+                curr[j] = arr[n - 1][j];
+                continue;
+            }
+            int ans = 1e9;
+            ans = min(ans, next[j] + arr[i][j]);
+            ans = min(ans, next[j + 1] + arr[i][j]);
+            curr[j] = ans;
+        }
+        next = curr;
+    }
+    return next[0];
+}
+
+-----------------------------------------------------------------------------
+        (minimum falling path sum)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<vector<int>> &arr, vector<vector<int>> &dp){
+        int n = arr.size();
+        if(j < 0 || j >= n){
+            return 1e9;
+        }
+        if(i == 0){
+            return arr[i][j];
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 1e6;
+        ans = min(ans, func(i - 1, j, arr, dp) + arr[i][j]);
+        ans = min(ans, func(i - 1, j - 1, arr, dp) + arr[i][j]);
+        ans = min(ans, func(i - 1, j + 1, arr, dp) + arr[i][j]);
+        return dp[i][j] = ans;
+    }
+
+    int minFallingPathSum(vector<vector<int>>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (n, -1));
+        int ans = 1e6;
+        for(int i = 0; i < n ; i++){
+            ans = min(ans, func(n - 1, i, arr, dp));
+        }
+        return ans;
+    }
+};
+
+----tab
+
+int minFallingPathSum(vector<vector<int>>& arr) {
+    int n = arr.size();
+    vector<vector<int>> dp(n, vector<int> (n, 0));
+    int ans = 1e6;
+    for(int i = 0; i < n; i++){
+        dp[0][i] = arr[0][i];
+    }
+    for(int i = 1; i < n; i++){
+        for(int j = 0; j < n; j++){
+            int ans = 1e6;
+            ans = min(ans, dp[i - 1][j] + arr[i][j]);
+            if(j - 1 >= 0) ans = min(ans, dp[i - 1][j - 1] + arr[i][j]);
+            if(j + 1 < n) ans = min(ans, dp[i - 1][j + 1] + arr[i][j]);
+            dp[i][j] = ans;
+        }
+    }
+    for(int i = 0; i < n ; i++){
+        ans = min(ans, dp[n - 1][i]);
+    }
+    return ans;
+}
+
+------space
+
+int minFallingPathSum(vector<vector<int>>& arr) {
+    int n = arr.size();
+    vector<int> curr(n, 0), prev(n, 0);
+    int ans = 1e6;
+    for(int i = 0; i < n; i++){
+        prev[i] = arr[0][i];
+    }
+    for(int i = 1; i < n; i++){
+        for(int j = 0; j < n; j++){
+            int ans = 1e6;
+            ans = min(ans, prev[j] + arr[i][j]);
+            if(j - 1 >= 0) ans = min(ans, prev[j - 1] + arr[i][j]);
+            if(j + 1 < n) ans = min(ans, prev[j + 1] + arr[i][j]);
+            curr[j] = ans;
+        }
+        prev = curr;
+    }
+    for(int i = 0; i < n ; i++){
+        ans = min(ans, prev[i]);
+    }
+    return ans;
+}
+
+------------------------------------------------------------------------------------------------
+
+        (cherry pickup II)
+
+-----memo
+
+class Solution {
+public:
+
+    int func(int i, int j1, int j2, vector<vector<int>> &arr, vector<vector<vector<int>>> &dp){
+        if(i == (arr.size() - 1)){
+            if(j1 == j2){
+                return dp[i][j1][j2] = arr[i][j1];
+            }
+            return dp[i][j1][j2] = arr[i][j1] + arr[i][j2];
+        }
+        if(dp[i][j1][j2] != -1){
+            return dp[i][j1][j2];
+        }
+        int sum = 0;
+        int temp = (j1 == j2) ? arr[i][j1] : arr[i][j1] + arr[i][j2];
+        for(int l = -1; l <= 1; l++){
+            for(int r = -1; r <= 1; r++){
+                if(j1 + l >= 0 && j1 + l < arr[0].size() && j2 + r >= 0 && j2 + r < arr[0].size()){
+                    sum = max(sum, temp + func(i + 1, j1 + l, j2 + r, arr, dp));
+                }
+            }
+        }
+        return dp[i][j1][j2] = sum;
+    }
+
+    int cherryPickup(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>> (m, vector<int> (m, -1)));
+        return func(0, 0, m - 1, arr, dp);
+    }
+};
+
+----tab
+
+int cherryPickup(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>> (m, vector<int> (m, 0)));
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < m; j++){
+                if(i == j){
+                    dp[n - 1][i][j] = arr[n - 1][i];
+                }else{
+                    dp[n - 1][i][j] = arr[n - 1][i] + arr[n - 1][j];
+                }
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int j1 = 0; j1 < m; j1++){
+                for(int j2 = 0; j2 < m; j2++){
+                    int sum = 0;
+                    int temp = (j1 == j2) ? arr[i][j1] : arr[i][j1] + arr[i][j2];
+                    for(int l = -1; l <= 1; l++){
+                        for(int r = -1; r <= 1; r++){
+                            if(j1 + l >= 0 && j1 + l < arr[0].size() && j2 + r >= 0 && j2 + r < arr[0].size()){
+                                sum = max(sum, temp + dp[i + 1][j1 + l][j2 + r]);
+                            }
+                        }
+                    }
+                    dp[i][j1][j2] = sum;
+                }
+            }
+        }
+        return dp[0][0][m - 1];
+    }
+
+----space
+
+int cherryPickup(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> next(m, vector<int> (m, 0));
+        vector<vector<int>> curr(m, vector<int> (m, 0));
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < m; j++){
+                if(i == j){
+                    next[i][j] = arr[n - 1][i];
+                }else{
+                    next[i][j] = arr[n - 1][i] + arr[n - 1][j];
+                }
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int j1 = 0; j1 < m; j1++){
+                for(int j2 = 0; j2 < m; j2++){
+                    int sum = 0;
+                    int temp = (j1 == j2) ? arr[i][j1] : arr[i][j1] + arr[i][j2];
+                    for(int l = -1; l <= 1; l++){
+                        for(int r = -1; r <= 1; r++){
+                            if(j1 + l >= 0 && j1 + l < arr[0].size() && j2 + r >= 0 && j2 + r < arr[0].size()){
+                                sum = max(sum, temp + next[j1 + l][j2 + r]);
+                            }
+                        }
+                    }
+                    curr[j1][j2] = sum;
+                }
+            }
+            next = curr;
+        }
+        return next[0][m - 1];
+    }
+
+--------------------------------------------------------------------------------------------------------------------------
+
+        (subset sum == k)
+--memo
+class Solution{   
+public:
+
+    bool func(int i, int target, vector<int> &arr, vector<vector<int>> &dp){
+        if(target == 0){
+            return dp[i][target] = true;
+        }
+        if(i == 0){
+            return dp[i][target] = (arr[i] == target);
+        }
+        if(dp[i][target] != -1){
+            return dp[i][target];
+        }
+        bool flag = false;
+        flag |= func(i - 1, target, arr, dp);
+        if(target >= arr[i]){
+            flag |= func(i - 1, target - arr[i], arr, dp);
+        }
+        return dp[i][target] = flag;
+    }
+    
+    bool isSubsetSum(vector<int>arr, int sum){
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (sum + 1, -1));
+        return func(n - 1, sum, arr, dp); 
+    }
+};
+
+----tab
+
+bool isSubsetSum(vector<int>arr, int sum){
+        int n = arr.size();
+        vector<vector<bool>> dp(n, vector<bool> (sum + 1, false));
+        for(int i = 0; i < n; i++){
+            dp[i][0] = true;
+        }
+        dp[0][arr[0]] = true;
+        for(int i = 1; i < n; i++){
+            for(int target = 1; target <= sum; target++){
+                bool flag = false;
+                flag |= dp[i - 1][target];
+                if(target >= arr[i]){
+                    flag |= dp[i - 1][target - arr[i]];
+                }
+                dp[i][target] = flag;
+            }
+        }
+        return dp[n - 1][sum];
+    }
+
+-------space
+
+bool isSubsetSum(vector<int>arr, int sum){
+        int n = arr.size();
+        vector<bool> prev(sum + 1, false), curr(sum + 1, false);
+        prev[0] = curr[0] = true;
+        prev[arr[0]] = true;
+        for(int i = 1; i < n; i++){
+            for(int target = 1; target <= sum; target++){
+                bool flag = false;
+                flag |= prev[target];
+                if(target >= arr[i]){
+                    flag |= prev[target - arr[i]];
+                }
+                curr[target] = flag;
+            }
+            prev = curr;
+        }
+        return prev[sum];
+    }
+
+------------------------------------------------------------------------------
+
+        (partition into two equal sum subset)
+
+---memo
+
+class Solution {
+public:
+
+    bool func(int i, int target, vector<int> &arr, vector<vector<int>> &dp){
+        if(target == 0){ return dp[i][target] = true; }
+        if(i == 0){ return dp[i][target] = (arr[i] == target); }
+        if(dp[i][target] != -1){ return dp[i][target]; }
+        bool flag = false;
+        flag |= func(i - 1, target, arr, dp);
+        if(target - arr[i] >= 0){
+            flag |= func(i - 1, target - arr[i], arr, dp);
+        }
+        return dp[i][target] = flag;
+    }
+
+    bool canPartition(vector<int>& arr) {
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        int n = arr.size();
+        if(sum & 1){
+            return false;
+        }
+        int half = sum >> 1;
+        vector<vector<int>> dp(n, vector<int> (half + 1, -1));
+        return func(n - 1, half, arr, dp);
+    }
+};
+
+----tab
+
+bool canPartition(vector<int>& arr) {
+    int sum = 0;
+    for(auto it : arr){
+        sum += it;
+    }
+    int n = arr.size();
+    if(sum & 1){
+        return false;
+    }
+    int half = sum >> 1;
+    vector<vector<bool>> dp(n, vector<bool> (half + 1, false));
+    for(int i = 0; i < n; i++){
+        dp[i][0] = true;
+    }
+    if(arr[0] > half){
+        return false;
+    }
+    dp[0][arr[0]] = true;
+    for(int i = 1; i < n; i++){
+        for(int target = 1; target <= half; target++){
+            bool flag = false;
+            flag |= dp[i - 1][target];
+            if(target - arr[i] >= 0){
+                flag |= dp[i - 1][target - arr[i]];
+            }
+            dp[i][target] = flag;
+        }
+    }
+    return dp[n - 1][half];
+}
+
+---space
+
+bool canPartition(vector<int>& arr) {
+    int sum = 0;
+    for(auto it : arr){
+        sum += it;
+    }
+    int n = arr.size();
+    if(sum & 1){
+        return false;
+    }
+    int half = sum >> 1;
+    vector<bool> curr(half + 1, false), prev(half + 1, false);
+    prev[0] = curr[0] = true;
+    if(arr[0] > half){
+        return false;
+    }
+    prev[arr[0]] = true;
+    for(int i = 1; i < n; i++){
+        for(int target = 1; target <= half; target++){
+            bool flag = false;
+            flag |= prev[target];
+            if(target - arr[i] >= 0){
+                flag |= prev[target - arr[i]];
+            }
+            curr[target] = flag;
+        }
+        prev = curr;
+    }
+    return prev[half];
+}
+
+------------------------------------------------------------------------------------
+
+    (patition into two suset with minimal ab. diffrences)
+
+----memo
+
+#include<bits/stdc++.h>
+
+bool func(int i, int target, vector<int> &arr, vector<vector<int>> &dp){
+	if(target == 0){
+		dp[i][target] = true;
+	}
+	if(i == 0){
+		return dp[i][target] = (arr[i] == target);
+	}
+	if(dp[i][target] != -1){
+		return dp[i][target];
+	}
+	bool flag = false;
+	flag |= func(i - 1, target, arr, dp);
+	if(target - arr[i] >= 0){
+		flag |= func(i - 1, target - arr[i], arr, dp);
+	}
+	return dp[i][target] = flag;
+}
+
+int minSubsetSumDifference(vector<int>& arr, int n)
+{
+	int sum = 0;
+	for(auto it : arr){
+		sum += it;
+	}
+	int half = (sum >> 1);
+	vector<vector<int>> dp(n, vector<int> (half + 1, -1));
+	for(int target = half; target >= 0; target--){
+		if(func(n - 1, target, arr, dp)){
+			return (sum - target) - target; 
+		}
+	}
+	return 0;
+}
+
+-------tab
+
+#include<bits/stdc++.h>
+
+int minSubsetSumDifference(vector<int>& arr, int n)
+{
+	int sum = 0;
+	for(auto it : arr){
+		sum += it;
+	}
+	int half = sum >> 1;
+	vector<vector<bool>> dp(n, vector<bool> (half + 1, false));
+    for(int i = 0; i < n; i++){
+        dp[i][0] = true;
+    }
+    if(arr[0] <= half){
+		dp[0][arr[0]] = true;
+    }
+    for(int i = 1; i < n; i++){
+        for(int target = 1; target <= half; target++){
+            bool flag = false;
+            flag |= dp[i - 1][target];
+            if(target - arr[i] >= 0){
+                flag |= dp[i - 1][target - arr[i]];
+            }
+            dp[i][target] = flag;
+        }
+    }
+	for(int target = half; target >= 0; target--){
+		if(dp[n - 1][target]){
+			return (sum - target) - target; 
+		}
+	}
+	return 0;
+}
+
+-----space
+
+#include<bits/stdc++.h>
+
+int minSubsetSumDifference(vector<int>& arr, int n)
+{
+	int sum = 0;
+	for(auto it : arr){
+		sum += it;
+	}
+	int half = sum >> 1;
+	vector<bool> curr(half + 1, false), prev(half + 1, false);
+    prev[0] = curr[0] = true;
+    if(arr[0] <= half){
+	prev[arr[0]] = true;
+    }
+    for(int i = 1; i < n; i++){
+	for(int target = 1; target <= half; target++){
+	    bool flag = false;
+	    flag |= prev[target];
+	    if(target - arr[i] >= 0){
+		flag |= prev[target - arr[i]];
+	    }
+	    curr[target] = flag;
+	}
+	prev = curr;
+    }
+	for(int target = half; target >= 0; target--){
+		if(prev[target]){
+			return (sum - target) - target; 
+		}
+	}
+	return 0;
+}
+
+-------------------------------------------------------------------------------
+
+		(count subset with sum k include 0, +ve)
+
+class Solution{
+
+	public:
+	 int mod = 1e9 + 7;
+	 
+	 int func(int i, int sum, int arr[], vector<vector<int>> &dp){
+	     if(i == 0){
+	         if(sum == 0 && arr[0] == 0){
+	             return 2;
+	         }
+	         if(sum == 0 || arr[0] == sum){
+	             return 1;
+	         }
+	         return 0;
+	     }
+	     if(dp[i][sum] != -1){
+	         return dp[i][sum];
+	     }
+	     int count = 0;
+	     count = (count + func(i - 1, sum, arr, dp)) % mod;
+	     if(sum >= arr[i]){
+	         count = (count + func(i - 1, sum - arr[i], arr, dp)) % mod;
+	     }
+	     return dp[i][sum] = count;
+	 }
+	
+	int perfectSum(int arr[], int n, int sum)
+	{
+	    vector<vector<int>> dp(n, vector<int> (sum + 1, -1));
+	    return func(n - 1, sum, arr, dp);
+	}
+	  
+};
+
+------tab
+
+int perfectSum(int arr[], int n, int sum)
+	{
+	    vector<vector<int>> dp(n, vector<int> (sum + 1, 0));
+	    if(arr[0] == 0){
+	        dp[0][0] = 2;
+	    }else{
+	        dp[0][0] = 1;
+	    }
+	    if(arr[0] <= sum && arr[0] != 0){
+	        dp[0][arr[0]] = 1;
+	    }
+	    for(int i = 1; i < n; i++){
+	        for(int target = 0; target <= sum; target++){
+	            int count = 0;
+	            count = (count + dp[i - 1][target]) % mod;
+	            if(target - arr[i] >= 0){
+	                count = (count + dp[i - 1][target - arr[i]]) % mod;
+	            }
+	            dp[i][target] = count;
+	        }
+	    }
+	    return dp[n - 1][sum];
+	}
+
+----space
+
+int perfectSum(int arr[], int n, int sum)
+	{
+	    vector<int> curr(sum + 1, 0), prev(sum + 1, 0);
+	    if(arr[0] == 0){
+	        prev[0] = 2;
+	    }else{
+	        prev[0] = 1;
+	    }
+	    if(arr[0] <= sum && arr[0] != 0){
+	        prev[arr[0]] = 1;
+	    }
+	    for(int i = 1; i < n; i++){
+	        for(int target = 0; target <= sum; target++){
+	            int count = 0;
+	            count = (count + prev[target]) % mod;
+	            if(target - arr[i] >= 0){
+	                count = (count + prev[target - arr[i]]) % mod;
+	            }
+	            curr[target] = count;
+	        }
+	        prev = curr;
+	    }
+	    return prev[sum];
+	}
+
+-------------------------------------------------------------------------------------------------
+		(devide into two subset s1 >= s2 where diffrenece is d)
+
+---memo
+
+class Solution {
+  public:
+    int mod = 1e9 + 7;
+    int func(int i, int need, vector<int> &arr, vector<vector<int>> &dp){
+        if(i == 0){
+            if(need == 0 && arr[0] == 0) return 2;
+            if(need == 0 || arr[0] == need) return 1;
+            return 0;
+        }
+        if(dp[i][need] != -1){
+            return dp[i][need];
+        }
+        int count = 0;
+        count = (count + func(i - 1, need, arr, dp)) % mod;
+        if(need - arr[i] >= 0){
+            count = (count + func(i - 1, need - arr[i], arr, dp)) % mod;
+        }
+        return dp[i][need] = count;
+    }
+  
+    int countPartitions(int n, int d, vector<int>& arr) {
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if((sum + d) & 1){
+            return 0;
+        }
+        int need = (sum + d) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, -1));
+        return func(n - 1, need, arr, dp);
+    }
+};
+
+-----tab
+
+int countPartitions(int n, int d, vector<int>& arr) {
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if((sum + d) & 1){
+            return 0;
+        }
+        int need = (sum + d) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, 0));
+        if(arr[0] == 0){
+            dp[0][0] = 2;
+        }else{
+            dp[0][0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            dp[0][arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int target = 0; target <= need; target++){
+                int count = 0;
+                count = (count + dp[i - 1][target]) % mod;
+                if(target - arr[i] >= 0){
+                    count = (count + dp[i - 1][target - arr[i]]) % mod;
+                }
+                dp[i][target] = count;
+            }
+        }
+        return dp[n - 1][need];
+    }
+
+----space
+
+int countPartitions(int n, int d, vector<int>& arr) {
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if((sum + d) & 1){
+            return 0;
+        }
+        int need = (sum + d) >> 1;
+        vector<int> curr(need + 1, 0), prev(need + 1, 0);
+        if(arr[0] == 0){
+            prev[0] = 2;
+        }else{
+            prev[0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            prev[arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int target = 0; target <= need; target++){
+                int count = 0;
+                count = (count + prev[target]) % mod;
+                if(target - arr[i] >= 0){
+                    count = (count + prev[target - arr[i]]) % mod;
+                }
+                curr[target] = count;
+            }
+            prev = curr;
+        }
+        return prev[need];
+    }
+
+--------------------------------------------------------------------------------------------
+
+	(knap shake problem)
+
+----memo
+
+class Solution
+{
+    public:
+    
+    int func(int i, int w, int wt[], int val[], vector<vector<int>> &dp){
+        if(i == 0){
+            if(w - wt[0] >= 0){
+                return val[0];
+            }
+            return 0;
+        }
+        if(dp[i][w] != -1){
+            return dp[i][w];
+        }
+        int ans = INT_MIN;
+        ans = max(ans, func(i - 1, w, wt, val, dp));
+        if(w - wt[i] >= 0){
+            ans = max(ans, func(i - 1, w - wt[i], wt, val, dp) + val[i]);
+        }
+        return dp[i][w] = ans;
+    }
+    
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<vector<int>> dp(n, vector<int> (W + 1, -1));
+       return func(n - 1, W, wt, val, dp);
+    }
+};
+
+------tab
+
+int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<vector<int>> dp(n, vector<int> (W + 1, 0));
+       for(int i = wt[0]; i <= W; i++){
+           dp[0][i] = val[0];
+       }
+       for(int i = 1; i < n; i++){
+           for(int w = 0; w <= W; w++){
+                int ans = INT_MIN;
+                ans = max(ans, dp[i - 1][w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, dp[i - 1][w - wt[i]] + val[i]);
+                }
+                dp[i][w] = ans;
+           }
+       }
+       return dp[n - 1][W];
+    }
+
+----space
+
+int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<int> curr(W + 1, 0), prev(W + 1, 0);
+       for(int i = wt[0]; i <= W; i++){
+           prev[i] = val[0];
+       }
+       for(int i = 1; i < n; i++){
+           for(int w = 0; w <= W; w++){
+                int ans = INT_MIN;
+                ans = max(ans, prev[w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, prev[w - wt[i]] + val[i]);
+                }
+                curr[w] = ans;
+           }
+           prev = curr;
+       }
+       return prev[W];
+    }
+
+----one array only size of W
+
+int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       vector<int> prev(W + 1, 0);
+       for(int i = wt[0]; i <= W; i++){
+           prev[i] = val[0];
+       }
+       for(int i = 1; i < n; i++){
+           for(int w = W; w >= 0; w--){
+                int ans = INT_MIN;
+                ans = max(ans, prev[w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, prev[w - wt[i]] + val[i]);
+                }
+                prev[w] = ans;
+           }
+       }
+       return prev[W];
+    }
+
+-----------------------------------------------------------------------------------
+
+	(coin change -- return minimum number of coin to get target - infinite suuppply of coin)
+
+---recursion time complexity is >> o(2^n) because on same index we are and space complexity is o(target) (because of reduce by 11111..) not o(N) same reason.
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int amount, vector<int> &arr, vector<vector<int>> &dp){
+        if(i == 0){
+            if(amount % arr[i] == 0){
+                return amount / arr[i];
+            }
+            return 1e9;
+        }
+        if(dp[i][amount] != -1){
+            return dp[i][amount];
+        }
+        int ans = 1e9;
+        ans = min(ans, func(i - 1, amount, arr, dp));
+        if(amount - arr[i] >= 0){
+            ans = min(ans, 1 + func(i, amount - arr[i], arr, dp));
+        }
+        return dp[i][amount] = ans;
+    }
+
+    int coinChange(vector<int>& arr, int amount) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (amount + 1, -1));
+        int ans = func(n - 1, amount, arr, dp);
+        return ans == 1e9 ? -1 : ans;
+    }
+};
+
+---tab
+
+int coinChange(vector<int>& arr, int Target) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (Target + 1, 0));
+        for(int i = 0; i <= Target; i++){
+            if(i % arr[0] == 0){
+                dp[0][i] = (i / arr[0]);
+            }else{
+                dp[0][i] = 1e9;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            for(int amount = 0; amount <= Target; amount++){
+                int ans = 1e9;
+                ans = min(ans, dp[i - 1][amount]);
+                if(amount - arr[i] >= 0){
+                    ans = min(ans, 1 + dp[i][amount - arr[i]]);
+                }
+                dp[i][amount] = ans;
+            }
+        }
+        int ans = dp[n - 1][Target];
+        return ans == 1e9 ? -1 : ans;
+    }
+
+---space
+
+int coinChange(vector<int>& arr, int Target) {
+        int n = arr.size();
+        vector<int> prev(Target + 1, 0), curr(Target + 1, 0);
+        for(int i = 0; i <= Target; i++){
+            if(i % arr[0] == 0){
+                prev[i] = (i / arr[0]);
+            }else{
+                prev[i] = 1e9;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            for(int amount = 0; amount <= Target; amount++){
+                int ans = 1e9;
+                ans = min(ans, prev[amount]);
+                if(amount - arr[i] >= 0){
+                    ans = min(ans, 1 + curr[amount - arr[i]]);
+                }
+                curr[amount] = ans;
+            }
+            prev = curr;
+        }
+        int ans = prev[Target];
+        return ans == 1e9 ? -1 : ans;
+    }
+
+-----------------------------------------------------------------------------------------
+
+	use + and - and get target
+
+---trick
+
+always use s2 as a target = sum - target / 2;
+
+-----memo
+
+class Solution {
+public:
+
+    int func(int i, int need, vector<int> &arr, vector<vector<int>> &dp){
+        if(i == 0){
+            if(need == 0 && arr[0] == 0){
+                return 2;
+            }else if(need == arr[0] || need == 0){
+                return 1;
+            }
+            return 0;
+        }
+        if(dp[i][need] != -1){
+            return dp[i][need];
+        }
+        int count = 0;
+        count += func(i - 1, need, arr, dp);
+        if(need - arr[i] >= 0){
+            count += func(i - 1, need - arr[i], arr, dp);
+        }
+        return dp[i][need] = count;
+    }
+
+    int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, -1));
+        return func(n - 1, need, arr, dp);
+    }
+};
+
+---tab
+
+int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<vector<int>> dp(n, vector<int> (need + 1, 0));
+        if(arr[0] == 0){
+            dp[0][0] = 2;
+        }else{
+            dp[0][0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            dp[0][arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int ned = 0; ned <= need; ned++){
+                int count = 0;
+                count += dp[i - 1][ned];
+                if(ned - arr[i] >= 0){
+                    count += dp[i - 1][ned - arr[i]];
+                }
+                dp[i][ned] = count;
+            }
+        }
+        return dp[n - 1][need];
+    }
+
+----space
+
+int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<int> prev(need + 1, 0), curr(need + 1, 0);
+        if(arr[0] == 0){
+            prev[0] = 2;
+        }else{
+            prev[0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            prev[arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int ned = 0; ned <= need; ned++){
+                int count = 0;
+                count += prev[ned];
+                if(ned - arr[i] >= 0){
+                    count += prev[ned - arr[i]];
+                }
+                curr[ned] = count;
+            }
+            prev = curr;
+        }
+        return prev[need];
+    }
+
+------one vector only (i - 1) and second state is like this.
+
+int findTargetSumWays(vector<int>& arr, int t) {
+        int n = arr.size();
+        int sum = 0;
+        for(auto it : arr){
+            sum += it;
+        }
+        if(sum < t || (sum + t) % 2 == 1){
+            return 0;
+        }
+        int need = (sum - t) >> 1;
+        vector<int> prev(need + 1, 0);
+        if(arr[0] == 0){
+            prev[0] = 2;
+        }else{
+            prev[0] = 1;
+        }
+        if(arr[0] != 0 && arr[0] <= need){
+            prev[arr[0]] = 1;
+        }
+        for(int i = 1; i < n; i++){
+            for(int ned = need; ned >= 0; ned--){
+                int count = 0;
+                count += prev[ned];
+                if(ned - arr[i] >= 0){
+                    count += prev[ned - arr[i]];
+                }
+                prev[ned] = count;
+            }
+        }
+        return prev[need];
+    }
+
+------------------------------------------------------------------------
+
+	coin change 2
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int amount, vector<int> &arr, vector<vector<int>> &dp){
+        if(amount == 0){
+            return 1;
+        }
+        if(i == 0){
+            if(amount == 0 || amount % arr[i] == 0){
+                return 1;
+            }
+            return 0;
+        }
+        if(dp[i][amount] != -1){
+            return dp[i][amount];
+        }
+        int count = 0;
+        count += func(i - 1, amount, arr, dp);
+        if(amount - arr[i] >= 0){
+            count += func(i, amount - arr[i], arr, dp);
+        }
+        return dp[i][amount] = count;
+    }
+
+    int change(int amount, vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (amount + 1, -1));
+        return func(n - 1, amount, arr, dp);
+    }
+};
+
+
+---tab
+
+int change(int target, vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (target + 1, 0));
+        for(int i = 0; i <= target; i++){
+            if(i % arr[0] == 0){
+                dp[0][i] = 1;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            dp[i][0] = 1;
+            for(int amount = 1; amount <= target; amount++){
+                int count = 0;
+                count +=  dp[i - 1][amount];
+                if(amount - arr[i] >= 0){
+                    count += dp[i][amount - arr[i]];
+                }
+                dp[i][amount] = count;
+            }
+        }
+        return dp[n - 1][target];
+    }
+
+---space
+
+int change(int target, vector<int>& arr) {
+        int n = arr.size();
+        vector<int> prev(target + 1, 0), curr(target + 1, 0);
+        for(int i = 0; i <= target; i++){
+            if(i % arr[0] == 0){
+                prev[i] = 1;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            curr[0] = 1;
+            for(int amount = 1; amount <= target; amount++){
+                int count = 0;
+                count += prev[amount];
+                if(amount - arr[i] >= 0){
+                    count += curr[amount - arr[i]];
+                }
+                curr[amount] = count;
+            }
+            prev = curr;
+        }
+        return prev[target];
+    }
+
+---one vector
+
+int change(int target, vector<int>& arr) {
+        int n = arr.size();
+        vector<int> prev(target + 1, 0);
+        for(int i = 0; i <= target; i++){
+            if(i % arr[0] == 0){
+                prev[i] = 1;
+            }
+        }
+        for(int i = 1; i < n; i++){
+            for(int amount = 0; amount <= target; amount++){
+                int count = 0;
+                count += prev[amount];
+                if(amount - arr[i] >= 0){
+                    count += prev[amount - arr[i]];
+                }
+                prev[amount] = count;
+            }
+        }
+        return prev[target];
+    }
+
+--------------------------------------------------------------------------------
+
+	(unbounded knapskate)
+
+----memo
+
+class Solution{
+public:
+
+    int func(int i, int w, int val[], int wt[], vector<vector<int>> &dp){
+        if(i == 0){
+            int temp = w / wt[0];
+            return temp * val[0];
+        }
+        if(dp[i][w] != -1){
+            return dp[i][w];
+        }
+        int ans = -1e9;
+        ans = max(ans, func(i - 1, w, val, wt, dp));
+        if(w - wt[i] >= 0){
+            ans = max(ans, val[i] + func(i, w - wt[i], val, wt, dp));
+        }
+        return dp[i][w] = ans;
+    }
+
+    int knapSack(int n, int W, int val[], int wt[])
+    {
+        vector<vector<int>> dp(n, vector<int> (W + 1, -1));
+        return func(n - 1, W, val, wt, dp);
+    }
+};
+
+----tab
+
+int knapSack(int n, int W, int val[], int wt[])
+    {
+        vector<vector<int>> dp(n, vector<int> (W + 1, 0));
+        for(int i = 0; i <= W; i++){
+            dp[0][i] = (i / wt[0]) * val[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int w = 0; w <= W; w++){
+                int ans = -1e9;
+                ans = max(ans, dp[i - 1][w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, val[i] + dp[i][w - wt[i]]);
+                }
+                dp[i][w] = ans;
+            }
+        }
+        return dp[n - 1][W];
+    }
+
+----space
+
+int knapSack(int n, int W, int val[], int wt[])
+    {
+        vector<int> prev(W + 1, 0), curr(W + 1, 0);
+        for(int i = 0; i <= W; i++){
+            prev[i] = (i / wt[0]) * val[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int w = 0; w <= W; w++){
+                int ans = -1e9;
+                ans = max(ans, prev[w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, val[i] + curr[w - wt[i]]);
+                }
+                curr[w] = ans;
+            }
+            prev = curr;
+        }
+        return prev[W];
+    }
+
+----one vector
+
+int knapSack(int n, int W, int val[], int wt[])
+    {
+        vector<int> prev(W + 1, 0);
+        for(int i = 0; i <= W; i++){
+            prev[i] = (i / wt[0]) * val[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int w = 0; w <= W; w++){
+                int ans = -1e9;
+                ans = max(ans, prev[w]);
+                if(w - wt[i] >= 0){
+                    ans = max(ans, val[i] + prev[w - wt[i]]);
+                }
+                prev[w] = ans;
+            }
+        }
+        return prev[W];
+    }
+
+---------------------------------------------------------------------------------
+
+		(rod cutting)
+
+---memo
+
+class Solution{
+  public:
+  
+    int func(int i, int len, int arr[], vector<vector<int>> &dp){
+        if(len == 0){
+            return 0;
+        }
+        if(i == 0){
+            return (len / (i + 1)) * arr[0];
+        }
+        if(dp[i][len] != -1){
+            return dp[i][len];
+        }
+        int ans = -1e9;
+        ans = max(ans, func(i - 1, len, arr, dp));
+        if(len - (i + 1) >= 0){
+            ans = max(ans, arr[i] + func(i, len - (i + 1), arr, dp));
+        }
+        return dp[i][len] = ans;
+    }
+  
+    int cutRod(int arr[], int n) {
+        vector<vector<int>> dp(n, vector<int> (n + 1, -1));
+        return func(n - 1, n, arr, dp);
+    }
+};
+
+--tab
+
+int cutRod(int arr[], int n) {
+        vector<vector<int>> dp(n, vector<int> (n + 1, 0));
+        for(int i = 0; i <= n; i++){
+            dp[0][i] = i * arr[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int len = 0; len <= n; len++){
+                int ans = -1e9;
+                ans = max(ans, dp[i - 1][len]);
+                if(len - (i + 1) >= 0){
+                    ans = max(ans, arr[i] + dp[i][len - (i + 1)]);
+                }
+                dp[i][len] = ans;
+            }
+        }
+        return dp[n - 1][n];
+    }
+
+--space
+
+int cutRod(int arr[], int n) {
+        vector<int> prev(n + 1, 0), curr(n + 1, 0);
+        for(int i = 0; i <= n; i++){
+            prev[i] = i * arr[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int len = 0; len <= n; len++){
+                int ans = -1e9;
+                ans = max(ans, prev[len]);
+                if(len - (i + 1) >= 0){
+                    ans = max(ans, arr[i] + curr[len - (i + 1)]);
+                }
+                curr[len] = ans;
+            }
+            prev = curr;
+        }
+        return prev[n];
+    }
+
+----one vector
+
+int cutRod(int arr[], int n) {
+        vector<int> prev(n + 1, 0);
+        for(int i = 0; i <= n; i++){
+            prev[i] = i * arr[0];
+        }
+        for(int i = 1; i < n; i++){
+            for(int len = 0; len <= n; len++){
+                int ans = -1e9;
+                ans = max(ans, prev[len]);
+                if(len - (i + 1) >= 0){
+                    ans = max(ans, arr[i] + prev[len - (i + 1)]);
+                }
+                prev[len] = ans;
+            }
+        }
+        return prev[n];
+    }
+
+-------------------------------------------------------------------------------------
+
+	dp on subsequeces
+
+can be consecutive or non consecutive but as long as maintain the order
+
+---------------------------------------------------------------------------------------
+
+		(lcs )
+
+-----memo space O(n * m) + O(n + m) ex: ab|cd
+
+class Solution {
+public:
+
+    int func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(i < 0 || j < 0){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(s[i] == t[j]){
+            return dp[i][j] = 1 + func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = max(func(i - 1, j, s, t, dp), func(i, j - 1, s, t, dp));
+    }
+
+    int longestCommonSubsequence(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, s, t, dp);
+    }
+};
+
+---memo (shift the index)
+
+class Solution {
+public:
+
+    int func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(i == 0 || j == 0){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(s[i - 1] == t[j - 1]){
+            return dp[i][j] = 1 + func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = max(func(i - 1, j, s, t, dp), func(i, j - 1, s, t, dp));
+    }
+
+    int longestCommonSubsequence(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, -1));
+        return func(n, m, s, t, dp);
+    }
+};
+
+-------tab
+
+int longestCommonSubsequence(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                }else{
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
+----space
+
+int longestCommonSubsequence(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> curr(m + 1, 0), prev(m + 1, 0);
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = 1 + prev[j - 1];
+                }else{
+                    curr[j] = max(prev[j], curr[j - 1]);
+                }
+            }
+            prev = curr;
+        }
+        return prev[m];
+    }
+
+-----------------------------------------------------------------------------
+
+	Print the LCS
+
+---tab
+
+int longestCommonSubsequence(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                }else{
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        } 					       - 
+        int i = n, j = m;			       -
+        string ans = ""; //O(n + m) --> worse case -----
+        while(i > 0 && j > 0){
+            if(s[i - 1] == t[j - 1]){
+                ans.push_back(s[i - 1]);
+                i--;
+                j--;
+            }else{
+                if(dp[i - 1][j] > dp[i][j - 1]){
+                    i--;
+                }else{
+                    j--;
+                }
+            }
+        }
+        reverse(ans.begin(), ans.end());
+        cout << ans;
+        return dp[n][m];
+    }
+
+-----------------------------------------------------------------------------
+
+		(substring consecutive and maintain the order)
+
+----tab
+
+int longestCommonSubstr (string s, string t, int n, int m)
+    {
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        int ans = 0;
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                    ans = max(ans, dp[i][j]);
+                }else{
+		    dp[i][j] = 0;
+		}
+            }
+        }
+        return ans;
+    }
+
+----space
+
+int longestCommonSubstr (string s, string t, int n, int m)
+    {
+        vector<int> prev(m + 1, 0), curr(m + 1, 0);
+        int ans = 0;
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = 1 + prev[j - 1];
+                    ans = max(ans, curr[j]);
+                }else{
+                    curr[j] = 0;
+                }
+            }
+            prev = curr;
+        }
+        return ans;
+    }
+
+---------------------------------------------------------------------------------
+	(longest palindromic subseq.)
+
+---space
+
+class Solution {
+public:
+
+    int func(string &s, string &t){
+        int n = s.size();
+        vector<int> curr(n + 1, 0), prev(n + 1, 0);
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= n; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = 1 + prev[j - 1];
+                }else{
+                    curr[j] = max(curr[j - 1], prev[j]);
+                }
+            }
+            prev = curr;
+        }
+        return prev[n];
+    }
+
+    int longestPalindromeSubseq(string s) {
+        string t = s;
+        reverse(t.begin(), t.end());
+        return func(s, t);
+    }
+};
+
+------------------------------------------------------------------------------
+		(minimum insertion to make palindrome)
+
+----space
+
+class Solution {
+public:
+
+    int func(string &s, string &t){
+        int n = s.size();
+        vector<int> curr(n + 1, 0), prev(n + 1, 0);
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= n; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = 1 + prev[j - 1];
+                }else{
+                    curr[j] = max(curr[j - 1], prev[j]);
+                }
+            }   
+            prev = curr;
+        }
+        return prev[n];
+    }
+
+    int minInsertions(string s) {
+        string t = s;
+        reverse(t.begin(), t.end());
+        return s.size() - func(s, t);
+    }
+};
+
+---------------------------------------------------------------------------------------
+
+	(minimum deletetion to make s and t both equal)
+
+----space
+
+class Solution {
+public:
+
+    int func(string &s, string &t){
+        int n = s.size(), m = t.size();
+        vector<int> curr(m + 1, 0), prev(m + 1, 0);
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = 1 + prev[j - 1];
+                }else{
+                    curr[j] = max(curr[j - 1], prev[j]);
+                }
+            }
+            prev = curr;
+        }
+        return 2 * prev[m];
+    }
+
+    int minDistance(string s, string t) {
+        int n = s.size(), m = t.size();
+        return n + m - func(s, t);   
+    }
+};
+
+---------------------------------------------------------------------
+
+		(length , string of shortest super sequences)
+length = (n + m - lcs)
+----tab
+
+class Solution {
+public:
+    string shortestCommonSupersequence(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                }else{
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        int i = n, j = m;
+        string ans = "";
+        while(i > 0 && j > 0){
+            if(s[i - 1] == t[j - 1]){
+                ans += s[i - 1];
+                i--;
+                j--;
+            }else{
+                if(dp[i - 1][j] > dp[i][j - 1]){
+                    ans += s[i - 1];
+                    i--;
+                }else{
+                    ans += t[j - 1];
+                    j--;
+                }
+            }
+        }
+        while(i > 0){
+            ans += s[i - 1];
+            i--;
+        }
+        while(j > 0){
+            ans += t[j - 1];
+            j--;
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+---------------------------------------------------------------------------------
+
+	(distinct subsequeces)
+
+-----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(j < 0){
+            return 1;
+        }
+        if(i < 0){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(s[i] == t[j]){
+            return dp[i][j] = func(i - 1, j, s, t, dp) + func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = func(i - 1, j, s, t, dp);
+    }
+
+    int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, s, t, dp);
+    }
+};
+
+---index shift
+
+class Solution {
+public:
+
+    int func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(j == 0){
+            return 1;
+        }
+        if(i == 0){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(s[i - 1] == t[j - 1]){
+            return dp[i][j] = func(i - 1, j, s, t, dp) + func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = func(i - 1, j, s, t, dp);
+    }
+
+    int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, -1));
+        return func(n, m, s, t, dp);
+    }
+};
+
+----tab
+
+int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        for(int i = 0; i <= n; i++){
+            dp[i][0] = 1;
+        }
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = 0LL + (long long)dp[i - 1][j] + (long long)dp[i - 1][j - 1];
+                }else{
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
+----space
+
+int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> prev(m + 1, 0), curr(m + 1, 0);
+        prev[0] = curr[0] = 1;
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = 0LL + (long long)prev[j] + (long long)prev[j - 1];
+                }else{
+                    curr[j] = prev[j];
+                }
+            }
+            prev = curr;
+        }
+        return prev[m];
+    }
+
+----one vector
+
+int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> prev(m + 1, 0);
+        prev[0] = 1;
+        for(int i = 1; i <= n; i++){
+            for(int j = m; j >= 1; j--){
+                if(s[i - 1] == t[j - 1]){
+                    prev[j] = 0LL + (long long)prev[j] + (long long)prev[j - 1];
+                }else{
+                    prev[j] = prev[j];
+                }
+            }
+        }
+        return prev[m];
+    }
+
+---same
+
+int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> prev(m + 1, 0);
+        prev[0] = 1;
+        for(int i = 1; i <= n; i++){
+            for(int j = m; j >= 1; j--){
+                if(s[i - 1] == t[j - 1]){
+                    prev[j] = 0LL + (long long)prev[j] + (long long)prev[j - 1];
+                }
+            }
+        }
+        return prev[m];
+    }
+
+-----------------------------------------------------------------------------------------------
+
+		(edit distances)
+
+---memo
+
+class Solution {
+public:
+
+    int func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(i < 0){
+            return j + 1;
+        }
+        if(j < 0){
+            return i + 1;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(s[i] == t[j]){
+            return dp[i][j] = func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = 1 + min({func(i - 1, j - 1, s, t, dp), func(i - 1, j, s, t, dp), func(i, j - 1, s, t, dp)});
+    }
+
+    int minDistance(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, s, t, dp);
+    }
+};
+
+----index by + 1
+
+class Solution {
+public:
+
+    int func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(i == 0){
+            return j;
+        }
+        if(j == 0){
+            return i;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(s[i - 1] == t[j - 1]){
+            return dp[i][j] = func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = 1 + min({func(i - 1, j - 1, s, t, dp), func(i - 1, j, s, t, dp), func(i, j - 1, s, t, dp)});
+    }
+
+    int minDistance(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, -1));
+        return func(n, m, s, t, dp);
+    }
+};
+
+----tab
+
+int minDistance(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        for(int j = 0; j <= m; j++){
+            dp[0][j] = j;
+        }
+        for(int i = 0; i <= n; i++){
+            dp[i][0] = i;
+        }
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    dp[i][j] = dp[i - 1][j - 1];
+                }else{
+                    dp[i][j] = 1 + min({dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j]});
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
+-----space
+
+int minDistance(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> prev(m + 1, 0), curr(m + 1, 0);
+        for(int j = 0; j <= m; j++){
+            prev[j] = j;
+        }
+        for(int i = 1; i <= n; i++){
+            curr[0] = i;
+            for(int j = 1; j <= m; j++){
+                if(s[i - 1] == t[j - 1]){
+                    curr[j] = prev[j - 1];
+                }else{
+                    curr[j] = 1 + min({prev[j - 1], curr[j - 1], prev[j]});
+                }
+            }
+            prev = curr;
+        }
+        return prev[m];
+    }
+
+----no one vector optimization possible
+
+----------------------------------------------------------------------------------------------
+
+	(wild card matching)
+
+---memo
+
+class Solution {
+public:
+
+    bool func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(i < 0){
+            for(int k = 0; k <= j; k++){
+                if(t[k] != '*'){
+                    return false;
+                }
+            }
+            return true;
+        }
+        if(j < 0){
+            return false;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(t[j] == '*'){
+            return dp[i][j] = func(i - 1, j, s, t, dp) | func(i, j - 1, s, t, dp);
+        }
+        if(s[i] == t[j] || t[j] == '?'){
+            return dp[i][j] = func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = false;
+    }
+
+    bool isMatch(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n, vector<int> (m, -1));
+        return func(n - 1, m - 1, s, t, dp);
+    }
+};
+
+-----index shift
+
+class Solution {
+public:
+
+    bool func(int i, int j, string &s, string &t, vector<vector<int>> &dp){
+        if(i == 0){
+            for(int k = 1; k <= j; k++){
+                if(t[k - 1] != '*'){
+                    return false;
+                }
+            }
+            return true;
+        }
+        if(j == 0){
+            return false;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        if(t[j - 1] == '*'){
+            return dp[i][j] = func(i - 1, j, s, t, dp) | func(i, j - 1, s, t, dp);
+        }
+        if(s[i - 1] == t[j - 1] || t[j - 1] == '?'){
+            return dp[i][j] = func(i - 1, j - 1, s, t, dp);
+        }
+        return dp[i][j] = false;
+    }
+
+    bool isMatch(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, -1));
+        return func(n, m, s, t, dp);
+    }
+};
+
+----tab
+
+bool isMatch(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1, 0));
+        for(int j = 0; j <= m; j++){
+            if(j == 0){
+                dp[0][0] = true;
+            }else{
+                if(t[j - 1] == '*'){
+                    dp[0][j] = true;
+                }else{
+                    break;
+                }
+            }
+        }
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(t[j - 1] == '*'){
+                    dp[i][j] = dp[i - 1][j] | dp[i][j - 1];
+                }else if(s[i - 1] == t[j - 1] || t[j - 1] == '?'){
+                    dp[i][j] = dp[i - 1][j - 1];
+                }else {
+                    dp[i][j] = false;
+                }
+            }
+        }
+        return dp[n][m];
+    }
+
+----space
+
+bool isMatch(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> prev(m + 1, 0), curr(m + 1, 0);
+        for(int j = 0; j <= m; j++){
+            if(j == 0){
+                prev[0] = true;
+            }else{
+                if(t[j - 1] == '*'){
+                    prev[j] = true;
+                }else{
+                    break;
+                }
+            }
+        }
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= m; j++){
+                if(t[j - 1] == '*'){
+                    curr[j] = prev[j] | curr[j - 1];
+                }else if(s[i - 1] == t[j - 1] || t[j - 1] == '?'){
+                    curr[j] = prev[j - 1];
+                }else {
+                    curr[j] = false;
+                }
+            }
+            prev = curr;
+        }
+        return prev[m];
+    }
+
+----one vector is not possible
+
+------------------------------------------------------------------------------------------
+
+	(buy and sell stock, only 1 time and max the profit)
+
+----optimal
+
+class Solution {
+public:
+    int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0, mn = arr[0];
+        for(int i = 1; i < n; i++){
+            ans = max(ans, arr[i] - mn);
+            if(arr[i] < mn){
+                mn = arr[i];
+            }
+        }
+        return ans;
+    }
+};
+
+-------------------------------------------------------------------------------------------
+
+		(buy and sell stock, as many you want , max profit)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int buy, vector<int> &arr, vector<vector<int>> &dp){
+        int n = arr.size();
+        if(i == n - 1){
+            if(buy){
+                return 0;
+            }
+            return arr[n - 1];
+        }
+        if(dp[i][buy] != -1){
+            return dp[i][buy];
+        }
+        int profit = 0;
+        if(buy){
+            profit = max({profit, -arr[i] + func(i + 1, !buy, arr, dp), func(i + 1, buy, arr, dp)});
+        }else{
+            profit = max({profit, arr[i] + func(i + 1, !buy, arr, dp), func(i + 1, buy, arr, dp)});
+        }
+        return dp[i][buy] = profit;
+    }
+
+    int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (2, -1));
+        return func(0, 1, arr, dp);
+    }
+};
+
+----tab
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (2, 0));
+        dp[n - 1][1] = 0;
+        dp[n - 1][0] = arr[n - 1];
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                int profit = 0;
+                if(buy){
+                    profit = max({profit, -arr[i] + dp[i + 1][!buy], dp[i + 1][buy]});
+                }else{
+                    profit = max({profit, arr[i] + dp[i + 1][!buy], dp[i + 1][buy]});
+                }
+                dp[i][buy] = profit;
+            }
+        }
+        return dp[0][1];
+    }
+
+-----space
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> curr(2, 0), next(2, 0);
+        next[1] = 0;
+        next[0] = arr[n - 1];
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                int profit = 0;
+                if(buy){
+                    profit = max({profit, -arr[i] + next[!buy], next[buy]});
+                }else{
+                    profit = max({profit, arr[i] + next[!buy], next[buy]});
+                }
+                curr[buy] = profit;
+            }
+            next = curr;
+        }
+        return next[1];
+    }
+
+----4 variable (this and space are same)
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        int nextBuy = 0;
+        int nextSell = arr[n - 1];
+        for(int i = n - 2; i >= 0; i--){
+            int currBuy = 0, currSell = 0;
+            for(int buy = 0; buy <= 1; buy++){
+                if(buy){
+                    currBuy = max({currBuy, -arr[i] + nextSell, nextBuy});
+                }else{
+                    currSell = max({currSell, arr[i] + nextBuy, nextSell});
+                }
+            }
+            nextSell = currSell;
+            nextBuy = currBuy;
+        }
+        return nextBuy;
+    }
+
+---- remove second for loop
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        int nextBuy = 0;
+        int nextSell = arr[n - 1];
+        for(int i = n - 2; i >= 0; i--){
+            int currBuy = 0, currSell = 0;
+            currBuy = max({currBuy, -arr[i] + nextSell, nextBuy});
+            currSell = max({currSell, arr[i] + nextBuy, nextSell});
+            nextSell = currSell;
+            nextBuy = currBuy;
+        }
+        return nextBuy;
+    }
+
+------------------------------------------------------------------------------------------------------------
+
+		(buy and sell at most two time 3d dp)
+--------------------solution in n * 2 * 3
+-----memo
+
+class Solution {
+public:
+
+    int func(int i, int buy, int rem, vector<int> &arr, vector<vector<vector<int>>> &dp){
+        if(rem == 0){
+            return 0;
+        }
+        int n = arr.size();
+        if(i == n - 1){
+            if(buy){
+                return 0;
+            }
+            return arr[n - 1];
+        }
+        if(dp[i][buy][rem] != -1){
+            return dp[i][buy][rem];
+        }
+        int profit = 0;
+        if(buy){
+            profit = max({profit, -arr[i] + func(i + 1, !buy, rem, arr, dp), func(i + 1, buy, rem, arr, dp)});
+        }else{
+            profit = max({profit, arr[i] + func(i + 1, !buy, rem - 1, arr, dp), func(i + 1, buy, rem, arr, dp)});
+        }
+        return dp[i][buy][rem] = profit;
+    }
+
+    int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>> (2, vector<int> (3, -1)));
+        return func(0, 1, 2, arr, dp); // gives time limit (TLE)
+    }
+};
+
+----tab
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<vector<int>>> dp(n, vector<vector<int>> (2, vector<int> (3, 0)));
+        dp[n - 1][1][0] = 0;
+        dp[n - 1][0][0] = 0;
+        for(int rem = 1; rem <= 2; rem++){
+            dp[n - 1][1][rem] = 0;
+            dp[n - 1][0][rem] = arr[n - 1];
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                for(int rem = 1; rem <= 2; rem++){
+                    int profit = 0;
+                    if(buy){
+                        profit = max({ profit, -arr[i] + dp[i + 1][!buy][rem], dp[i + 1][buy][rem] });
+                    }else{
+                        profit = max({ profit, arr[i] + dp[i + 1][!buy][rem - 1], dp[i + 1][buy][rem] });
+                    }
+                    dp[i][buy][rem] = profit;
+                }
+            }
+        }
+        return dp[0][1][2];
+    }
+
+----space
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> next(2, vector<int> (3, 0));
+        vector<vector<int>> curr(2, vector<int> (3, 0));
+        next[1][0] = 0;
+        next[0][0] = 0;
+        for(int rem = 1; rem <= 2; rem++){
+            next[1][rem] = 0;
+            next[0][rem] = arr[n - 1];
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                for(int rem = 1; rem <= 2; rem++){
+                    int profit = 0;
+                    if(buy){
+                        profit = max({ profit, -arr[i] + next[!buy][rem], next[buy][rem] });
+                    }else{
+                        profit = max({ profit, arr[i] + next[!buy][rem - 1], next[buy][rem] });
+                    }
+                    curr[buy][rem] = profit;
+                }
+            }
+            next = curr;
+        }
+        return next[1][2];
+    }
+
+--------------------------------solution in n * 4
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int num, vector<int> &arr, vector<vector<int>> &dp){
+        if(num == 4){
+            return 0;
+        }
+        int n = arr.size();
+        if(i == n - 1){
+            if(num & 1){
+                return arr[n - 1];
+            }
+            return 0;
+        }
+        if(dp[i][num] != -1){
+            return dp[i][num];
+        }
+        int profit = 0;
+        if(!(num & 1)){
+            profit = max({ profit, -arr[i] + func(i + 1, num + 1, arr, dp), func(i + 1, num, arr, dp) });
+        }else{
+            profit = max({ profit, arr[i] + func(i + 1, num + 1, arr, dp), func(i + 1, num, arr, dp) });
+        }
+        return dp[i][num] = profit;
+    }
+
+    int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (4, -1));
+        return func(0, 0, arr, dp);
+    }
+};
+
+// TLE
+
+----tab
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (5, 0));
+        dp[n - 1][4] = 0;
+        for(int num = 0; num <= 3; num++){
+            if(num & 1){
+                dp[n - 1][num] = arr[n - 1];
+            }else{
+                dp[n - 1][num] = 0;
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int num = 3; num >= 0; num--){
+                int profit = 0;
+                if(!(num & 1)){
+                    profit = max({ profit, -arr[i] + dp[i + 1][num + 1], dp[i + 1][num] });
+                }else{
+                    profit = max({ profit, arr[i] + dp[i + 1][num + 1], dp[i + 1][num] });
+                }
+                dp[i][num] = profit;
+            }
+        }
+        return dp[0][0];
+    }
+
+----space
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> next(5, 0), curr(5, 0);
+        next[4] = 0;
+        for(int num = 0; num <= 3; num++){
+            if(num & 1){
+                next[num] = arr[n - 1];
+            }else{
+                next[num] = 0;
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int num = 3; num >= 0; num--){
+                int profit = 0;
+                if(!(num & 1)){
+                    profit = max({ profit, -arr[i] + next[num + 1], next[num] });
+                }else{
+                    profit = max({ profit, arr[i] + next[num + 1], next[num] });
+                }
+                curr[num] = profit;
+            }
+            next = curr;
+        }
+        return next[0];
+    }
+
+----------------------------------------------------------------------------------------------
+
+		(you can do now at most k transection)
+
+---space o(2 * k)
+
+int maxProfit(int k, vector<int>& arr) {
+        int n = arr.size();
+        vector<int> next(2 * k + 1, 0), curr(2 * k + 1, 0);
+        next[2 * k] = 0;
+        for(int num = 0; num <= 2 * k; num++){
+            if(num & 1){
+                next[num] = arr[n - 1];
+            }else{
+                next[num] = 0;
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int num = 2 * k - 1; num >= 0; num--){
+                int ans = 0;
+                if(!(num & 1)){
+                    ans = max({ ans, -arr[i] + next[num + 1], next[num] });
+                }else{
+                    ans = max({ ans, arr[i] + next[num + 1], next[num] });
+                }
+                curr[num] = ans;
+            }
+            next = curr;
+        }
+        return next[0];
+    }
+
+--------------------------------------------------------------------------------------------------
+		(cool down day)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int buy, vector<int> &arr, vector<vector<int>> &dp){
+        int n = arr.size();
+        if(i >= n){
+            return 0;
+        }
+        if(i == n - 1){
+            if(buy){
+                return 0;
+            }
+            return arr[n - 1];
+        }
+        if(dp[i][buy] != -1){
+            return dp[i][buy];
+        }
+        int profit = 0; 
+        if(buy){
+            profit = max({ profit, func(i + 1, buy, arr, dp), -arr[i] + func(i + 1, !buy, arr, dp) });
+        }else{
+            profit = max({ profit, func(i + 1, buy, arr, dp), arr[i] + func(i + 2, !buy, arr, dp) });
+        }
+        return dp[i][buy] = profit;
+    }
+
+    int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (2, -1));
+        return func(0, 1, arr, dp);
+    }
+};
+
+---tab
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n + 1, vector<int> (2, 0));
+        dp[n - 1][0] = arr[n - 1];
+        dp[n - 1][1] = 0;
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                int profit = 0; 
+                if(buy){
+                    profit = max({ profit, dp[i + 1][buy], -arr[i] + dp[i + 1][!buy] });
+                }else{
+                    profit = max({ profit, dp[i + 1][buy], arr[i] + dp[i + 2][!buy] });
+                }
+                dp[i][buy] = profit;
+            }
+        }
+        return dp[0][1];
+    }
+
+----space ( 1 extra vector beccause i + 2)
+
+int maxProfit(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> next(2, 0), curr(2, 0), nn(2, 0);
+        next[0] = arr[n - 1];
+        next[1] = 0;
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                int profit = 0; 
+                if(buy){
+                    profit = max({ profit, next[buy], -arr[i] + next[!buy] });
+                }else{
+                    profit = max({ profit, next[buy], arr[i] + nn[!buy] });
+                }
+                curr[buy] = profit;
+            }
+            nn = next;
+            next = curr;
+        }
+        return next[1];
+    }
+
+--we can omit the second (buy) loop as well.
+
+--------------------------------------------------------------------------------------------
+
+	(apply trasection fee on sell)
+
+----tab
+
+int maxProfit(vector<int>& arr, int fee) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (2, 0));
+        dp[n - 1][1] = 0;
+        dp[n - 1][0] = arr[n - 1] - fee;
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                int profit = 0;
+                if(buy){
+                    profit = max({ profit, dp[i + 1][buy], dp[i + 1][!buy] - arr[i] });
+                }else{
+                    profit = max({ profit, dp[i + 1][buy], dp[i + 1][!buy] + arr[i] - fee });
+                }
+                dp[i][buy] = profit;
+            }
+        }
+        return dp[0][1];
+    }
+
+----space
+
+int maxProfit(vector<int>& arr, int fee) {
+        int n = arr.size();
+        vector<int> next(2, 0), curr(2, 0);
+        next[1] = 0;
+        next[0] = arr[n - 1] - fee;
+        for(int i = n - 2; i >= 0; i--){
+            for(int buy = 0; buy <= 1; buy++){
+                int profit = 0;
+                if(buy){
+                    profit = max({ profit, next[buy], next[!buy] - arr[i] });
+                }else{
+                    profit = max({ profit, next[buy], next[!buy] + arr[i] - fee });
+                }
+                curr[buy] = profit;
+            }
+            next = curr;
+        }
+        return next[1];
+    }
+
+-----4 vvariable
+
+int maxProfit(vector<int>& arr, int fee) {
+        int n = arr.size();
+        int nextBuy = 0;
+        int nextSell = arr[n - 1] - fee;
+        for(int i = n - 2; i >= 0; i--){
+            int currBuy = 0, currSell = 0;
+            currBuy = max({ currBuy, nextBuy, nextSell - arr[i] });
+            currSell = max({ currSell, nextSell, nextBuy + arr[i] - fee });
+            nextBuy = currBuy;
+            nextSell = currSell;
+        }
+        return nextBuy;
+    }
+
+--------------------------------------------------------------------------------------------
+
+		(longest increasing subsequences)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int prev, vector<int> &arr, vector<vector<int>> &dp){
+        int n = arr.size();
+        if(i == n - 1){ 
+            return (prev == -1 || arr[prev] < arr[i]) ? 1 : 0;
+        }
+        if(dp[i][prev + 1] != -1){
+            return dp[i][prev + 1];
+        }
+        int len = func(i + 1, prev, arr, dp);
+        if(prev == -1 || arr[prev] < arr[i]){
+            len = max(len, 1 + func(i + 1, i, arr, dp));
+        }
+        return dp[i][prev + 1] = len;
+    }
+
+    int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (n + 1, -1));
+        return func(0, -1, arr, dp);
+    }
+};
+
+----tab
+
+int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (n + 1, 0));
+        dp[n - 1][0] = 1;
+        for(int i = 0; i < n - 1; i++){
+            if(arr[i] < arr[n - 1]){
+                dp[n - 1][i + 1] = 1;
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int prev = i - 1; prev >= -1; prev--){
+                int len = dp[i + 1][prev + 1];
+                if(prev == -1 || arr[prev] < arr[i]){
+                    len = max(len, 1 + dp[i + 1][i + 1]);
+                }
+                dp[i][prev + 1] = len;
+            }
+        }
+        return dp[0][-1 + 1];
+    }
+
+----space
+
+int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> next(n + 1, 0), curr(n + 1, 0);
+        next[0] = 1;
+        for(int i = 0; i < n - 1; i++){
+            if(arr[i] < arr[n - 1]){
+                next[i + 1] = 1;
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int prev = i - 1; prev >= -1; prev--){
+                int len = next[prev + 1];
+                if(prev == -1 || arr[prev] < arr[i]){
+                    len = max(len, 1 + next[i + 1]);
+                }
+                curr[prev + 1] = len;
+            }
+            next = curr;
+        }
+        return next[-1 + 1];
+    }
+
+--------------dp[n] solution -- important when you want to print the LIS.
+
+dp[i] represent arr[i] must in you sequnces based on that what is the longest. (end at i index) 
+
+int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> dp(n, 1);
+        int ans = 1;
+        for(int i = 1; i < n; i++){
+            for(int j = 0; j < i; j++){
+                if(arr[j] < arr[i]){
+                    dp[i] = max(dp[i], 1 + dp[j]);
+                }
+            }
+            if(ans < dp[i]){
+                ans = dp[i];
+            }
+        }
+        return ans;
+    }
+
+-------- print the LIS
+
+vector<int> longestIncreasingSubsequence(int n, vector<int>& arr) {
+        vector<int> dp(n, 1), track(n);
+        track[0] = 0;
+        int lastIndex = 0, ans = 1;
+        for(int i = 1; i < n; i++){
+            track[i] = i;
+            for(int j = 0; j < i; j++){
+                if(arr[j] < arr[i] && dp[i] < 1 + dp[j]){
+                    dp[i] = 1 + dp[j];
+                    track[i] = j;
+                }
+            }
+            if(ans < dp[i]){
+                ans = dp[i];
+                lastIndex = i;
+            }
+        }
+        vector<int> st;
+        while(track[lastIndex] != lastIndex){
+            st.push_back(arr[lastIndex]);
+            lastIndex = track[lastIndex];
+        }
+        st.push_back(arr[lastIndex]);
+        reverse(st.begin(), st.end());
+        return st;
+    }
+
+-------LIS - binary search solution
+
+till now best is O(N^2) in time and O(N) in space --> dp[n] ka solution
+
+int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> temp;
+        for(int i = 0; i < n; i++){
+            if(temp.empty() || temp.back() < arr[i]){
+                temp.push_back(arr[i]);
+            }else{
+                auto it = lower_bound(temp.begin(), temp.end(), arr[i]) - temp.begin();
+                temp[it] = arr[i];
+            }
+        }
+        return temp.size();
+    }
+
+temp is not LIS --> matter with only length for print the LIS dp[n] solution will work no this one.
+
+-----------------------------------------------------------------------------------------------------
+
+		( module of each pair is divisble by each other)
+
+----tab dp[n] solution
+
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& arr) {
+        int n = arr.size();
+        sort(arr.begin(), arr.end());
+        vector<int> dp(n, 1), track(n);
+        track[0] = 0;
+        int lastIndex = 0, len = 1;
+        for(int i = 1; i < n; i++){
+            track[i] = i;
+            for(int j = 0; j < i; j++){
+                if(arr[i] % arr[j] == 0 && 1 + dp[j] > dp[i]){
+                    dp[i] = 1 + dp[j];
+                    track[i] = j;
+                }
+            }
+            if(dp[i] > len){
+                len = dp[i];
+                lastIndex = i;
+            }
+        }
+        vector<int> ans;
+        while(track[lastIndex] != lastIndex){
+            ans.push_back(arr[lastIndex]);
+            lastIndex = track[lastIndex];
+        }
+        ans.push_back(arr[lastIndex]);
+        return ans;
+    }
+};
+
+--------------------------------------------------------------------------------
+
+		(longest string chain)
+
+---tab
+
+class Solution {
+private:
+    static bool comp(string &s, string &t){
+        return s.size() < t.size();
+    }
+    bool check(string &s, string &t){
+        int n = s.size(), m = t.size();
+        if(m - n != 1){
+            return false;
+        }
+        int i = 0, j = 0, cnt = 0;
+        while(i < n && j < m){
+            if(s[i] != t[j]){
+                cnt++;
+                j++;
+            }else{
+                i++; 
+                j++;
+            }
+        }
+        return cnt <= 1;
+    }
+public:
+    int longestStrChain(vector<string>& arr) {
+        sort(arr.begin(), arr.end(), comp);
+        int n = arr.size();
+        int len = 1;
+        vector<int> dp(n, 1);
+        for(int i = 1; i < n; i++){
+            for(int j = 0; j < i; j++){
+                if(check(arr[j], arr[i]) && 1 + dp[j] > dp[i]){
+                    dp[i] = 1 + dp[j];
+                }
+            }
+            if(dp[i] > len){
+                len = dp[i];
+            }
+        }
+        return len;
+    }
+};
+
+---you can omit cnt variable and check i == n && j == m return true;
+
+----------------------------------------------------------------------------------
+
+		(longest bitonic subsequence)
+
+---- (stricly increasing and decresing are ok
+
+int longestBitonicSubsequence(vector<int>& arr, int n)
+{
+	vector<int> left(n, 0), right(n, 0);
+	for(int i = 1; i < n; i++){
+		for(int j = 0; j < i; j++){
+			if(arr[j] < arr[i] && 1 + left[j] > left[i]){
+				left[i] = 1 + left[j];
+			}
+		}
+	}
+	int ans = 0;
+	for(int i = n - 2; i >= 0; i--){
+		for(int j = n - 1; j > i; j--){
+			if(arr[j] < arr[i] && 1 + right[j] > right[i]){
+				right[i] = 1 + right[j];
+			}
+		}
+	}
+	for(int i = 0; i <= n - 1; i++){
+		// if(left[i] > 0 && right[i] > 0){
+			ans = max(ans, left[i] + right[i] + 1);
+		// }
+	}
+	return ans;
+}
+
+----(stricly increasing and decresing are not ok
+
+class Solution {
+  public:
+    int LongestBitonicSequence(int n, vector<int> &arr) {
+        vector<int> left(n, 0), right(n, 0);
+        for(int i = 1; i < n; i++){
+            for(int j = 0; j < i; j++){
+                if(arr[j] < arr[i] && 1 + left[j] > left[i]){
+                    left[i] = 1 + left[j];
+                }
+            }
+        }
+        int ans = 0;
+        for(int i = n - 2; i >= 0; i--){
+            for(int j = n - 1; j > i; j--){
+                if(arr[j] < arr[i] && 1 + right[j] > right[i]){
+                    right[i] = 1 + right[j];
+                }
+            }
+        }
+        for(int i = 0; i <= n - 1; i++){
+            if(left[i] > 0 && right[i] > 0){
+                ans = max(ans, left[i] + right[i] + 1);
+            }
+        }
+        return ans;
+    }
+};
+
+----------------------------------------------------------------------------
+
+	(number of LIS)
+
+---2 vector solution.
+
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> dp(n, 1), path(n, 1);
+        int len = 1;
+        for(int i = 1; i < n; i++){
+            for(int j = 0; j < i; j++){
+                if(arr[j] < arr[i]){
+                    if(1 + dp[j] > dp[i]){
+                        dp[i] = 1 + dp[j];
+                        path[i] = path[j];
+                    }else if(1 + dp[j] == dp[i]){
+                        path[i] += path[j];
+                    }
+                }
+            }
+            if(dp[i] > len){
+                len = dp[i];
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            if(len == dp[i]){
+                ans += path[i];
+            }
+        }
+        return ans;
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+	(partition dp)
+
+----memo
+
+class Solution{
+public:
+
+    int func(int i, int j, int arr[], vector<vector<int>> &dp){
+        if(i == j){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int mini = 1e9;
+        for(int k = i; k < j; k++){
+            int step = arr[i - 1] * arr[k] * arr[j] + func(i, k, arr, dp) + func(k + 1, j, arr, dp);
+            mini = min(mini, step);
+        }
+        return dp[i][j] = mini;
+    }
+
+    int matrixMultiplication(int n, int arr[])
+    {
+        vector<vector<int>> dp(n, vector<int> (n, -1));
+        return func(1, n - 1, arr, dp);
+    }
+};
+
+-----tab
+
+int matrixMultiplication(int n, int arr[])
+    {
+        vector<vector<int>> dp(n, vector<int> (n, 0));
+        for(int i = n - 2; i >= 1; i--){
+            for(int j = i + 1; j <= n - 1; j++){
+                int mini = 1e9;
+                for(int k = i; k < j; k++){
+                    int step = arr[i - 1] * arr[k] * arr[j] + dp[i][k] + dp[k + 1][j];
+                    mini = min(mini, step);
+                }
+                dp[i][j] = mini;
+            }
+        }
+        return dp[1][n - 1];
+    }
+
+
+------------------------------------------------------------------------------------------------------
+
+		(minimum cost to cut the stick)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<int> &arr, vector<vector<int>> &dp){
+        if(i > j){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = 1e9;
+        for(int k = i; k <= j; k++){
+            int cuts = arr[j + 1] - arr[i - 1] + func(i, k - 1, arr, dp) + func(k + 1, j, arr, dp);
+            ans = min(ans, cuts);
+        }
+        return dp[i][j] = ans;
+    }
+
+    int minCost(int len, vector<int>& arr) {
+        arr.insert(arr.begin(), 0);
+        arr.push_back(len);
+        int n = arr.size();
+        sort(arr.begin(), arr.end());
+        vector<vector<int>> dp(n, vector<int> (n, -1));
+        return func(1, n - 2, arr, dp);
+    }
+};
+
+----tab
+
+int minCost(int len, vector<int>& arr) {
+        arr.insert(arr.begin(), 0);
+        arr.push_back(len);
+        int n = arr.size();
+        sort(arr.begin(), arr.end());
+        vector<vector<int>> dp(n, vector<int> (n, 0));
+        for(int i = n - 2; i >= 1; i--){
+            for(int j = i; j <= n - 2; j++){
+                int ans = 1e9;
+                for(int k = i; k <= j; k++){
+                    int cuts = arr[j + 1] - arr[i - 1] + dp[i][k - 1] + dp[k + 1][j];
+                    ans = min(ans, cuts);
+                }
+                dp[i][j] = ans;
+            }
+        }
+        return dp[1][n - 2];
+    }
+
+---------------------------------------------------------------------------------------------------
+
+		(burst bulloons)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int j, vector<int> &arr, vector<vector<int>> &dp){
+        if(i > j){
+            return 0;
+        }
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int ans = -1e9;
+        for(int k = i; k <= j; k++){
+            int val = arr[i - 1] * arr[k] * arr[j + 1] + func(i, k - 1, arr, dp) + func(k + 1, j, arr, dp);
+            ans = max(ans, val);
+        }
+        return dp[i][j] = ans;
+    }
+
+    int maxCoins(vector<int>& arr) {
+        arr.insert(arr.begin(), 1);
+        arr.push_back(1);
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (n, -1));
+        return func(1, n - 2, arr, dp);
+    }
+};
+
+---tab
+
+int maxCoins(vector<int>& arr) {
+        arr.insert(arr.begin(), 1);
+        arr.push_back(1);
+        int n = arr.size();
+        vector<vector<int>> dp(n, vector<int> (n, 0));
+        for(int i = n - 2; i >= 1; i--){
+            for(int j = i; j <= n - 2; j++){
+                int ans = -1e9;
+                for(int k = i; k <= j; k++){
+                    int val = arr[i - 1] * arr[k] * arr[j + 1] + dp[i][k - 1] + dp[k + 1][j];
+                    ans = max(ans, val);
+                }
+                dp[i][j] = ans;
+            }
+        }
+        return dp[1][n - 2];
+    }
+
+-----------------------------------------------------------------------------------------------------
+
+		(evalute to true and false)
+
+----memo
+
+#include<bits/stdc++.h>
+
+const int mod = 1e9 + 7;
+
+int func(int i, int j, int flag, string &s, vector<vector<vector<int>>> &dp){
+    if(i == j){
+        return flag ? s[i] == 'T' : s[i] == 'F';
+    }
+    if(dp[i][j][flag] != -1){
+        return dp[i][j][flag];
+    }
+    int count = 0;
+    for(int k = i + 1; k <= j - 1; k += 2){
+        int left_true = func(i, k - 1, 1, s, dp);
+        int left_false = func(i, k - 1, 0, s, dp);
+        int right_true = func(k + 1, j, 1, s, dp);
+        int right_false = func(k + 1, j, 0, s, dp);
+        if(s[k] == '|'){
+            if(flag){
+                count = (count + 1LL * left_true * right_true) % mod;
+                count = (count + 1LL * left_true * right_false) % mod;
+                count = (count + 1LL * left_false * right_true) % mod;
+            }else{
+                count = (count + 1LL * left_false * right_false) % mod;
+            }
+        }else if(s[k] == '&'){
+            if(flag){
+                count = (count + 1LL * left_true * right_true) % mod;
+            }else{
+                count = (count + 1LL * left_true * right_false) % mod;
+                count = (count + 1LL * left_false * right_true) % mod;
+                count = (count + 1LL * left_false * right_false) % mod;
+            }
+        }else{
+            if(flag){
+                count = (count + 1LL * left_true * right_false) % mod;
+                count = (count + 1LL * left_false * right_true) % mod;
+            }else{
+                count = (count + 1LL * left_true * right_true) % mod;
+                count = (count + 1LL * left_false * right_false) % mod;
+            }
+        }
+    }
+    return dp[i][j][flag] = count;
+}
+
+int evaluateExp(string & s) {
+    int n = s.size();
+    vector<vector<vector<int>>> dp(n, vector<vector<int>> (n, vector<int> (2, -1)));
+    return func(0, n - 1, 1, s, dp);
+}
+
+---tab
+
+int evaluateExp(string & s) {
+    int n = s.size();
+    vector<vector<vector<int>>> dp(n, vector<vector<int>> (n, vector<int> (2, 0)));
+    for(int i = 0; i < n; i += 2){
+        for(int flag = 0; flag <= 1; flag++){
+            dp[i][i][flag] = (flag ? s[i] == 'T' : s[i] == 'F');
+        }
+    }
+    for(int i = n - 1; i >= 0; i--){
+        for(int j = i + 1; j <= n - 1; j++){
+            for(int flag = 0; flag <= 1; flag++){
+                int count = 0;
+                for(int k = i + 1; k <= j - 1; k += 2){
+                    int left_true = dp[i][k - 1][1];
+                    int left_false = dp[i][k - 1][0];
+                    int right_true = dp[k + 1][j][1];
+                    int right_false = dp[k + 1][j][0];
+                    if(s[k] == '|'){
+                        if(flag){
+                            count = (count + 1LL * left_true * right_true) % mod;
+                            count = (count + 1LL * left_true * right_false) % mod;
+                            count = (count + 1LL * left_false * right_true) % mod;
+                        }else{
+                            count = (count + 1LL * left_false * right_false) % mod;
+                        }
+                    }else if(s[k] == '&'){
+                        if(flag){
+                            count = (count + 1LL * left_true * right_true) % mod;
+                        }else{
+                            count = (count + 1LL * left_true * right_false) % mod;
+                            count = (count + 1LL * left_false * right_true) % mod;
+                            count = (count + 1LL * left_false * right_false) % mod;
+                        }
+                    }else{
+                        if(flag){
+                            count = (count + 1LL * left_true * right_false) % mod;
+                            count = (count + 1LL * left_false * right_true) % mod;
+                        }else{
+                            count = (count + 1LL * left_true * right_true) % mod;
+                            count = (count + 1LL * left_false * right_false) % mod;
+                        }
+                    }
+                }
+                dp[i][j][flag] = count;
+            }
+        }
+    }
+    return dp[0][n - 1][1];
+}
+
+-----------------------------------------------------------------------------------------------
+
+	(make minimum partition to make palindrome)
+
+---memo
+
+class Solution {
+public:
+
+    bool check(int i,int j, string &s){
+        while(i < j){
+            if(s[i++] != s[j--]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    int func(int i, string &s, vector<int> &dp){
+        int n = s.size();
+        if(i == n){
+            return 0;
+        }   
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        int ans = 1e9;
+        for(int j = i; j < s.size(); j++){
+            if(check(i, j, s)){
+                ans = min(ans, 1 + func(j + 1, s, dp));
+            }
+        }
+        return dp[i] = ans;
+    }
+
+    int minCut(string s) {
+        int n = s.size();
+        vector<int> dp(n, -1);
+        return func(0, s, dp) - 1;
+    }
+};
+
+----tab
+
+int minCut(string s) {
+        int n = s.size();
+        vector<int> dp(n + 1, 0);
+        for(int i = n - 1; i >= 0; i--){
+            int ans = 1e9;
+            for(int j = i; j < s.size(); j++){
+                if(check(i, j, s)){
+                    ans = min(ans, 1 + dp[j + 1]);
+                }
+            }
+            dp[i] = ans;
+        }
+        return dp[0] - 1;   
+    }
+
+------------------------------------------------------------------------
+
+		(make at most k partition and max subarray sum)
+
+----memo
+
+class Solution {
+public:
+
+    int func(int i, int k, vector<int> &arr, vector<int> &dp){
+        if(i == arr.size()){
+            return 0;
+        }
+        if(dp[i] != -1){
+            return dp[i];
+        }
+        int mx = -1, ans = -1;
+        for(int j = i; j < min(i + k, (int)arr.size()); j++){
+            if(arr[j] > mx){
+                mx = arr[j];
+            }
+            int temp = mx * (j - i + 1) + func(j + 1, k, arr, dp);
+            ans = max(ans, temp);
+        }
+        return dp[i] = ans;
+    }
+
+    int maxSumAfterPartitioning(vector<int>& arr, int k) {
+        int n = arr.size();
+        vector<int> dp(n, -1);
+        return func(0, k, arr, dp);
+    }
+};
+
+----tab
+
+int maxSumAfterPartitioning(vector<int>& arr, int k) {
+        int n = arr.size();
+        vector<int> dp(n + 1, 0);
+        for(int i = n - 1; i >= 0; i--){
+            int mx = -1, ans = -1;
+            for(int j = i; j < min(i + k, (int)arr.size()); j++){
+                if(arr[j] > mx){
+                    mx = arr[j];
+                }
+                int temp = mx * (j - i + 1) + dp[j + 1];
+                ans = max(ans, temp);
+            }
+            dp[i] = ans;
+        }
+        return dp[0];
+    }
+
+------------------------------------------------------------------------------------------
+
+		(how many square matrix in matrix)
+
+----tab
+
+class Solution {
+public:
+    int countSquares(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<vector<int>> dp(n, vector<int> (m, 0));
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 || j == 0){
+                    dp[i][j] = arr[i][j];
+                }else if(arr[i][j]){
+                    dp[i][j] = 1 + min({ dp[i - 1][j], dp[i - 1][j - 1], dp[i][j - 1] });
+                }
+                ans += dp[i][j];
+            }
+        }
+        return ans;
+    }
+};
+
+-----space
+
+class Solution {
+public:
+    int countSquares(vector<vector<int>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<int> curr(m, 0), prev(m, 0);
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == 0 || j == 0){
+                    curr[j] = arr[i][j];
+                }else if(arr[i][j]){
+                    curr[j] = 1 + min({ prev[j], prev[j - 1], curr[j - 1] });
+                }else{
+                    curr[j] = 0;
+                }
+                ans += curr[j];
+            }
+            prev = curr;
+        }
+        return ans;
+    }
+};
