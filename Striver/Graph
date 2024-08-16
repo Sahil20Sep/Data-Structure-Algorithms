@@ -215,18 +215,19 @@ public:
         queue<pair<int, int>> Q;
         Q.push({sr, sc});
         int prev = arr[sr][sc];
+        arr[sr][sc] = color;
         vector<pair<int, int>> movement = {
             {-1, 0}, {0, -1}, {1, 0}, {0, 1}
         };
         while(!Q.empty()){
             auto f = Q.front();
             Q.pop();
-            arr[f.first][f.second] = color;
             for(auto it : movement){
                 int x = f.first + it.first;
                 int y = f.second + it.second;
                 if(x >= 0 && x < n && y >= 0 && y < m && arr[x][y] == prev){
                     Q.push({x, y});
+                    arr[x][y] = color;
                 }
             }
         }
