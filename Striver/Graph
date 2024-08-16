@@ -472,7 +472,7 @@ public:
             for(auto it : movement){
                 int x = it.first + i;
                 int y = it.second + j;
-                if(x >= 0 && x < n && y >= 0 && y < m && 1 + level[i][j] < level[x][y]){
+                if(x >= 0 && x < n && y >= 0 && y < m && level[x][y] == 1e9){
                     level[x][y] = 1 + level[i][j];
                     Q.push({x, y});
                 }
