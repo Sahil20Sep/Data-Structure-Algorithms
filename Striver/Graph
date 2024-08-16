@@ -1321,7 +1321,7 @@ public:
                     store[i] = (j + 'a');
                     if(ms.find(store) != ms.end()){
                         Q.push({store, d + 1});
-                        ms.erase(store);
+                        ms.erase(store); // reason is if I found string at some better level, so there is no need to find the string after of that level.
                     }
                 }
             }
