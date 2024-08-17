@@ -135,30 +135,31 @@ int upperBound(vector<int> &arr, int x, int n){
 
 class Solution {
 public:
-    int searchInsert(vector<int>& nums, int target) {
-        
-        int low = 0, high = nums.size() - 1;
-
-        int ans = nums.size();
-
+    int searchInsert(vector<int>& arr, int target) {
+        int n = arr.size();
+        int low = 0, high = n - 1;
         while(low <= high){
-            
             int mid = (low + high) >> 1;
-
-            if(nums[mid] >= target){
-                ans = mid;
+            if(arr[mid] >= target){
                 high = mid - 1;
             }else{
                 low = mid + 1;
             }
         }
-
-        return ans;
-
+        return low;
     }
 };
 
-or either use of lower_bound
+-----lowerbound
+
+class Solution {
+public:
+    int searchInsert(vector<int>& arr, int target) {
+        int n = arr.size();
+        int it = lower_bound(arr.begin(), arr.end(), target) - arr.begin();
+        return it;
+    }
+};
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -215,7 +216,7 @@ pair<int, int> getFloorAndCeil(int arr[], int n, int x) {
 
 }
 
------------------
+-----
 
 pair<int, int> getFloorAndCeil(int arr[], int n, int x) {
 
@@ -282,29 +283,22 @@ public:
     }
 };
 
-------------------------
+-----
 
 class Solution {
 public:
-    vector<int> searchRange(vector<int>& nums, int target) {
-
-        int n = nums.size();
-
-        int low = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
-
-        if(low == n || nums[low] != target){
+    vector<int> searchRange(vector<int>& arr, int target) {
+        int n = arr.size();
+        int first = lower_bound(arr.begin(), arr.end(), target) - arr.begin();
+        int second = upper_bound(arr.begin(), arr.end(), target) - arr.begin();
+        if(first == second){
             return {-1, -1};
         }
-
-        int high = upper_bound(nums.begin(), nums.end(), target) - nums.begin();
-        high--;
-
-        return {low, high};
-
+        return {first, --second};
     }
 };
 
---------------------
+-----
 
 class Solution {
 public:
@@ -361,7 +355,7 @@ public:
 
 -----------------------------------------------------------------------------------------------------
 
-      (same number of occurcex) - return how many
+      			(same number of occurcex) - return how many
 
 class Solution{
 public:	
@@ -414,9 +408,22 @@ public:
 	}
 };
 
+------
+class Solution{
+public:	
+	int count(int arr[], int n, int x) {
+	        int first = lower_bound(arr, arr + n, x) - arr;
+	        int second = upper_bound(arr, arr + n, x) - arr;
+	        if(first == second){
+	            return 0;
+	        }
+	        return second - first;
+	}
+};
+
 -------------------------------------------------------------------------------------------------------------
 
-    (search in rotated array) - unique element
+    			(search in rotated array) - unique element
 
 
 class Solution {
