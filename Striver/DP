@@ -3948,3 +3948,39 @@ public:
         return ans;
     }
 };
+
+------------------------------------------------------------------------------------------------
+
+		maximal recengle
+
+class Solution {
+public:
+
+    int func(vector<int> &arr){
+        int n = arr.size(), ans = 0;
+        stack<int> st;
+        for(int i = 0; i <= n; i++){
+            while(st.size() && (i == n || arr[i] <= arr[st.top()])){
+                int height = arr[st.top()];
+                st.pop();
+                int width = st.empty() ? i - (-1) - 1 : i - st.top() - 1;
+                ans = max(ans, height * width);
+            }
+            st.push(i);
+        }
+        return ans;
+    }
+
+    int maximalRectangle(vector<vector<char>>& arr) {
+        int n = arr.size(), m = arr[0].size();
+        vector<int> prev(m, 0);
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                arr[i][j] == '1' ? prev[j]++ : prev[j] = 0;
+            }
+            ans = max(ans, func(prev));
+        }   
+        return ans;
+    }
+};
