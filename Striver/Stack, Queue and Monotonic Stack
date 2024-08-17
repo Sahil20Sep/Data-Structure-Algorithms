@@ -1,186 +1,3 @@
-----------------------------------------------------------------------------------------------
-
-                    infixx to postfix (take i , ans , stack)
-
-class Solution {
-  public:
-  
-    int priority(char x){
-        if(x == '^'){
-            return 3;
-        }else if(x == '*' || x == '/'){
-            return 2;
-        }else if(x == '+' || x == '-'){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-  
-    string infixToPostfix(string s) {
-        int i = 0, n = s.size();
-        string ans = "";
-        stack<char> st;
-        while(i < n){
-            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
-                ans += s[i];
-            }else if(s[i] == '('){
-                st.push(s[i]);
-            }else if(s[i] == ')'){
-                while(st.size() && st.top() != '('){
-                    ans += st.top();
-                    st.pop();
-                }
-                st.pop();
-            }else{
-                while(st.size() && priority(s[i]) <= priority(st.top())){
-                    ans += st.top();
-                    st.pop();
-                }
-                st.push(s[i]);
-            }
-            i++;
-        }
-        while(st.size()){
-            ans += st.top();
-            st.pop();
-        }
-        return ans;
-    }
-};
-
-------------------------------------------------------------------------------------------------------------------
-
-                              infix to prefix
-
-step 1. rever the infix
-step 2. infix to post fixx which above code and only < condtion in else condition as well as ( -> ) and ) -> (
-step 3. reverse the ans.
-
-<= condtion for ^
-< codition for any other oprator
-
-------------------------------------------------------------------------------------------------------------
-
-                              postfix to infix
-
-taking only i and stack
-
-class Solution {
-  public:
-    string postToInfix(string s) {
-        int n = s.size();
-        int i = 0;
-        stack<string> st;
-        while(i < n){
-            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
-                string t = "";
-                t.push_back(s[i]);
-                st.push(t);
-            }else{
-                string t1 = st.top();
-                st.pop();
-                string t2 = st.top();
-                st.pop();
-                string res = '(' + t2 + s[i] + t1 + ')';
-                st.push(res);
-            }
-            i++;
-        }
-        return st.top();
-    }
-};
-
---------------------------------------------------------------------------------------------------------------------
-
-                    prefix to infix
-
-class Solution {
-  public:
-    string preToInfix(string s) {
-        int n = s.size();
-        int i = n - 1;
-        stack<string> st;
-        while(i >= 0){
-            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
-                string t = "";
-                t.push_back(s[i]);
-                st.push(t);
-            }else{
-                string t1 = st.top();
-                st.pop();
-                string t2 = st.top();
-                st.pop();
-                string res = '(' + t1 + s[i] + t2 +  ')';
-                st.push(res);
-            }
-            i--;
-        }
-        return st.top();
-    }
-};
-
---------------------------------------------------------------------------------------------------------
-
-                              post fix to prefix
-
-class Solution {
-  public:
-    string postToPre(string s) {
-        int n = s.size();
-        stack<string> st;
-        int i = 0;
-        while(i < n){
-            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
-                string t = "";
-                t.push_back(s[i]);
-                st.push(t);
-            }else{
-                string t1 = st.top();
-                st.pop();
-                string t2 = st.top();
-                st.pop();
-                string res = s[i] + t2 + t1;
-                st.push(res);
-            }
-            i++;
-        }
-        return st.top();
-    }
-};
-
---------------------------------------------------------------------------------------------------
-
-                    prefix to postfix
-
-class Solution {
-  public:
-    string preToPost(string s) {
-        int n = s.size();
-        stack<string> st;
-        int i = n - 1;
-        while(i >= 0){
-            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
-                string t = "";
-                t.push_back(s[i]);
-                st.push(t);
-            }else{
-                string t1 = st.top();
-                st.pop();
-                string t2 = st.top();
-                st.pop();
-                string res = t1 + t2 + s[i];
-                st.push(res);
-            }
-            i--;
-        }
-        return st.top();
-    }
-};
-
-
-
-
 (stack implement using array)
 
 void MyStack :: push(int x)
@@ -521,6 +338,186 @@ public:
         
         return input.empty() && output.empty();
 
+    }
+};
+
+----------------------------------------------------------------------------------------------
+
+                    infixx to postfix (take i , ans , stack)
+
+class Solution {
+  public:
+  
+    int priority(char x){
+        if(x == '^'){
+            return 3;
+        }else if(x == '*' || x == '/'){
+            return 2;
+        }else if(x == '+' || x == '-'){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+  
+    string infixToPostfix(string s) {
+        int i = 0, n = s.size();
+        string ans = "";
+        stack<char> st;
+        while(i < n){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                ans += s[i];
+            }else if(s[i] == '('){
+                st.push(s[i]);
+            }else if(s[i] == ')'){
+                while(st.size() && st.top() != '('){
+                    ans += st.top();
+                    st.pop();
+                }
+                st.pop();
+            }else{
+                while(st.size() && priority(s[i]) <= priority(st.top())){
+                    ans += st.top();
+                    st.pop();
+                }
+                st.push(s[i]);
+            }
+            i++;
+        }
+        while(st.size()){
+            ans += st.top();
+            st.pop();
+        }
+        return ans;
+    }
+};
+
+------------------------------------------------------------------------------------------------------------------
+
+                              infix to prefix
+
+step 1. rever the infix
+step 2. infix to post fixx which above code and only < condtion in else condition as well as ( -> ) and ) -> (
+step 3. reverse the ans.
+
+<= condtion for ^
+< codition for any other oprator
+
+------------------------------------------------------------------------------------------------------------
+
+                              postfix to infix
+
+taking only i and stack
+
+class Solution {
+  public:
+    string postToInfix(string s) {
+        int n = s.size();
+        int i = 0;
+        stack<string> st;
+        while(i < n){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = '(' + t2 + s[i] + t1 + ')';
+                st.push(res);
+            }
+            i++;
+        }
+        return st.top();
+    }
+};
+
+--------------------------------------------------------------------------------------------------------------------
+
+                    prefix to infix
+
+class Solution {
+  public:
+    string preToInfix(string s) {
+        int n = s.size();
+        int i = n - 1;
+        stack<string> st;
+        while(i >= 0){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = '(' + t1 + s[i] + t2 +  ')';
+                st.push(res);
+            }
+            i--;
+        }
+        return st.top();
+    }
+};
+
+--------------------------------------------------------------------------------------------------------
+
+                              post fix to prefix
+
+class Solution {
+  public:
+    string postToPre(string s) {
+        int n = s.size();
+        stack<string> st;
+        int i = 0;
+        while(i < n){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = s[i] + t2 + t1;
+                st.push(res);
+            }
+            i++;
+        }
+        return st.top();
+    }
+};
+
+--------------------------------------------------------------------------------------------------
+
+                    prefix to postfix
+
+class Solution {
+  public:
+    string preToPost(string s) {
+        int n = s.size();
+        stack<string> st;
+        int i = n - 1;
+        while(i >= 0){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = t1 + t2 + s[i];
+                st.push(res);
+            }
+            i--;
+        }
+        return st.top();
     }
 };
 
