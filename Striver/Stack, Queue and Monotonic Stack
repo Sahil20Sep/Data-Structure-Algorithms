@@ -1079,16 +1079,10 @@ public:
 
         for(int i = 0; i < n; i++){
 
-            long long left_side = i - left[i] - 1;
-            long long right_side = right[i] - i - 1;
-
-            ans = (ans + arr[i]) % mod;
-
-            ans = (ans + left_side * arr[i]) % mod;
-
-            ans = (ans + right_side * arr[i]) % mod;
-
-            ans = (ans + (left_side * right_side * arr[i])) % mod;  --> here we can also write as ans += (left_side * right_side * arr[i]);
+            long long left_side = i - left[i];
+            long long right_side = right[i] - i;
+            
+            ans = (ans + (left_side * right_side * arr[i])) % mod; 
 
         }
 
@@ -1097,133 +1091,79 @@ public:
     }
 };
 
--------
-
-long long left_side = i - left[i];
-long long right_side = right[i] - i;
-
-ans = (ans + (left_side * right_side * arr[i])) % mod; 
-
 -------------------------------------------------------------------------------------------------------
 
                               (sum of subarray maxi - mini)
 
 class Solution {
 public:
+
+    void clear(stack<int> &st){
+        while(st.size()){
+            st.pop();
+        }
+    }
+
     long long subArrayRanges(vector<int>& arr) {
-        
         int n = arr.size();
-
+        vector<int> nextGreater(n, n), prevGreater(n, -1), nextSmaller(n, n), prevSmaller(n, -1);
+        // find next greater element
         stack<int> st;
-
-        vector<int> left_greater(n, -1), right_greater(n, n);
-
-        for(int i = 0; i < n; i++){
-
-            while(!st.empty() && arr[st.top()] >= arr[i]){
-
-                st.pop();
-
-            }
-
-            if(!st.empty()){
-
-                left_greater[i] = st.top();
-
-            }
-
-            st.push(i);
-
-        }
-
-        while(st.size()){
-            st.pop();
-        }
-
         for(int i = n - 1; i >= 0; i--){
-
-            while(!st.empty() && arr[st.top()] > arr[i]){
-
+            while(st.size() && arr[st.top()] <= arr[i]){
                 st.pop();
-
             }
-
             if(!st.empty()){
-
-                right_greater[i] = st.top();
-                
+                nextGreater[i] = st.top();
             }
-
             st.push(i);
-
         }
-
-        while(st.size()){
-            st.pop();
-        }
-
-        vector<int> left_smaller(n, -1), right_smaller(n, n);
-
+        clear(st);
+        // find prev greater element
         for(int i = 0; i < n; i++){
-
-            while(!st.empty() && arr[st.top()] <= arr[i]){
-
+            while(st.size() && arr[st.top()] < arr[i]){
                 st.pop();
-
             }
-
             if(!st.empty()){
-
-                left_smaller[i] = st.top();
-
+                prevGreater[i] = st.top();
             }
-
             st.push(i);
-
         }
-
-        while(st.size()){
-            st.pop();
-        }
-
+        clear(st);
+        // find next smaller element
         for(int i = n - 1; i >= 0; i--){
-
-            while(!st.empty() && arr[st.top()] < arr[i]){
-
+            while(st.size() && arr[i] <= arr[st.top()]){
                 st.pop();
-
             }
-
             if(!st.empty()){
-
-                right_smaller[i] = st.top();
-
+                nextSmaller[i] = st.top();
             }
-
             st.push(i);
-
         }
-
+        clear(st);
+        // find prev smaller elemnt
+        for(int i = 0; i < n; i++){
+            while(st.size() && arr[i] < arr[st.top()]){
+                st.pop();
+            }
+            if(!st.empty()){
+                prevSmaller[i] = st.top();
+            }
+            st.push(i);
+        }
+        clear(st);
         long long ans = 0;
-
         for(int i = 0; i < n; i++){
-
-            long long left_length_i_mn = i - left_greater[i];
-            long long right_length_i_mn = right_greater[i] - i;
-
-            long long minCount = (left_length_i_mn * right_length_i_mn * arr[i]);
-            ans -= minCount;
-
-            long long left_length_i_mx = i - left_smaller[i];
-            long long right_lenght_i_mx = right_smaller[i] - i;
-
-            long long maxCount = (left_length_i_mx * right_lenght_i_mx * arr[i]);
-            ans += maxCount;
-
+            // finding how many array contain this element as maximum
+            long long maxLeftSide = i - prevGreater[i];
+            long long maxRightSide = nextGreater[i] - i;
+            ans = (ans + arr[i] * maxLeftSide * maxRightSide * 1LL);
+            // finding how many array contain this element as minimum
+            long long minLeftSide = i - prevSmaller[i];
+            long long minRightSide = nextSmaller[i] - i;
+            ans = (ans - arr[i] * minLeftSide * minRightSide * 1LL);
         }
-
         return ans;
-
     }
 };
 
@@ -1474,10 +1414,6 @@ public:
         return ans;
     }
 };
-
----------------------------------------------------------------------------------------------------
-
-                    
 
 ----------------------------------------------------------------------------------------------------
 
