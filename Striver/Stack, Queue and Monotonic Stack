@@ -1,0 +1,1552 @@
+----------------------------------------------------------------------------------------------
+
+                    infixx to postfix (take i , ans , stack)
+
+class Solution {
+  public:
+  
+    int priority(char x){
+        if(x == '^'){
+            return 3;
+        }else if(x == '*' || x == '/'){
+            return 2;
+        }else if(x == '+' || x == '-'){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+  
+    string infixToPostfix(string s) {
+        int i = 0, n = s.size();
+        string ans = "";
+        stack<char> st;
+        while(i < n){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                ans += s[i];
+            }else if(s[i] == '('){
+                st.push(s[i]);
+            }else if(s[i] == ')'){
+                while(st.size() && st.top() != '('){
+                    ans += st.top();
+                    st.pop();
+                }
+                st.pop();
+            }else{
+                while(st.size() && priority(s[i]) <= priority(st.top())){
+                    ans += st.top();
+                    st.pop();
+                }
+                st.push(s[i]);
+            }
+            i++;
+        }
+        while(st.size()){
+            ans += st.top();
+            st.pop();
+        }
+        return ans;
+    }
+};
+
+------------------------------------------------------------------------------------------------------------------
+
+                              infix to prefix
+
+step 1. rever the infix
+step 2. infix to post fixx which above code and only < condtion in else condition as well as ( -> ) and ) -> (
+step 3. reverse the ans.
+
+<= condtion for ^
+< codition for any other oprator
+
+------------------------------------------------------------------------------------------------------------
+
+                              postfix to infix
+
+taking only i and stack
+
+class Solution {
+  public:
+    string postToInfix(string s) {
+        int n = s.size();
+        int i = 0;
+        stack<string> st;
+        while(i < n){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = '(' + t2 + s[i] + t1 + ')';
+                st.push(res);
+            }
+            i++;
+        }
+        return st.top();
+    }
+};
+
+--------------------------------------------------------------------------------------------------------------------
+
+                    prefix to infix
+
+class Solution {
+  public:
+    string preToInfix(string s) {
+        int n = s.size();
+        int i = n - 1;
+        stack<string> st;
+        while(i >= 0){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = '(' + t1 + s[i] + t2 +  ')';
+                st.push(res);
+            }
+            i--;
+        }
+        return st.top();
+    }
+};
+
+--------------------------------------------------------------------------------------------------------
+
+                              post fix to prefix
+
+class Solution {
+  public:
+    string postToPre(string s) {
+        int n = s.size();
+        stack<string> st;
+        int i = 0;
+        while(i < n){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = s[i] + t2 + t1;
+                st.push(res);
+            }
+            i++;
+        }
+        return st.top();
+    }
+};
+
+--------------------------------------------------------------------------------------------------
+
+                    prefix to postfix
+
+class Solution {
+  public:
+    string preToPost(string s) {
+        int n = s.size();
+        stack<string> st;
+        int i = n - 1;
+        while(i >= 0){
+            if((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z') || (s[i] >= '0' && s[i] <= '9')){
+                string t = "";
+                t.push_back(s[i]);
+                st.push(t);
+            }else{
+                string t1 = st.top();
+                st.pop();
+                string t2 = st.top();
+                st.pop();
+                string res = t1 + t2 + s[i];
+                st.push(res);
+            }
+            i--;
+        }
+        return st.top();
+    }
+};
+
+
+
+
+(stack implement using array)
+
+void MyStack :: push(int x)
+{
+    top++;
+    arr[top] = x;
+}
+
+int MyStack :: pop()
+{
+    if(top == -1){
+        return -1;
+    }
+    return arr[top--];
+}
+
+for size return (top + 1) and empty return (top == -1)
+
+------------------------------------------------------------------------------
+
+      (queue implement using array)
+
+void push(int x){
+
+        if(cnt < n){
+            cnt++;
+            arr[rear % n] = x;
+            rear++;
+        }
+
+        return -1;
+    }
+
+    void pop(){
+
+        if(cnt == 0){
+            // no element
+        }
+        
+        a[front % n] = -1;
+        cnt--;
+        front++;
+
+    }
+
+    void top(){
+
+        if(cnt == 0){
+            // no element
+        }
+        
+        return a[front % n];
+    }
+
+-------------------
+
+void MyQueue :: push(int x)
+{
+    arr[rear++] = x;
+}
+
+int MyQueue :: pop()
+{
+    if(rear == front){
+        return -1;
+    }
+    return arr[front++]; 
+}
+
+determine size and empty we use cnt;
+
+--------------------------------------------------------------------------------------------------------
+
+                (implement stack using 2-queue)
+
+class MyStack {
+public:
+
+    queue<int> Q1, Q2;
+
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        
+        Q2.push(x);
+
+        while(!Q1.empty()){
+
+            Q2.push(Q1.front());
+            Q1.pop();
+
+        }
+
+        swap(Q1, Q2);
+    }
+    
+    int pop() {
+        
+        int ans = Q1.front();
+        Q1.pop();
+        return ans;
+
+    }
+    
+    int top() {
+        
+        return Q1.front();
+
+    }
+    
+    bool empty() {
+        
+        return Q1.empty();
+
+    }
+};
+
+space is 2* N
+
+------------------
+
+        (using one queue)
+
+class MyStack {
+public:
+
+    queue<int> Q1;
+
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        
+        Q1.push(x);
+
+        int cnt = 0, n = Q1.size();
+
+        while(cnt != n - 1){
+
+            cnt++;
+            Q1.push(Q1.front());
+            Q1.pop();
+
+        }
+
+    }
+    
+    int pop() {
+        
+        int ans = Q1.front();
+        Q1.pop();
+        return ans;
+
+    }
+    
+    int top() {
+        
+        return Q1.front();
+
+    }
+    
+    bool empty() {
+        
+        return Q1.empty();
+
+    }
+};
+
+space N
+
+-------------------------------------------------------------------------------------------------
+
+implement a min stack  
+
+--------------------bruter force O(2 * N)
+
+class MinStack {
+public:
+
+    stack<pair<int, int>> st;
+
+    MinStack() {
+        
+    
+    }
+    
+    void push(int val) {
+        
+        if(st.empty()){
+
+            st.push({val, val});
+
+        }else{
+
+            st.push({val, min(st.top().second, val)});
+
+        }
+
+    }
+    
+    void pop() {
+        
+        st.pop();
+
+    }
+    
+    int top() {
+        
+        return st.top().first;
+
+    }
+    
+    int getMin() {
+        
+        return st.top().second;
+
+    }
+};
+
+---------------------------------------------------------------------------------------------------
+
+        (implement queue using 2-stack)
+
+class MyQueue {
+public:
+
+    stack<int> st1, st2;
+
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+        
+        while(!st1.empty()){
+
+            st2.push(st1.top());
+            st1.pop();
+
+        }
+
+        st1.push(x);
+
+        while(!st2.empty()){
+
+            st1.push(st2.top());
+            st2.pop();
+
+        }
+
+    }
+    
+    int pop() {
+        
+        int ans = st1.top();
+        
+        st1.pop();
+
+        return ans;
+
+    }
+    
+    int peek() {
+        
+        return st1.top();
+
+    }
+    
+    bool empty() {
+        
+        return st1.empty();
+
+    }
+};
+
+-------------------------------------
+
+        (implement using input and output stack)
+
+class MyQueue {
+public:
+
+    stack<int> input, output;
+
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+
+        input.push(x);
+
+    }
+    
+    int pop() {
+        
+        if(output.empty()){
+
+            while(!input.empty()){
+
+                output.push(input.top());
+                input.pop();
+
+            }
+
+        }
+
+        int ans = output.top();
+        output.pop();
+
+        return ans;
+
+    }
+    
+    int peek() {
+        
+        if(output.empty()){
+
+            while(!input.empty()){
+
+                output.push(input.top());
+                input.pop();
+                
+            }
+
+        }
+
+        int ans = output.top();
+
+        return ans;
+
+    }
+    
+    bool empty() {
+        
+        return input.empty() && output.empty();
+
+    }
+};
+
+--------------------------------------------------------------------------------
+
+                              (check for valid paretheess)
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> st;
+        int n = s.size();
+        if(n & 1){
+            return false;
+        }
+        for(auto it : s){
+            if(it == '{' || it == '[' || it == '('){
+                st.push(it);
+            }else{
+                if(st.empty()){
+                    return false;
+                }
+                char c = st.top();
+                if((c == '{' && it == '}') || (c == '(' && it == ')') || (c == '[' && it == ']')){
+                    st.pop();
+                }else{
+                    return false;
+                }
+            }
+        }
+        return st.empty() ? true : false;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------
+
+                              (next greater element I --> monotonic stack)
+
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& a, vector<int>& b) {
+        
+        stack<int> st;
+
+        map<int, int> hash;
+
+        for(int i = 0; i < b.size(); i++){
+
+            hash[b[i]] = i;
+
+        }
+
+        int n = b.size();
+
+        vector<int> ans(n, -1);
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && st.top() < b[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                ans[i] = st.top();
+
+            }
+
+            st.push(b[i]);
+
+        }
+
+        vector<int> fi;
+
+        for(int i = 0; i < a.size(); i++){
+
+            fi.push_back(ans[hash[a[i]]]);
+
+        }
+
+        return fi;
+    }
+};
+
+------------------------------------------------------------------------------------------------------------
+
+                              (next greater element II)
+
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& arr) {
+
+        int n = arr.size();
+
+        vector<int> ans(n, -1);
+
+        stack<int> st;
+
+        for(int i = (n << 1) - 1; i >= 0; i--){
+
+            while(!st.empty() && st.top() <= arr[i % n]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                ans[i % n] = st.top();
+
+            }
+
+            st.push(arr[i % n]);
+
+        }
+
+        return ans;
+
+    }
+};
+
+using cnt++ to relize time complxity;
+
+O(2*N + 2*N) --> time and O(N) --> space
+
+--------------------------------------------------------------------------------------------------------------
+
+                              (Next smaller element)
+
+vector<int> Solution::prevSmaller(vector<int> &arr) {
+    
+    stack<int> st;
+    
+    int n = arr.size();
+    
+    vector<int> ans(n, -1);
+    
+    for(int i = 0; i < n; i++){
+        
+        while(!st.empty() && st.top() >= arr[i]){
+            
+            st.pop();
+            
+        }
+        
+        if(!st.empty()){
+            
+            ans[i] = st.top();
+            
+        }
+        
+        st.push(arr[i]);
+        
+    }
+    
+    return ans;
+
+}
+
+-------------------------------------------------------------------------------------------------------------
+
+                              (count the number of greter element after the index)
+
+class Solution{
+public:
+
+    vector<int> count_NGE(int n, vector<int> &arr, int queries, vector<int> &ind){
+        
+        vector<int> ans(ind.size());
+        
+        for(int i = 0; i < ind.size(); i++){
+            
+            int index = ind[i], cnt = 0;
+            
+            for(int j = index + 1; j < arr.size(); j++){
+                
+                if(arr[j] > arr[index]){
+                    
+                    cnt++;
+                    
+                }
+            }
+            
+            ans[i] = cnt;
+        }
+        
+        return ans;
+       
+    }
+
+};
+
+------------------------------------------------------------------------------------------------------------------
+
+                    (Trapping the water)
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        
+        int n = height.size();
+
+        vector<int> left(n), right(n);
+
+        int mx = 0;
+
+        for(int i = 0; i < n; i++){
+
+            if(height[i] > mx){
+                mx = height[i];
+            }
+
+            left[i] = mx;
+
+        }
+
+        mx = 0;
+
+        for(int i = n - 1; i >= 0; i--){
+
+            if(height[i] > mx){
+                mx = height[i];
+            }
+
+            right[i] = mx;
+
+        }
+
+        int ans = 0;
+
+        for(int i = 0; i < n; i++){
+
+            ans += min(left[i], right[i]) - height[i];
+
+        }
+
+        return ans;
+
+    }
+};
+
+-----------------
+
+                    (using two pointer approch)
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        
+        int n = height.size();
+
+        int low = 0, high = n - 1;
+
+        int left_max = 0, right_max = 0;
+
+        int ans = 0;
+
+        while(low <= high){
+
+            if(height[low] <= height[high]){
+
+                if(height[low] >= left_max){
+
+                    left_max = height[low];
+
+                }else{
+
+                    ans += (left_max - height[low]);
+
+                }
+
+                low++;
+
+            }else{
+
+                if(height[high] >= right_max){
+
+                    right_max = height[high];
+
+                }else{
+
+                    ans += (right_max - height[high]);
+
+                }
+
+                high--;
+            }
+
+        }
+
+        return ans;
+
+    }
+};
+
+-----------------------------------------------------------------------------------------------------
+
+                              (largest recteengle in histrogram)
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        vector<int> left(n, -1), right(n, n);
+
+        stack<int> st;
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(!st.empty()){
+
+            st.pop();
+
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+                
+                st.pop();
+
+            }
+            
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            ans = max(ans, (right[i] - left[i] - 1) * arr[i]);
+
+        }
+
+        return ans;
+
+    }
+};
+
+------------------------------------------------------------------------------------------------------------------
+
+                              (some modification in above code) --> largest rectangle in grid
+
+class Solution {
+public:
+
+    int func(vector<int> &arr){
+
+        int n = arr.size();
+
+        vector<int> left(n, -1), right(n, n);
+
+        stack<int> st;
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(!st.empty()){
+
+            st.pop();
+
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+                
+                st.pop();
+
+            }
+            
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            ans = max(ans, (right[i] - left[i] - 1) * arr[i]);
+
+        }
+
+        return ans;
+
+    }
+
+    int maximalRectangle(vector<vector<char>>& v) {
+        
+        int n = v.size(), m = v[0].size();
+
+        vector<int> prev(m, 0);
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            for(int j = 0; j < m; j++){
+
+                if(v[i][j] == '1'){
+
+                    prev[j]++;
+
+                }else{
+
+                    prev[j] = 0;
+
+                }
+            }
+
+            ans = max(ans, func(prev));
+        }
+
+        return ans;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------
+
+                    (sum of minimum element of subarray)
+
+class Solution {
+public:
+    int sumSubarrayMins(vector<int>& arr) {
+
+        long long mod = 1e9 + 7;
+        
+        int n = arr.size();
+
+        vector<int> left(n, -1), right(n, n);
+
+        stack<int> st;
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+                
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(st.size()){
+
+            st.pop();
+
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] > arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        long long ans = 0;
+
+        for(int i = 0; i < n; i++){
+
+            long long left_side = i - left[i] - 1;
+            long long right_side = right[i] - i - 1;
+
+            ans = (ans + arr[i]) % mod;
+
+            ans = (ans + left_side * arr[i]) % mod;
+
+            ans = (ans + right_side * arr[i]) % mod;
+
+            ans = (ans + (left_side * right_side * arr[i])) % mod;  --> here we can also write as ans += (left_side * right_side * arr[i]);
+
+        }
+
+        return ans;
+
+    }
+};
+
+-------
+
+long long left_side = i - left[i];
+long long right_side = right[i] - i;
+
+ans = (ans + (left_side * right_side * arr[i])) % mod; 
+
+-------------------------------------------------------------------------------------------------------
+
+                              (sum of subarray maxi - mini)
+
+class Solution {
+public:
+    long long subArrayRanges(vector<int>& arr) {
+        
+        int n = arr.size();
+
+        stack<int> st;
+
+        vector<int> left_greater(n, -1), right_greater(n, n);
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left_greater[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(st.size()){
+            st.pop();
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] > arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                right_greater[i] = st.top();
+                
+            }
+
+            st.push(i);
+
+        }
+
+        while(st.size()){
+            st.pop();
+        }
+
+        vector<int> left_smaller(n, -1), right_smaller(n, n);
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] <= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left_smaller[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(st.size()){
+            st.pop();
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] < arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                right_smaller[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        long long ans = 0;
+
+        for(int i = 0; i < n; i++){
+
+            long long left_length_i_mn = i - left_greater[i];
+            long long right_length_i_mn = right_greater[i] - i;
+
+            long long minCount = (left_length_i_mn * right_length_i_mn * arr[i]);
+            ans -= minCount;
+
+            long long left_length_i_mx = i - left_smaller[i];
+            long long right_lenght_i_mx = right_smaller[i] - i;
+
+            long long maxCount = (left_length_i_mx * right_lenght_i_mx * arr[i]);
+            ans += maxCount;
+
+        }
+
+        return ans;
+
+    }
+};
+
+-------------------------------------------------------------------------------------------------------------------------
+
+                                        (astrenoid collison)
+
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& arr) {
+        int n = arr.size();
+        stack<int> st;
+        for(int i = 0; i < n; i++){
+            if(arr[i] > 0){
+                st.push(arr[i]);
+            }else{
+                while(st.size() && st.top() > 0 && st.top() < abs(arr[i])){
+                    st.pop();
+                }
+                if(st.size() && st.top() == abs(arr[i])){
+                    st.pop();
+                }
+                else if(st.size() == 0 || st.top() < 0){
+                    st.push(arr[i]);
+                }
+            }
+        }
+        vector<int> ans(st.size());
+        int t = st.size() - 1;
+        while(st.size()){
+            ans[t--] = st.top();
+            st.pop();
+        }
+        return ans;
+    }
+};
+
+--------------------------------------------------------------------------------------------------------
+
+                              (remove k digit and make minimum number)
+
+class Solution {
+public:
+    string removeKdigits(string s, int k) {
+        int n = s.size();
+        stack<char> st;
+        for(int i = 0; i <n; i++){
+            while(st.size() && k > 0 && (st.top() - '0') > (s[i] - '0')){
+                st.pop();
+                k--;
+            }
+            st.push(s[i]);
+        }
+        while(k > 0){
+            st.pop();
+            k--;
+        }
+        if(st.empty()) return "0";
+        string res = "";
+        while(st.size()){
+            res += st.top();
+            st.pop();
+        }
+        while(res.size() && res.back() == '0'){
+            res.pop_back();
+        }
+        if(res.size() == 0) return "0";
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+
+-------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    vector<int> canSeePersonsCount(vector<int>& height) {
+        
+        int n = height.size();
+
+        stack<int> st;
+
+        vector<int> ans(n, 0);
+
+        st.push(height[n - 1]);
+
+        for(int i = n - 2; i >= 0; i--){
+
+            int cnt = 0;
+
+            while(!st.empty() && st.top() < height[i]){
+
+                st.pop();
+                cnt++;
+
+            }
+
+            if(!st.empty()){
+
+                cnt++;
+
+            }
+
+            ans[i] = cnt;
+
+            st.push(height[i]);
+
+        }
+
+        return ans;
+
+    }
+};
+
+--------------------------------------------------------------------------------------------
+
+                              (min subarray elemtn * length is maximux but k lies i to j)
+
+class Solution {
+public:
+    int maximumScore(vector<int>& arr, int k) {
+        
+        int n = arr.size();
+
+        stack<int> st;
+
+        vector<int> left(n, -1), right(n, n);
+
+        for(int i = 0; i < n; i++){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                left[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        while(st.size()){
+
+            st.pop();
+            
+        }
+
+        for(int i = n - 1; i >= 0; i--){
+
+            while(!st.empty() && arr[st.top()] >= arr[i]){
+
+                st.pop();
+
+            }
+
+            if(!st.empty()){
+
+                right[i] = st.top();
+
+            }
+
+            st.push(i);
+
+        }
+
+        int ans = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+
+            int left_side = left[i] + 1;
+            int right_side = right[i] - 1;
+
+            if(left_side <= k && k <= right_side){
+
+                ans = max(ans, (right_side - left_side + 1) * arr[i]);
+
+            }
+        }
+
+        return ans;
+    }
+};
+
+-----------------------------------------------------------------------------------------------------
+
+                    (4sum - II)
+
+class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        
+        unordered_map<int, int> hash;
+
+        for(auto i : nums1){
+
+            for(auto j : nums2){
+
+                hash[i + j]++;
+
+            }
+        }
+
+        int ans = 0;
+
+        for(auto i : nums3){
+
+            for(auto j : nums4){
+
+                ans += hash[-(i + j)];
+
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+----------------------------------------------------------------------------------------------
+
+                    (sliding window maximum)
+
+-----O(2N) solution using deque
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& arr, int k) {
+        deque<int> DQ;
+        int n = arr.size();
+        vector<int> ans;
+        for(int i = 0; i < n; i++){
+            if(!DQ.empty() && DQ.front() == i - k){
+                DQ.pop_front();
+            }
+            while(!DQ.empty() && arr[DQ.back()] <= arr[i]){
+                DQ.pop_back();
+            }
+            DQ.push_back(i);
+            if(i >= k - 1){
+                ans.push_back(arr[DQ.front()]);
+            }
+        }
+        return ans;
+    }
+};
+
+---------------------------------------------------------------------------------------------------
+
+                    (largest rectangle in histogram) use of one stack
+
+class Solution {
+public:
+
+    int largestRectangleArea(vector<int>& arr) {
+        int n = arr.size();
+        stack<int> st;
+        int maxArea = 0;
+        for(int i = 0; i <= n; i++){
+            while(!st.empty() && (i == n || arr[i] <= arr[st.top()])){
+                int height = arr[st.top()];
+                st.pop();
+                int width;
+                if(st.empty()){
+                    width = i - (-1) - 1;
+                }else{
+                    width = i - st.top() - 1;
+                }
+                maxArea = max(maxArea, height * width);
+            }
+            st.push(i);
+        }
+        return maxArea;
+    }
+};
+
+----------------------------------------------------------------------------------------------------
+
+        LRU
+
+struct Node{
+    int key;
+    int val;
+    Node* prev;
+    Node* next;
+    Node(int k, int v){
+        key = k;
+        val = v;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+class LRUCache {
+public:
+
+    Node* head ;
+    Node* tail ;
+
+    int cap;
+
+    unordered_map<int, Node*> hash;
+
+    LRUCache(int capacity) {
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
+        head -> next = tail;
+        tail -> prev = head;
+        cap = capacity;
+    }
+
+    void addNode(Node* node){ // time is O(1)
+        Node* temp = head -> next;
+        head -> next = node;
+        node -> next = temp;
+        node -> prev = head;
+        temp -> prev = node;
+    }
+
+    void deleteNode(Node* node){ // time is O(1)
+        Node* prev_of_node = node -> prev;
+        Node* next_of_node = node -> next;
+        prev_of_node -> next = next_of_node;
+        next_of_node -> prev = prev_of_node;
+        node -> next = NULL;
+        node -> prev = NULL;
+    }
+    
+    int get(int key) { // tiime is O(1) best case and worse case O(N)
+        if(hash.find(key) == hash.end()){
+           return -1;
+        }
+        Node* address = hash[key];
+        int res = address -> val;
+        deleteNode(address);
+        addNode(address);
+        hash[key] = head -> next;
+        return res;
+    }
+    
+    void put(int key, int value) { // tiime is O(1) best case and worse case O(N)
+        if(hash.find(key) != hash.end()){
+            Node* address = hash[key];
+            deleteNode(address);
+        }
+        else if(hash.size() == cap){
+            hash.erase(tail -> prev -> key);
+            deleteNode(tail -> prev);
+        }
+        addNode(new Node(key, value));
+        hash[key] = head -> next;
+    }
+};
