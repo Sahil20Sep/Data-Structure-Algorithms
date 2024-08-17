@@ -171,55 +171,6 @@ public:
 
 space N
 
--------------------------------------------------------------------------------------------------
-
-implement a min stack  
-
---------------------bruter force O(2 * N)
-
-class MinStack {
-public:
-
-    stack<pair<int, int>> st;
-
-    MinStack() {
-        
-    
-    }
-    
-    void push(int val) {
-        
-        if(st.empty()){
-
-            st.push({val, val});
-
-        }else{
-
-            st.push({val, min(st.top().second, val)});
-
-        }
-
-    }
-    
-    void pop() {
-        
-        st.pop();
-
-    }
-    
-    int top() {
-        
-        return st.top().first;
-
-    }
-    
-    int getMin() {
-        
-        return st.top().second;
-
-    }
-};
-
 ---------------------------------------------------------------------------------------------------
 
         (implement queue using 2-stack)
@@ -338,6 +289,136 @@ public:
         
         return input.empty() && output.empty();
 
+    }
+};
+
+----------------------------------------------------------------------------------------------
+
+implement a min stack  
+
+--------------------bruter force O(2 * N)
+
+class MinStack {
+public:
+
+    stack<pair<int, int>> st;
+
+    MinStack() {
+        
+    
+    }
+    
+    void push(int val) {
+        
+        if(st.empty()){
+
+            st.push({val, val});
+
+        }else{
+
+            st.push({val, min(st.top().second, val)});
+
+        }
+
+    }
+    
+    void pop() {
+        
+        st.pop();
+
+    }
+    
+    int top() {
+        
+        return st.top().first;
+
+    }
+    
+    int getMin() {
+        
+        return st.top().second;
+
+    }
+};
+
+-----optimized approch
+
+class MinStack {
+public:
+    stack<long long> st;
+    long long mn;
+    MinStack() {
+        while(st.size()){
+            st.pop();
+        }
+        mn = 1e9;
+    }
+    
+    void push(long long val) {
+        if(st.empty()){
+            st.push(val);
+            mn = val;
+            return;
+        }
+        if(val < mn){
+            long long modified = 2 * val - mn;
+            st.push(modified);
+            mn = val;
+        }else{
+            st.push(val);
+        }
+    }
+    
+    void pop() {
+        if(st.top() < mn){
+            long long val = st.top();
+            st.pop();
+            mn = 2 * mn - val;
+        }else{
+            st.pop();
+        }
+    }
+    
+    int top() {
+        if(st.top() < mn){
+            return mn;
+        }
+        return st.top();
+    }
+    
+    int getMin() {
+        return mn;
+    }
+};
+
+--------------------------------------------------------------------------------
+
+                              (check for valid paretheess)
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> st;
+        int n = s.size();
+        if(n & 1){
+            return false;
+        }
+        for(auto it : s){
+            if(it == '{' || it == '[' || it == '('){
+                st.push(it);
+            }else{
+                if(st.empty()){
+                    return false;
+                }
+                char c = st.top();
+                if((c == '{' && it == '}') || (c == '(' && it == ')') || (c == '[' && it == ']')){
+                    st.pop();
+                }else{
+                    return false;
+                }
+            }
+        }
+        return st.empty() ? true : false;
     }
 };
 
@@ -521,37 +602,6 @@ class Solution {
     }
 };
 
---------------------------------------------------------------------------------
-
-                              (check for valid paretheess)
-
-class Solution {
-public:
-    bool isValid(string s) {
-        stack<char> st;
-        int n = s.size();
-        if(n & 1){
-            return false;
-        }
-        for(auto it : s){
-            if(it == '{' || it == '[' || it == '('){
-                st.push(it);
-            }else{
-                if(st.empty()){
-                    return false;
-                }
-                char c = st.top();
-                if((c == '{' && it == '}') || (c == '(' && it == ')') || (c == '[' && it == ']')){
-                    st.pop();
-                }else{
-                    return false;
-                }
-            }
-        }
-        return st.empty() ? true : false;
-    }
-};
-
 -------------------------------------------------------------------------------------------------------
 
                               (next greater element I --> monotonic stack)
@@ -559,48 +609,25 @@ public:
 class Solution {
 public:
     vector<int> nextGreaterElement(vector<int>& a, vector<int>& b) {
-        
+        int n = a.size(), m = b.size();   
         stack<int> st;
-
         map<int, int> hash;
-
-        for(int i = 0; i < b.size(); i++){
-
+        vector<int> ans(m, -1);
+        for(int i = m - 1; i >= 0; i--){
             hash[b[i]] = i;
-
-        }
-
-        int n = b.size();
-
-        vector<int> ans(n, -1);
-
-        for(int i = n - 1; i >= 0; i--){
-
-            while(!st.empty() && st.top() < b[i]){
-
+            while(st.size() && st.top() < b[i]){
                 st.pop();
-
             }
-
-            if(!st.empty()){
-
+            if(st.size()){
                 ans[i] = st.top();
-
             }
-
             st.push(b[i]);
-
         }
-
-        vector<int> fi;
-
-        for(int i = 0; i < a.size(); i++){
-
-            fi.push_back(ans[hash[a[i]]]);
-
+        vector<int> result(n);
+        for(int i = 0; i < n; i++){
+            result[i] = ans[hash[a[i]]];
         }
-
-        return fi;
+        return result;
     }
 };
 
@@ -611,33 +638,19 @@ public:
 class Solution {
 public:
     vector<int> nextGreaterElements(vector<int>& arr) {
-
         int n = arr.size();
-
-        vector<int> ans(n, -1);
-
         stack<int> st;
-
-        for(int i = (n << 1) - 1; i >= 0; i--){
-
-            while(!st.empty() && st.top() <= arr[i % n]){
-
+        vector<int> res(n, -1);
+        for(int i = 2*n - 1; i >= 0; i--){
+            while(st.size() && arr[st.top()] <= arr[i % n]){
                 st.pop();
-
             }
-
-            if(!st.empty()){
-
-                ans[i % n] = st.top();
-
+            if(i <= n - 1 && st.size()){
+                res[i] = arr[st.top()];
             }
-
-            st.push(arr[i % n]);
-
+            st.push(i % n);
         }
-
-        return ans;
-
+        return res;
     }
 };
 
@@ -647,41 +660,39 @@ O(2*N + 2*N) --> time and O(N) --> space
 
 --------------------------------------------------------------------------------------------------------------
 
-                              (Next smaller element)
+                              (prev smaller element)
 
 vector<int> Solution::prevSmaller(vector<int> &arr) {
-    
-    stack<int> st;
-    
     int n = arr.size();
-    
-    vector<int> ans(n, -1);
-    
+    stack<int> st;
+    vector<int> res(n, -1);
     for(int i = 0; i < n; i++){
-        
-        while(!st.empty() && st.top() >= arr[i]){
-            
+        while(st.size() && arr[i] <= arr[st.top()]){
             st.pop();
-            
         }
-        
-        if(!st.empty()){
-            
-            ans[i] = st.top();
-            
+        if(st.size()){
+            res[i] = arr[st.top()];
         }
-        
-        st.push(arr[i]);
-        
+        st.push(i);
     }
-    
-    return ans;
-
+    return res;
 }
+
+-----------------------------------------------------------------------------------------------------------
+
+if(next) --> run loop from n - 1 to 0
+Next Smaller --> arr[i] <= arr[st.top()]
+Next Greater --> arr[st.top()] <= arr[i]
+
+if(prev) --> run loop from 0 to n - 1
+Prev Smaller --> arr[i] <= arr[st.top()]
+Prev Greater --> arr[st.top()] <= arr[i]
 
 -------------------------------------------------------------------------------------------------------------
 
                               (count the number of greter element after the index)
+
+---this problem is not solve by stack, solve by merge sort.
 
 class Solution{
 public:
@@ -708,6 +719,65 @@ public:
         
         return ans;
        
+    }
+
+};
+
+----mergeSort
+
+class Solution{
+public:
+
+    void merge(int low, int mid, int high, vector<pair<int, int>> &arr, vector<int> &cnt){
+        int left = low, right = mid + 1;
+        vector<pair<int, int>> temp;
+        while(left <= mid && right <= high){
+            if(arr[left].first < arr[right].first){
+                temp.push_back({arr[left].first, arr[left].second});
+                cnt[arr[left].second] += (high - right + 1);
+                left++;
+            }else{
+                temp.push_back({arr[right].first, arr[right].second});
+                right++;
+            }
+        }
+        while(left <= mid){
+            temp.push_back({arr[left].first, arr[left].second});
+            left++;
+        }
+        while(right <= high){
+            temp.push_back({arr[right].first, arr[right].second});
+            right++;
+        }
+        int idx = 0;
+        for(int i = low; i <= high; i++){
+            arr[i] = temp[idx++];
+        }
+    }
+
+    void mergeSort(int low, int high, vector<pair<int, int>> &arr, vector<int> &cnt){
+        if(low >= high){
+            return ;
+        }
+        int mid = (low + high) >> 1;
+        mergeSort(low, mid, arr, cnt);
+        mergeSort(mid + 1, high, arr, cnt);
+        
+        merge(low, mid, high, arr, cnt);
+    }
+
+    vector<int> count_NGE(int n, vector<int> &v, int Q, vector<int> &input){
+        vector<int> cnt(n, 0);
+        vector<pair<int, int>> arr(n);
+        for(int i = 0; i < n; i++){
+            arr[i] = {v[i], i};
+        }
+        mergeSort(0, n - 1, arr, cnt);
+        vector<int> result;
+        for(auto it : input){
+            result.push_back(cnt[it]);
+        }
+        return result;
     }
 
 };
@@ -884,6 +954,33 @@ public:
     }
 };
 
+----------(largest rectangle in histogram) use of one stack
+
+class Solution {
+public:
+
+    int largestRectangleArea(vector<int>& arr) {
+        int n = arr.size();
+        stack<int> st;
+        int maxArea = 0;
+        for(int i = 0; i <= n; i++){
+            while(!st.empty() && (i == n || arr[i] <= arr[st.top()])){
+                int height = arr[st.top()];
+                st.pop();
+                int width;
+                if(st.empty()){
+                    width = i - (-1) - 1;
+                }else{
+                    width = i - st.top() - 1;
+                }
+                maxArea = max(maxArea, height * width);
+            }
+            st.push(i);
+        }
+        return maxArea;
+    }
+};
+
 ------------------------------------------------------------------------------------------------------------------
 
                               (some modification in above code) --> largest rectangle in grid
@@ -892,93 +989,30 @@ class Solution {
 public:
 
     int func(vector<int> &arr){
-
-        int n = arr.size();
-
-        vector<int> left(n, -1), right(n, n);
-
+        int n = arr.size(), ans = 0;
         stack<int> st;
-
-        for(int i = 0; i < n; i++){
-
-            while(!st.empty() && arr[st.top()] >= arr[i]){
-
+        for(int i = 0; i <= n; i++){
+            while(st.size() && (i == n || arr[i] <= arr[st.top()])){
+                int height = arr[st.top()];
                 st.pop();
-
+                int width = st.empty() ? i - (-1) - 1 : i - st.top() - 1;
+                ans = max(ans, height * width);
             }
-
-            if(!st.empty()){
-
-                left[i] = st.top();
-
-            }
-
             st.push(i);
-
         }
-
-        while(!st.empty()){
-
-            st.pop();
-
-        }
-
-        for(int i = n - 1; i >= 0; i--){
-
-            while(!st.empty() && arr[st.top()] >= arr[i]){
-                
-                st.pop();
-
-            }
-            
-            if(!st.empty()){
-
-                right[i] = st.top();
-
-            }
-
-            st.push(i);
-
-        }
-
-        int ans = INT_MIN;
-
-        for(int i = 0; i < n; i++){
-
-            ans = max(ans, (right[i] - left[i] - 1) * arr[i]);
-
-        }
-
         return ans;
-
     }
 
-    int maximalRectangle(vector<vector<char>>& v) {
-        
-        int n = v.size(), m = v[0].size();
-
+    int maximalRectangle(vector<vector<char>>& arr) {
+        int n = arr.size(), m = arr[0].size();
         vector<int> prev(m, 0);
-
-        int ans = INT_MIN;
-
+        int ans = 0;
         for(int i = 0; i < n; i++){
-
             for(int j = 0; j < m; j++){
-
-                if(v[i][j] == '1'){
-
-                    prev[j]++;
-
-                }else{
-
-                    prev[j] = 0;
-
-                }
+                arr[i][j] == '1' ? prev[j]++ : prev[j] = 0;
             }
-
             ans = max(ans, func(prev));
-        }
-
+        }   
         return ans;
     }
 };
@@ -1443,32 +1477,7 @@ public:
 
 ---------------------------------------------------------------------------------------------------
 
-                    (largest rectangle in histogram) use of one stack
-
-class Solution {
-public:
-
-    int largestRectangleArea(vector<int>& arr) {
-        int n = arr.size();
-        stack<int> st;
-        int maxArea = 0;
-        for(int i = 0; i <= n; i++){
-            while(!st.empty() && (i == n || arr[i] <= arr[st.top()])){
-                int height = arr[st.top()];
-                st.pop();
-                int width;
-                if(st.empty()){
-                    width = i - (-1) - 1;
-                }else{
-                    width = i - st.top() - 1;
-                }
-                maxArea = max(maxArea, height * width);
-            }
-            st.push(i);
-        }
-        return maxArea;
-    }
-};
+                    
 
 ----------------------------------------------------------------------------------------------------
 
