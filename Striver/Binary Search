@@ -1212,4 +1212,64 @@ class Solution
     }
 };
 
+-----------------------------------------------------------------------------------------
+
+		split the array largest sum -- same as above
+
+class Solution {
+public:
+    int splitArray(vector<int>& arr, int k) {
+        int n = arr.size(), sum = 0, maxEl = INT_MIN;
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            maxEl = max(maxEl, arr[i]);
+        }
+        int low = maxEl, high = sum;
+        while(low <= high){
+            int mid = (low + high) / 2;
+            int countSubarray = 1, windowSum = 0;
+            for(int i = 0; i < n; i++){
+                if(windowSum + arr[i] <= mid){
+                    windowSum += arr[i];
+                }else{
+                    windowSum = arr[i];
+                    countSubarray++;
+                }
+            }
+            countSubarray <= k ? high = mid - 1 : low = mid + 1;
+        }
+        return low;
+    }
+};
+
+--------------------------------------------------------------------------------
+
+		painter partition
+
+#include<bits/stdc++.h>
+
+int findLargestMinDistance(vector<int> &arr, int k)
+{
+    int n = arr.size(), maxEl = -1, sum = 0;
+    for(int i = 0; i < n; i++){
+        maxEl = max(maxEl, arr[i]);
+        sum += arr[i];
+    }
+    int low = maxEl, high = sum;
+    while(low <= high){
+        int mid = (low + high) / 2;
+        int worker = 1, sumOfBoard = 0;
+        for(int i = 0; i < n; i++){
+            if(sumOfBoard + arr[i] <= mid){
+                sumOfBoard += arr[i];
+            }else{
+                sumOfBoard = arr[i];
+                worker++;
+            }
+        }
+        worker <= k ? high = mid - 1 : low = mid + 1;
+    }
+    return low;
+}
+
 
