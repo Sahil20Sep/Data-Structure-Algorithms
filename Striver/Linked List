@@ -1,0 +1,1331 @@
+difference between array and linklist
+
+where is used? --> stack and queue
+
+real life example --> brower --> search --> takeyouforward --> take probblem --> leetcode / also do back tracking (double link list)
+singly link list --> todo list
+
+Node* y = new Node();
+cout << y // give the address
+cout << y.data // gives error
+cout << y->data // gives y data
+cout << y.next // gives error
+cout << y-> next // give next address
+
+because here y is ptr so use ->
+
+Node y = Node();
+y is object
+cout << y // give error
+cout << y -> data // gives error
+cout << y.data // gives data
+
+because here y is object so use .
+
+32 bit architecture --> ptr take 4 byte
+64 bit architecture --> ptr take 8 byte
+
+never ever change the head pointer take temp pointer.
+
+-----------------------------------------------------------
+    singly link list
+--------------------------------------------------------
+    (array to linklist)
+
+simple question
+
+  (traverse in linklist) --> O(N) time
+
+-------------------------------------------------------
+
+
+length of linklist O(N) time
+
+-------------------------------------------------------
+
+search in link list
+
+-------------------------------------------------------
+
+      (delete a node)
+
+---head
+
+if head is null return null;
+create temp = head;
+head = head -> next;
+delete temp;
+
+return head;
+
+---tail
+
+if(head is null or head -> next == nULl) return null;
+while(temp -> next -> next)
+
+delete(temp -> next)
+temp -> next = NULL;
+
+---delete kth element in linklist
+
+write the logic for head
+
+store current and prev node ;
+
+prev -> next = prev -> next -> next;
+
+----delete input val node
+
+-------------------------------------------------------
+
+        (insert)
+
+----head
+
+temp -> next = head;
+return temp; // do not change the head.
+
+----tail
+
+head == null return new Node(5);
+
+while(temp -> next)
+
+----in betwween
+
+if(head == NULL ) and k == 1 then insert o/w return null;
+
+if(k == 1) temp -> next = head;
+
+temp -> next = new Node();
+return head;
+
+if(k >= 2)
+  while(temp)
+  cnt++
+  if(cnt == k - 1)
+    x = new node;
+    x -> next = temp -> next;
+    temp -> next = x;
+
+----insert before value
+
+head == NULL return null;
+
+if(head -> val == givenVal)
+
+while(temp -> next)
+  cnt++
+  if(temp -> next -> data == GiveVal)
+    x = new node;
+    x -> next = temp -> next;
+    temp -> next = x;
+
+if value was not there in linklist return not present.
+
+----------------------------------------------------------------
+          doubly link list real time is browers
+
+---struct
+val
+next
+prev
+
+----array into double linklist
+
+new node-> back = prev;
+prev -> next = new Node;
+prev = new node;
+return head;
+
+--------------------------------------------------------------------------
+          (delete a node)
+
+---head of the linklist
+
+head == null || head -> next = null return null
+
+prev = head;
+head = head -> nexxt;
+head -> prev = null;
+prev -> next = null;
+delete(prev)
+return head;
+
+----tail 
+
+while(tail-> next)
+
+
+prev = teil -> back;
+prev -> next = null;
+tail -> back = null
+
+-----kth element   (k 1 to n)
+
+head = null return null
+
+directly traverse to k node
+
+then 
+
+take prev 
+take next
+left = temp -> prev;
+right = temp -> next;
+
+if(left == null and right == null) return null // single node 
+if(left == null) // head
+if(right == null) // tail
+
+left -> next = right;
+right -> prev = left;
+
+temp -> next = null;
+temp -> prev = null;
+
+delete(temp)
+return head;
+
+------delete give node
+
+
+prev = temp -> prev;
+next = temp -> next;
+
+if(next == NULL)  //tail
+  prev -> next = null;
+  temp -> back = null
+  free(temp);
+
+prev -> next = next;
+front -> prev = prev;
+
+temp -> next = temp-> back = null;
+
+-----------------------------------------------------------
+
+          (insert the node) - before the node
+
+----before head
+
+new node
+
+new node -> next = head;
+head -> prev = newNode;
+return new Node;
+
+----before tail
+
+single node // same as before head call just
+
+> 1 node;
+
+whiel(teil-> next)
+
+prev = tail -> pev
+new node(val, tail, prev)
+prev -> nexxt = new node
+tail -> back = new node;
+
+------before kth element
+
+itrerate throught k
+
+if(k=1) before head will be called.
+
+while(temp != null)
+cnt++
+if(cnt == k)
+break;
+
+temp is current now. // before this 
+
+prev = temp -> pev
+new node(val, temp, prev)
+prev -> nexxt = new node
+tail -> back = new node;
+
+------before the node
+
+prev = node -> pev
+new node(val, node, prev)
+prev -> next = neww node
+node -> back = new node
+
+-----------------------------------------------------------------
+
+            (reverse the doubly link list)
+
+----brute force
+
+use stack and iterate through link list.
+now temp again = head;
+and head -> data = st.top();
+
+2n time and n space
+
+-----most optimized
+
+class Solution
+{
+    public:
+    Node* reverseDLL(Node * head)
+    {
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        Node* curr = head;
+        Node* last = NULL;
+        while(curr != NULL){
+            last = curr -> prev;
+            curr -> prev = curr -> next;
+            curr -> next = last;
+            curr = curr -> prev;
+        }
+        return last -> prev;
+    }
+};
+
+n time and constant
+
+-------------------------------------------------------------
+        (adding two number)
+
+when we are require to store a new list always use dummy node.
+
+----optimized
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* temp1 = l1;
+        ListNode* temp2 = l2;
+        int carry = 0;
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* curr = dummyNode;
+        while(temp1 || temp2){
+            int sum = 0;
+            sum += carry;
+            if(temp1){
+                sum += temp1 -> val;
+            }
+            if(temp2){
+                sum += temp2 -> val;
+            }
+            curr -> next = new ListNode(sum % 10);
+            curr = curr -> next;
+            carry = sum / 10;
+            if(temp1){
+                temp1 = temp1 -> next;
+            }
+            if(temp2){
+                temp2 = temp2 -> next;
+            }
+        }
+        if(carry){
+            curr -> next = new ListNode(1);
+        }
+        return dummyNode -> next;
+    }
+};
+
+time max(l1, l2)
+space max(l1,l2) --> for storeing result // i can't optimize it.
+
+---------------------------------------------------------------------------------
+
+        (odd even link list)
+
+----brute force is data replacement
+
+first go through all odd nodes temp -> next -> next // n/2
+secodn go through all event nodes temp -> next -> next // n/ 2
+
+then do data replacement 
+
+timme 2n
+space n
+
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(head == NULL){
+            return NULL;
+        }
+        vector<int> data;
+        ListNode* temp = head;
+        while(temp && temp -> next){
+            data.push_back(temp -> val);
+            temp = temp -> next -> next;
+        }
+        if(temp){
+            data.push_back(temp -> val);
+        }
+        temp = head -> next;
+        while(temp && temp -> next){
+            data.push_back(temp -> val);
+            temp = temp -> next -> next;
+        }
+        if(temp){
+            data.push_back(temp -> val);
+        }
+        temp = head;
+        int i = 0;
+        while(temp){
+            temp -> val = data[i++];
+            temp = temp -> next;
+        }
+        return head;
+    }
+};
+
+-----optimized
+
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        ListNode* odd = head;
+        ListNode* even = head -> next;
+        ListNode* evenHead = head -> next;
+        while(even && even -> next){
+            odd -> next = odd -> next -> next;
+            even -> next = even -> next -> next;
+            odd = odd -> next;
+            even = even -> next;
+        }
+        odd -> next = evenHead;
+        return head;
+    }
+};
+
+time is n/2
+space 1;
+
+------------------------------------------------------------------------------
+
+
+    (sort 0 1 and 2)
+
+---brute force data replacement
+
+take the cnt0, cnt1, cnt2
+
+and then again run loop and make data replacement
+
+time is 2n space is 1
+
+-----most optimized (create three different link list)
+
+class Solution
+{
+    public:
+    
+    Node* segregate(Node *head) {
+        Node* zeroHead = new Node(-1);
+        Node* oneHead = new Node(-1);
+        Node* twoHead = new Node(-1);
+        Node* zero = zeroHead;
+        Node* one = oneHead;
+        Node* two = twoHead;
+        Node* temp = head;
+        while(temp){
+            if(temp -> data == 0){
+                zero -> next = temp;
+                zero = temp;
+            }else if(temp -> data == 1){
+                one -> next = temp;
+                one = temp;
+            }else{
+                two -> next = temp;
+                two = temp;
+            }
+            temp = temp -> next;
+        }
+        zero -> next = oneHead -> next ? oneHead -> next : twoHead -> next;
+        one -> next = twoHead -> next;
+        two -> next = NULL;
+        delete zeroHead;
+        delete oneHead;
+        delete twoHead; 
+        return zeroHead -> next;
+    }
+};
+
+time is n
+space is 1.
+-------------------------------------------------------------------------------------------
+
+
+            (delete N th node from last)
+
+take count / length
+
+now delete from start = length - N th node
+
+if(N == N)return head ->next;
+delete(head);cnt--
+if(cnt == 0)
+deleteNode = temp -> next;
+temp ->next  = temp -> next -> next;
+delte(deleteNode)
+
+----optimized
+
+slow and fast pointer
+first N step only fast
+and slow and fast
+slow -> next = slow -> next -> next;
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        if(head == NULL){
+            return NULL;
+        }
+        ListNode* slow = head;
+        ListNode* fast = head;
+        int cnt = n;
+        while(cnt > 0){
+            cnt--;
+            fast = fast -> next;
+        }
+        if(fast == NULL){
+            //head node
+            return head -> next;
+        }
+        while(fast -> next){
+            slow = slow -> next;
+            fast = fast -> next;
+        }
+        ListNode* store = slow -> next;
+        slow -> next = slow -> next -> next;
+        store -> next = NULL;
+        delete(store);
+        return head;
+    }
+};
+
+--------------------------------------------------------------------------------------------
+            (reverse link list)
+
+---brute force datareplacement
+
+stack and do data replacement;
+reverse interms of data.
+2n and n
+
+----optimmized
+
+store temp -> next;
+temp -> next = prev
+prev = temp;
+temp = store;
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        ListNode* temp = head;
+        ListNode* prev = NULL;
+        while(temp != NULL){
+            ListNode* storeNextNode = temp -> next;
+            temp -> next = prev;
+            prev = temp;
+            temp = storeNextNode;
+        }
+        return prev;
+    }
+};
+
+---recursive
+
+head null head -> next null return head
+
+newHead = func(head -> next)
+front = head -> next;
+front -> next = head;
+head -> next = null
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        ListNode* newHead = reverseList(head -> next);
+        ListNode* aage = head -> next;
+        aage -> next = head;
+        head -> next = NULL;
+        return newHead;
+    }
+};
+
+-----------------------------------------
+
+    (check palindrome)
+
+----brute
+
+save in stack
+
+and none by one compare if not match return false o/w return true;
+
+2n and n
+
+------
+
+slow and fast pointer to find bich ka element
+
+while(fast -> next && fast -> next -> next)
+
+newhead = reverse(slow -> next)
+
+first= head;
+second = newHead;
+
+while(second){
+    compare
+    not match reverse(newHead) false
+
+revere(newHead
+reutn true;
+
+time is 2n 
+space 1
+
+------------------------------------------------------------
+        (add 1 to ll)
+
+-----
+
+first reverse the linklist
+
+now take carry 1 and run loop and change the data.
+if(sum < 10){
+    break;
+
+if(carry == 1)
+    new Node(1);
+    node -> next = head;
+    new head = newnode
+    return new node
+
+reverse(head)
+return head
+
+3n and 1
+
+class Solution
+{
+    Node* reverseLinkList(Node* temp){
+        if(temp == NULL || temp -> next == NULL){
+            return temp;
+        }
+        Node* newHead = reverseLinkList(temp -> next);
+        Node* aage = temp -> next;
+        aage -> next = temp;
+        temp -> next = NULL;
+        return newHead;
+    }
+    
+    public:
+    Node* addOne(Node *head) 
+    {
+        Node* newHead = reverseLinkList(head);
+        Node* temp = newHead;
+        int carry = 1;
+        while(temp != NULL && carry > 0){
+            int sum = carry;
+            if(temp) sum += temp -> data;
+            if(sum < 10){
+                temp -> data = sum;
+                carry = 0;
+                break;
+            }
+            carry = 1;
+            temp -> data = 0;
+            temp = temp -> next;
+        }
+        if(carry){
+            Node* node = new Node(1);
+            node -> next = newHead;
+            newHead = node;
+            return newHead;
+        }
+        head = reverseLinkList(newHead);
+        return head;
+    }
+};
+
+-----use recursion
+
+if(head == null)
+return 1
+
+sum = data + func(head-> next)
+if(sum < 10)
+    data = sum
+    return 0;
+
+data = 0;
+return 1;
+
+main
+
+func() --> carry1 
+
+new node(1)
+
+new node -> next = head;
+return new node;
+
+class Solution
+{
+    
+    int func(Node* head){
+        if(head == NULL) return 1;
+        int sum = head -> data + func(head -> next);
+        head -> data = sum % 10;
+        return sum < 10 ? 0 : 1;
+    }
+    
+    public:
+    Node* addOne(Node *head) 
+    {
+        int carry = func(head);
+        if(carry){
+            Node* node = new Node(1);
+            node -> next = head;
+            head = node;
+            return head;
+        }
+        return head;
+    }
+};
+
+---------------------------------------------------
+
+        (find the intersection of two linklist)
+
+----brute force
+
+use map
+
+make true
+
+again traverse head2 and check exists or not if return true
+
+time n * logN + n * logN
+spce max(n1, n2)
+
+-------better
+
+find the l1
+fine the l2
+
+return func()
+
+func(small, large, l2 - l1
+or
+func(small, large, l1 - l2)
+
+func{
+    while(d) temp -> next d=--
+
+    if(t1 != t2){
+
+return t1;
+
+-----optimal
+
+when temp1 is null become head of l2 link list
+
+when tem2 is null become head of l1 link list
+
+and while(tem1 != temp2)
+    return temp1
+
+return false;
+
+if(head1 == null || head2 == null)
+    return null
+
+t1 = head1 , t2 = head2
+
+while(t1 != t2) // head1 == head2 for that condition
+
+t1 -> next t2 -> next
+if(t1 == t2) return t1
+if(!t1) t1 =head2;
+if(!t2) t2 = head1;
+
+return t1
+
+each of node travelr in null if not colliede (n1 + n2)
+
+--------------------------------------------------------------------------------
+
+    middle of node
+
+
+----brute 
+
+find the length and middle node (n/2) + 1
+
+n + n/2 time
+1
+
+----tortoise and hare
+
+while(fast && fast -> nxt)
+
+return slow
+
+n/2 , 1
+
+---------------------------------------------------------------------------------
+
+        (detect cycle)
+
+----brute force
+
+if(map.find(exitss)) --> return true
+map
+
+
+return false;
+
+2*logN * N
+N
+
+----better (tortioise and hare)
+
+slow = head, fast = head;
+
+while(fast && fast -> next)
+    if(slow == fast) return true
+return false
+
+n, 1
+
+why 1 step and why 2 step
+
+d % 1 == 0
+bount toward to 0.
+
+-------------------------------------------------------------------------
+
+        (length of loop)
+
+----brute force
+
+hash<node, timer>
+
+if(again visted)
+return new timer - hash[node] // length of cycle
+
+2*logN * N
+N
+----optimized
+
+same as above approch
+
+if(slow == fast) return findLen(slow, fast)
+
+findlen
+    fast = fast-> enxt;
+    cnt = 1;
+    while(slow != fast){
+        cnt++;
+
+return cnt // length
+
+-------------------------------------------------------------------------
+
+            Delete the middle node
+
+-----brute force
+
+find out n
+
+reach at n/2 th node and change the link and delte the n/2 + 1 node. // middle node.
+
+n + n/2
+1
+
+-----optimal
+
+take a third prev variable with starndard totois algorithms.
+
+-----optimal
+check for head == null and head => nex t= null
+
+skip one time slow will be reach before the middle node. just a slit modification.
+
+n/2 , 1
+
+----------------------------------------------------------------------------
+
+        (staring node in cycle)
+
+----brute
+
+hasing
+
+if(has.find== true) return node;
+hash[node] = 1
+
+n * logN
+N
+
+------optimal
+
+while(temp !+ NULL)
+    if(slow == fast)
+        retun func(head, fast; head == fast return fast;
+
+return null
+return null; // liner no cycle present
+
+q1. how we sure that they will collind?
+
+q2. if collaid how we sure that this is a starting node of cycle.
+
+------------------------------------------------------------------------------
+
+        (delete a occureance in doubly link lits)
+
+----simple
+
+do tranversel and change the links
+
+temp = head
+while(temp)
+    if(temp -> data == give val)
+        if(temp == head)
+            head = head -> next;
+        prev = temp -> prev;
+        next = temp -> next;
+        if(next)
+        next -> prev = prev; 
+        if(prev)
+        prev -> next = next;
+        delete temp;
+        temp = next;
+    else 
+    temp = temp-> next;
+
+n time and 1 space
+
+--------------------------------------------------------------------------
+distinct number
+            (find the sum of parit in sorted doubly link list)
+
+-----brute force
+
+temp1 --
+
+    temp2 --> temp -> next;
+
+    if(val1 + val2 == sum)  // basically check for evenry pari
+
+n2 and 1
+
+-----better 
+
+put into array and apply two pointer logic
+
+---optimal
+
+first = head
+end = traverse till end and then apply pointer logic
+
+while(l -> val < r -> val)
+    // two pointer
+
+find tail n
+while loop n
+
+over all 2n time and 1 in space
+
+------------------------------------------------------------------------------------
+
+        (remove duplicates in dll)
+
+----brute fforce
+
+take the advantage of contiguous
+
+----optimal
+temp = head
+while(temp && temp -> next){
+    int nextNode = temp -> next;
+    while(nextNode && nextNode ->val = temp -> val){
+        Node* duplicate = nextNode;
+        nexNode = nextNode-> nexxt;
+        free(duplicate);
+
+    temp -> next = nextNode;
+    if(nextNode) nextNode -> prev = temp;
+    temp = temp -> next;
+
+return head;
+
+--------------------------------------------------------------------------
+
+        (reverse in k size)
+
+class Solution {
+public:
+
+    ListNode* findKthNode(ListNode* temp, int k){
+        k--;
+        while(temp && k > 0){
+            k--;
+            temp = temp -> next;
+        }
+        return temp;
+    }
+
+    ListNode* reverseLinkList(ListNode* head){
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        ListNode* newHead = reverseLinkList(head -> next);
+        ListNode* front = head -> next;
+        front -> next = head;
+        head -> next = NULL;
+        return newHead;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode* prev = NULL;
+        ListNode* temp = head;
+        while(temp != NULL){
+            ListNode* store = temp;
+            ListNode* KthNode = findKthNode(store, k);
+            if(KthNode == NULL){
+                if(prev){
+                    prev -> next = temp;
+                }
+                break;
+            }
+            ListNode* nextNode = KthNode -> next;
+            KthNode -> next = NULL;
+            reverseLinkList(temp);
+            if(temp == head){
+                head = KthNode;
+            }else{
+                prev -> next = KthNode;
+            }
+            prev = temp;
+            temp = nextNode;
+        }
+        return head;
+    }
+};
+
+n + n kth node + reverse + (out side loop) --> n/ k
+
+--------------------------------------------------------------------------------
+
+            (rotate the link list)
+
+simple find length and tail
+
+k == 0
+k % len == 0 return head
+
+tail -> next = head;
+head = len - k npde -> next;
+len - k node -> next = Null;
+
+2n time complexity
+
+--------------------------------------------------------------------------------
+
+            (merge two sorted link list)
+
+----brute force
+
+take all data into array and make new link list return;
+
+n1 + n2 n logn  + n
+
+-----better
+
+create a new list and apply two pointer will be better
+
+----optima
+
+do not create a new list
+
+link is change. good solution
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        if(list1 == NULL && list2 == NULL){
+            return NULL;
+        }
+        if(list1 == NULL){
+            return list2;
+        }
+        if(list2 == NULL){
+            return list1;
+        }
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* temp = dummyNode;
+        ListNode* head1 = list1;
+        ListNode* head2 = list2;
+        while(head1 != NULL && head2 != NULL){
+            if(head1 -> val <= head2 -> val){
+                temp -> next = head1;
+                head1 = head1 -> next;
+            }else{
+                temp -> next = head2;
+                head2 = head2 -> next;
+            }
+            temp = temp -> next;
+        }
+        if(head1) temp -> next = head1;
+        if(head2) temp -> next = head2;
+        return dummyNode -> next;
+    }
+};
+
+n1 + n2
+
+reuse the node 1 in space
+
+-------------------------------------------------------------------------
+
+        (flattern a link list)
+
+----brute force
+
+take the data and sort this make the linklist
+
+n * m + n*m log(n*m) + n*m
+
+sapce n * m * 2  new link list and array
+
+-----better
+
+reuse the link list and use sorrting property
+
+Node* mergeTwoFlattenList(Node* head1, Node* head2){
+    Node* dummyNode = new Node(-1);
+    Node* temp = dummyNode;
+    Node* a = head1;
+    Node* b = head2;
+    while(a && b){
+        if(a -> data <= b -> data){
+            temp -> bottom = a;
+            temp = a;
+            a = a -> bottom;
+        }else{
+            temp -> bottom = b;
+            temp = b;
+            b = b -> bottom;
+        }
+        temp -> next = NULL;
+    }
+    if(a) temp -> bottom = a;
+    if(b) temp -> bottom = b;
+    return dummyNode -> bottom;
+}
+
+Node *flatten(Node *head) {
+    if(head == NULL || head -> next == NULL){
+        return head;
+    }
+    Node* newHead = flatten(head -> next);
+    return mergeTwoFlattenList(head, newHead);
+}
+
+space is take horizontal only n
+time is n * 2m 
+
+---------------------------------------------------------------------------
+
+        (merge K sorted link list)
+
+----brute
+
+take data, store into array and sort then 
+
+converty array to link list 
+return head;
+
+-----better
+
+same as above solution make some changes.
+
+(n1 + n2) + (n1 + n2 + n3) + (n1 + n2 + n3 + n4)  .... time 
+n + 2n + 3n +  ... Kn
+k * (k + 1) / 2 * n
+
+power of cubes
+
+lass Solution {
+public:
+
+    ListNode* mergeTwoSortedLinkedList(ListNode* a, ListNode* b){
+        if(a == NULL && b == NULL){
+            return NULL;
+        }
+        if(a == NULL) return b;
+        if(b == NULL) return a;
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* temp = dummyNode;
+        ListNode* head1 = a;
+        ListNode* head2 = b;
+        while(head1 != NULL && head2 != NULL){
+            if(head1 -> val <= head2 -> val){
+                temp -> next = head1;
+                head1 = head1 -> next;
+            }else{
+                temp -> next = head2;
+                head2 = head2 -> next;
+            }
+            temp = temp -> next;
+        }
+        if(head1) temp -> next = head1;
+        if(head2) temp -> next = head2;
+        return dummyNode -> next;
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& arr) {
+        int n = arr.size();
+        if(n == 0){
+            return NULL;
+        }
+        if(n == 1){
+            return arr[0];
+        }
+        ListNode* head = arr[0];
+        for(int i = 1; i < n; i++){
+            head = mergeTwoSortedLinkedList(head, arr[i]);
+        }
+        return head;
+    }
+};
+
+----optimal
+
+min-head pq
+
+class Solution {
+public:
+
+    ListNode* mergeKLists(vector<ListNode*>& arr) {
+        int n = arr.size();
+        if(n == 0){
+            return NULL;
+        }
+        if(n == 1){
+            return arr[0];
+        }
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* temp = dummyNode;
+        priority_queue<pair<int, ListNode*>, vector<pair<int, ListNode*>>, greater<pair<int, ListNode*>>> PQ;
+        for(int i = 0; i < n; i++){ // n * logN
+            if(arr[i] != NULL){
+                PQ.push({arr[i] -> val, arr[i]});
+            }
+        }
+        while(PQ.size()){ // total number of node
+            auto f = PQ.top();
+            PQ.pop();
+            temp -> next = f.second;
+            temp = temp -> next;
+            if(f.second -> next){
+                PQ.push({f.second -> next -> val, f.second -> next}); //  logN
+            }
+        }
+        return dummyNode -> next;
+    }
+};
+
+k * logk + n* k * logk
+space at a time only K elemtn is there.
+
+--------------------------------------------------------------------------------------
+
+            sort the list using merge sort
+
+------brute force
+
+take arr and store the number, sort ,and convert the array into link list or data replacement done
+
+2n + n logN
+n
+
+-------better
+
+class Solution {
+public:
+
+    ListNode* findMiddleNode(ListNode* head){
+        ListNode* slow = head;
+        ListNode* fast = head -> next -> next;
+        while(fast && fast -> next){
+            slow = slow -> next;
+            fast = fast -> next -> next;
+        }
+        return slow;
+    }
+
+    ListNode* mergeTwoSortedLinkedList(ListNode* a, ListNode* b){
+        if(a == NULL && b == NULL){
+            return NULL;
+        }
+        if(a == NULL) return b;
+        if(b == NULL) return a;
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* temp = dummyNode;
+        ListNode* head1 = a;
+        ListNode* head2 = b;
+        while(head1 != NULL && head2 != NULL){
+            if(head1 -> val <= head2 -> val){
+                temp -> next = head1;
+                head1 = head1 -> next;
+            }else{
+                temp -> next = head2;
+                head2 = head2 -> next;
+            }
+            temp = temp -> next;
+        }
+        if(head1) temp -> next = head1;
+        if(head2) temp -> next = head2;
+        return dummyNode -> next;
+    }
+
+    ListNode* sortList(ListNode* head) {
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+
+        ListNode* middleNode = findMiddleNode(head);
+        ListNode* leftHead = head;
+        ListNode* rightHead = middleNode -> next;
+        middleNode -> next = NULL;
+
+        leftHead = sortList(leftHead);
+        rightHead = sortList(rightHead);
+
+        return mergeTwoSortedLinkedList(leftHead, rightHead);
+    }
+};
+
+depth is logN * (N + N/2)
+space logN -- stack space
+
+
