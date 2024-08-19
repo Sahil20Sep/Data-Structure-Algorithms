@@ -596,6 +596,51 @@ while(second){
 revere(newHead
 reutn true;
 
+----
+
+class Solution {
+public:
+
+    ListNode* reverseLinkList(ListNode* head){
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        ListNode* temp = head;
+        ListNode* prev = NULL;
+        while(temp){    
+            ListNode* storeNextNode = temp -> next;
+            temp -> next = prev;
+            prev = temp;
+            temp = storeNextNode;
+        }
+        return prev;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        if(head == NULL || head -> next == NULL){
+            return true;
+        }
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while(fast && fast -> next){
+            slow = slow -> next;
+            fast = fast -> next -> next;
+        }
+        ListNode* middleNode = slow;
+        ListNode* newHead = reverseLinkList(slow);
+        ListNode* temp1 = head;
+        ListNode* temp2 = newHead;
+        while(temp1 && temp2){ // only temp2 will also work
+            if(temp1 -> val != temp2 -> val){
+                return false;
+            }
+            temp1 = temp1 -> next;
+            temp2 = temp2 -> next;
+        }
+        return true;
+    }
+};
+
 time is 2n 
 space 1
 
@@ -620,6 +665,8 @@ reverse(head)
 return head
 
 3n and 1
+
+-----------------
 
 class Solution
 {
@@ -684,6 +731,8 @@ new node(1)
 
 new node -> next = head;
 return new node;
+
+------------------------
 
 class Solution
 {
