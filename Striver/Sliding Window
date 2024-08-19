@@ -1,0 +1,706 @@
+        (Take card to make max score from front and back)
+
+class Solution {
+public:
+    int maxScore(vector<int>& arr, int k) {
+        int n = arr.size();
+        int lsum = 0, rsum = 0;
+        for(int i = 0; i < k; i++){
+            lsum += arr[i];
+        }
+        if(n == k){
+            return lsum;
+        }
+        int j = n - 1, tsum = lsum;
+        for(int i = k - 1; i >= 0; i--){
+            lsum -= arr[i];
+            rsum += arr[j--];
+            if(lsum + rsum > tsum){
+                tsum = lsum + rsum;
+            }
+        }
+        return tsum;
+    }
+};
+
+-----------------------------------------------------------------------------------------
+
+                (longest substring without reapeing char)
+
+---------brute force 
+
+generate all substring by 2 for loop and check condtion and take max len
+
+------------better - create map for char and freq.
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int l = 0, r = 0, n = s.size(), len = 0;
+        vector<int> hash(256, 0);
+        while(r < n){
+            hash[s[r]]++;
+            while(hash[s[r]] > 1){
+                hash[s[l++]]--;
+            }
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+    }
+};
+
+---------optimal - create map for char and index. O(N) and O(256) to access the array is take constant not logn.
+
+cadbzabcd
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int l = 0, r = 0, n = s.size(), len = 0;
+        vector<int> hash(256, -1);
+        while(r < n){
+            if(hash[s[r]] >= l){
+                l = hash[s[r]] + 1;
+            }
+            hash[s[r]] = r;
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+    }
+};
+
+---------------------------------------------------------------------------------------------------
+
+        (maximum consicutive 1 III)
+
+-----------brute force - generate all substring and check the condition
+
+-----------better - 
+
+class Solution {
+public:
+    int longestOnes(vector<int>& arr, int k) {
+        int l = 0, r = 0, n = arr.size(), temp = 0, len = 0;
+        while(r < n){
+            if(arr[r] == 0){
+                temp++;
+            }
+            while(temp > k){
+                if(arr[l] == 0){
+                    temp--;
+                }
+                l++;
+            }
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+    }
+};
+
+------------optimal
+
+class Solution {
+public:
+    int longestOnes(vector<int>& arr, int k) {
+        int l = 0, r = 0, n = arr.size(), temp = 0, len = 0;
+        while(r < n){
+            if(arr[r] == 0){
+                temp++;
+            }
+            if(temp > k){
+                if(arr[l] == 0){
+                    temp--;
+                }
+                l++;
+            }
+            if(temp <= k){
+                len = max(len, r - l + 1);
+            }
+            r++;
+        }
+        return len;
+    }
+};
+
+-------------------------------------------------------------------------------------------
+
+                (maximum fruit put into basket 2 type)
+
+-----------brute force
+
+generate all subarray and check
+
+------------better O(2N) O(3)
+
+int totalFruits(int n, vector<int> &arr) {
+        int l = 0, r = 0, len = 0;
+        map<int, int> hash;
+        while (r < n){
+            hash[arr[r]]++;
+            while(hash.size() > 2){
+                hash[arr[l]]--;
+                if(hash[arr[l]] == 0){
+                    hash.erase(arr[l]);
+                }
+                l++;
+            }
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+}
+
+---------optimal
+
+int totalFruits(int n, vector<int> &arr) {
+        int l = 0, r = 0, len = 0;
+        map<int, int> hash;
+        while (r < n){
+            hash[arr[r]]++;
+            if(hash.size() > 2){
+                hash[arr[l]]--;
+                if(hash[arr[l]] == 0){
+                    hash.erase(arr[l]);
+                }
+                l++;
+            }
+            if(hash.size() <= 2){
+                len = max(len, r - l + 1);
+            }
+            r++;
+        }
+        return len;
+    }
+
+--------------------------------------------------------------------------------------
+
+        (longest substring with at most/exect k distinct character)
+
+----------brute force
+
+generate all substring and check
+
+----------better
+
+int longestKSubstr(string s, int k) {
+        int l = 0, r = 0, n = s.size(), len = -1;
+        map<int, int> hash;
+        while(r < n){
+            hash[s[r] - 'a']++;
+            while(hash.size() > k){
+                hash[s[l] - 'a']--;
+                if(hash[s[l] - 'a'] == 0){
+                    hash.erase(s[l] - 'a');
+                }
+                l++;
+            }
+            if(hash.size() == k){
+                len = max(len, r - l + 1);
+            }
+            r++;
+        }
+        return len;
+    }
+
+----------optimal
+
+int longestKSubstr(string s, int k) {
+        int l = 0, r = 0, n = s.size(), len = -1;
+        map<int, int> hash;
+        while(r < n){
+            hash[s[r] - 'a']++;
+            if(hash.size() > k){
+                hash[s[l] - 'a']--;
+                if(hash[s[l] - 'a'] == 0){
+                    hash.erase(s[l] - 'a');
+                }
+                l++;
+            }
+            if(hash.size() == k){
+                len = max(len, r - l + 1);
+            }
+            r++;
+        }
+        return len;
+    }
+
+--------------------------------------------------------------------------------------
+
+        (substring that has same character with at most k flip operation)
+
+------brute
+
+generate all substring and check condition
+
+----------better
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        vector<int> cnt(26, 0);
+        int l = 0, r = 0, n = s.size(), len = 0, maxf = 0;
+        while(r < n){
+            maxf = max(maxf, ++cnt[s[r] - 'A']);
+            while(r - l + 1 - maxf > k){
+                cnt[s[l++] - 'A']--;
+                maxf = 0;
+                for(int i = 0; i < 26; i++){
+                    maxf = max(maxf, cnt[i]);
+                }
+            }   
+            len = max(len, r - l + 1);
+            r++;
+        }
+        return len;
+    }
+};
+
+------optimal
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        vector<int> cnt(26, 0);
+        int l = 0, r = 0, n = s.size(), len = 0, maxf = 0;
+        while(r < n){
+            maxf = max(maxf, ++cnt[s[r] - 'A']);
+            if(r - l + 1 - maxf > k){
+                cnt[s[l++] - 'A']--;
+                maxf = 0;
+                for(int i = 0; i < 26; i++){
+                    maxf = max(maxf, cnt[i]);
+                }
+            } 
+            if(r - l + 1 - maxf <= k){
+                len = max(len, r - l + 1);
+            }  
+            r++;
+        }
+        return len;
+    }
+};
+
+we can remove the inside for loop 0 --> 26 no need to update it because we have to find maximum.
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        vector<int> cnt(26, 0);
+        int l = 0, r = 0, n = s.size(), len = 0, maxf = 0;
+        while(r < n){
+            maxf = max(maxf, ++cnt[s[r] - 'A']);
+            if(r - l + 1 - maxf > k){
+                cnt[s[l++] - 'A']--;
+            } 
+            if(r - l + 1 - maxf <= k){
+                len = max(len, r - l + 1);
+            }  
+            r++;
+        }
+        return len;
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
+        (count the binary subarray which is equal to goal)
+
+------brute
+
+generate all subarray and check
+
+------better
+
+class Solution {
+public:
+    int numSubarraysWithSum(vector<int>& arr, int k) {
+        int n = arr.size();
+        int sum = 0;
+        int ans = 0;
+        map<int, int> hash;
+        hash[0] = 1;
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            if(hash[sum - k] > 0){
+                ans += hash[sum - k];
+            }
+            hash[sum]++;
+        }
+        return ans;
+    }
+};
+
+-------optimal
+
+class Solution {
+public:
+
+    int func(vector<int> &arr, int k){
+        if(k < 0){
+            return 0;
+        }
+        int l = 0, r = 0, n = arr.size(), cnt = 0, sum = 0;
+        while(r < n){
+            sum += arr[r];
+            while(sum > k){
+                sum -= arr[l++];
+            }
+            cnt += (r - l + 1);
+            r++;
+        }
+        return cnt;
+    }
+
+    int numSubarraysWithSum(vector<int>& arr, int k) {
+        return func(arr, k) - func(arr, k - 1);
+    }
+};
+                
+---------------------------------------------------------------------------------------
+
+        (count the subarray with k odd number)
+
+-----optimal
+
+class Solution {
+public:
+
+    int func(vector<int> &arr, int k){
+        int n = arr.size(), l = 0, r = 0, cnt = 0, odd = 0;
+        while(r < n){
+            odd += (arr[r] & 1);
+            while(odd > k){
+                odd -= (arr[l++] & 1);
+            }
+            cnt += (r - l + 1);
+            r++;
+        }
+        return cnt;
+    }
+
+    int numberOfSubarrays(vector<int>& arr, int k) {
+        return func(arr, k) - func(arr, k - 1);
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
+                (subarray has exaclty k diffrenet element)
+
+-------brute force
+
+generate all subarray and check
+
+----better
+
+is not there because if we find == k then we find the longest subarray count which is not include every subarray that's why we use <= k - <= k - 1 is ans.
+
+-------optimal
+
+class Solution {
+public:
+
+    int func(vector<int> &arr, int k){
+        if(k == 0){
+            return 0;
+        }
+        int n = arr.size(), l = 0, r = 0, cnt = 0;
+        unordered_map<int, int> hash;
+        while(r < n){
+            hash[arr[r]]++;
+            while(hash.size() > k){
+                hash[arr[l]]--;
+                if(hash[arr[l]] == 0){
+                    hash.erase(arr[l]);
+                }
+                l++;
+            }
+            cnt += r - l + 1;
+            r++;
+        }
+        return cnt;
+    }
+
+    int subarraysWithKDistinct(vector<int>& arr, int k) {
+        return func(arr, k) - func(arr, k - 1);
+    }
+};
+
+-------------------------------------------------------------------------------
+
+        (minimum window substring)
+
+---------brute
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int n = s.size(), m = t.size();
+        int len = INT_MAX, start = -1;
+        for(int i = 0; i < n; i++){
+            vector<int> hash(256, 0);
+            for(int j = 0; j < m; j++){
+                hash[t[j]]++;
+            }
+            int cnt = 0;
+            for(int j = i; j < n; j++){
+                if(hash[s[j]] > 0){
+                    cnt++;
+                }
+                hash[s[j]]--;
+                if(cnt == m){
+                    if(start == -1 || j - i + 1 < len){
+                        start = i;
+                        len = j - i + 1;
+                    }   
+                    break;
+                }
+            }
+        }
+        return start == -1 ? "" : s.substr(start, len);
+    }
+};
+
+----------my code.
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int n = s.size(), m = t.size();
+        vector<int> ss(58, 0), tt(58, 0);
+        for(int i = 0; i < m; i++){
+            tt[t[i] - 'A']++;
+        }
+        int l = 0, r = 0, min_index = -1, max_index = -1;
+        while(r < n){
+            ss[s[r] - 'A']++;
+            bool flag = true;
+            for(int i = 0; i < 58; i++){
+                if(tt[i] > 0){
+                    if(ss[i] < tt[i]){
+                        flag = false;
+                        break;
+                    }
+                }
+            }
+            while(flag){
+                if((max_index == -1 && min_index == -1) || (r - l + 1 < max_index - min_index + 1)){
+                    min_index = l, max_index = r;
+                }
+                ss[s[l] - 'A']--;
+                l++;
+                for(int i = 0; i < 58; i++){
+                    if(tt[i] > 0){
+                        if(ss[i] < tt[i]){
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            r++;
+        }
+        string ans = "";
+        if(min_index == -1 && max_index == -1){
+            return ans;
+        }
+        // cout << min_index << " " << max_index << endl;
+        for(int i = min_index; i <= max_index; i++){
+            ans += s[i];
+        }
+        return ans;
+    }
+};
+
+------striver
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        int n = s.size(), m = t.size(), l = 0, r = 0, len = 1e9, start = -1, cnt = 0;
+        vector<int> f(256, 0);
+        for(int i = 0; i < m; i++){
+            f[t[i]]++;
+        }
+        while(r < n){
+            if(f[s[r]] > 0){
+                cnt++;
+            }
+            f[s[r]]--;
+            while(cnt == m){
+                if(r - l + 1 < len){
+                    start = l;
+                    len = r - l + 1;
+                }
+                f[s[l]]++;
+                if(f[s[l]] > 0){
+                    cnt--;
+                }
+                l++;
+            }
+            r++;
+        }
+        return start == -1 ? "" : s.substr(start, len);
+    }
+};
+
+--------------------------------------------------------------------------------
+
+        (Brumpy Book store owner)
+
+----------better
+
+class Solution {
+public:
+    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
+        int n = cust.size(), l = 0, r = min - 1, sum = 0;
+        vector<int> pref(n, 0);
+        pref[0] = g[0] == 0 ? cust[0] : 0;
+        sum += cust[0];
+        for(int i = 1; i < n; i++){
+            if(i < min){
+                sum += cust[i];
+            }
+            pref[i] = g[i] == 0 ? pref[i - 1] + cust[i] : pref[i - 1];
+        }
+        int ans = sum + pref[n - 1] - pref[min - 1];
+        while(r < n - 1){
+            sum -= cust[l];
+            l++;
+            r++;
+            sum += cust[r];
+            if(l - 1 >= 0){
+                ans = max(ans, sum + pref[n - 1] - pref[r] + pref[l - 1]);
+            }
+        }
+        return ans;
+
+    }
+};
+
+---------optimal
+
+class Solution {
+public:
+    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
+        int n = cust.size(), l = 0, r = min - 1, sum = 0, lsum = 0, rsum = 0;
+        for(int i = 0; i < n; i++){
+            i < min ? sum += cust[i] : (g[i] ? rsum += 0 : rsum += cust[i]);
+        }
+        int ans = sum + rsum + lsum;
+        while(r < n - 1){
+            if(g[l] == 0){
+                lsum += cust[l];
+            }
+            sum -= cust[l];
+            l++;
+            r++;
+            sum += cust[r];
+            if(g[r] == 0){
+                rsum -= cust[r];
+            }
+            ans = max(ans, sum + lsum + rsum);
+        }
+        return ans;
+    }
+};
+
+-------------------------------------------------------------------------------------------------------
+
+                (trapping rain water)
+
+----brute force
+
+class Solution {
+public:
+    int trap(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        for(int i = 0; i < n; i++){
+            int val = i;
+            for(int j = i - 1; j >= 0; j--){
+                if(arr[j] > arr[val]){
+                    val = j;
+                }
+            }
+            if(val == i){
+                continue;
+            }
+            int val2 = i;
+            for(int j = i + 1; j < n; j++){
+                if(arr[j] > arr[val2]){
+                    val2 = j;
+                }
+            }
+            if(val2 == i){
+                continue;
+            }
+            // cout << i << " " << ans << endl;
+            ans += min(arr[val], arr[val2]) - arr[i];
+            // cout << i << " " << ans << endl;
+
+        }
+        return ans;
+    }
+};
+
+----better (pref and suff array)
+
+class Solution {
+public:
+    int trap(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        vector<int> pref(n, -1), suff(n, -1);
+        for(int i = 0; i < n; i++){
+            if(i == 0){
+                pref[i] = arr[i];
+            }else{
+                pref[i] = max(arr[i], pref[i - 1]);
+            }
+        }
+        for(int i = n - 1; i >= 0; i--){
+            if(i == n - 1){
+                suff[i] = arr[i];
+            }else{
+                suff[i] = max(arr[i], suff[i + 1]);
+            }
+        }
+        for(int i = 0; i < n; i++){
+            ans += min(pref[i], suff[i]) - arr[i];
+        }
+        return ans;
+    }
+};
+
+------two pointer approch
+
+class Solution {
+public:
+    int trap(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        int l = 0, r = n - 1, leftMost = -1, rightMost = -1;
+        while(l <= r){
+            if(arr[l] <= arr[r]){
+                if(arr[l] >= leftMost){
+                    leftMost = arr[l];
+                }else{
+                    ans += leftMost - arr[l];
+                }
+                l++;
+            }else{
+                if(arr[r] >= rightMost){
+                    rightMost = arr[r];
+                }else{
+                    ans += rightMost - arr[r];
+                }
+                r--;
+            }
+        }
+        return ans;
+    }
+};
