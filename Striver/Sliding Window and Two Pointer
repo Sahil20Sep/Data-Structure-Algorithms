@@ -439,6 +439,26 @@ public:
 
 -------------------------------------------------------------------------------------------------
 
+	1358. Number of Substrings Containing All Three Characters
+
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int r = 0, a = -1, b = -1, c = -1, ans = 0, n = s.size();
+        while(r < n){
+            s[r] == 'a' ? (a = r) : ((s[r] == 'b') ? b = r : c = r);
+            if(a != -1 && b != -1 && c != -1){
+                int mn = min({a, b, c});
+                ans += mn + 1;
+            }
+            r++;
+        }
+        return ans;
+    }
+};
+
+-------------------------------------------------------------------------------------------------
+
                 (subarray has exaclty k diffrenet element)
 
 -------brute force
@@ -515,57 +535,6 @@ public:
     }
 };
 
-----------my code.
-
-class Solution {
-public:
-    string minWindow(string s, string t) {
-        int n = s.size(), m = t.size();
-        vector<int> ss(58, 0), tt(58, 0);
-        for(int i = 0; i < m; i++){
-            tt[t[i] - 'A']++;
-        }
-        int l = 0, r = 0, min_index = -1, max_index = -1;
-        while(r < n){
-            ss[s[r] - 'A']++;
-            bool flag = true;
-            for(int i = 0; i < 58; i++){
-                if(tt[i] > 0){
-                    if(ss[i] < tt[i]){
-                        flag = false;
-                        break;
-                    }
-                }
-            }
-            while(flag){
-                if((max_index == -1 && min_index == -1) || (r - l + 1 < max_index - min_index + 1)){
-                    min_index = l, max_index = r;
-                }
-                ss[s[l] - 'A']--;
-                l++;
-                for(int i = 0; i < 58; i++){
-                    if(tt[i] > 0){
-                        if(ss[i] < tt[i]){
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            r++;
-        }
-        string ans = "";
-        if(min_index == -1 && max_index == -1){
-            return ans;
-        }
-        // cout << min_index << " " << max_index << endl;
-        for(int i = min_index; i <= max_index; i++){
-            ans += s[i];
-        }
-        return ans;
-    }
-};
-
 ------striver
 
 class Solution {
@@ -595,67 +564,6 @@ public:
             r++;
         }
         return start == -1 ? "" : s.substr(start, len);
-    }
-};
-
---------------------------------------------------------------------------------
-
-        (Brumpy Book store owner) // not part of striver
-
-----------better
-
-class Solution {
-public:
-    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
-        int n = cust.size(), l = 0, r = min - 1, sum = 0;
-        vector<int> pref(n, 0);
-        pref[0] = g[0] == 0 ? cust[0] : 0;
-        sum += cust[0];
-        for(int i = 1; i < n; i++){
-            if(i < min){
-                sum += cust[i];
-            }
-            pref[i] = g[i] == 0 ? pref[i - 1] + cust[i] : pref[i - 1];
-        }
-        int ans = sum + pref[n - 1] - pref[min - 1];
-        while(r < n - 1){
-            sum -= cust[l];
-            l++;
-            r++;
-            sum += cust[r];
-            if(l - 1 >= 0){
-                ans = max(ans, sum + pref[n - 1] - pref[r] + pref[l - 1]);
-            }
-        }
-        return ans;
-
-    }
-};
-
----------optimal
-
-class Solution {
-public:
-    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
-        int n = cust.size(), l = 0, r = min - 1, sum = 0, lsum = 0, rsum = 0;
-        for(int i = 0; i < n; i++){
-            i < min ? sum += cust[i] : (g[i] ? rsum += 0 : rsum += cust[i]);
-        }
-        int ans = sum + rsum + lsum;
-        while(r < n - 1){
-            if(g[l] == 0){
-                lsum += cust[l];
-            }
-            sum -= cust[l];
-            l++;
-            r++;
-            sum += cust[r];
-            if(g[r] == 0){
-                rsum -= cust[r];
-            }
-            ans = max(ans, sum + lsum + rsum);
-        }
-        return ans;
     }
 };
 
@@ -689,10 +597,7 @@ public:
             if(val2 == i){
                 continue;
             }
-            // cout << i << " " << ans << endl;
             ans += min(arr[val], arr[val2]) - arr[i];
-            // cout << i << " " << ans << endl;
-
         }
         return ans;
     }
@@ -755,3 +660,66 @@ public:
         return ans;
     }
 };
+
+
+--------------------------------------------------------------------------------
+
+        (Brumpy Book store owner) // not part of striver
+
+----------better
+
+class Solution {
+public:
+    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
+        int n = cust.size(), l = 0, r = min - 1, sum = 0;
+        vector<int> pref(n, 0);
+        pref[0] = g[0] == 0 ? cust[0] : 0;
+        sum += cust[0];
+        for(int i = 1; i < n; i++){
+            if(i < min){
+                sum += cust[i];
+            }
+            pref[i] = g[i] == 0 ? pref[i - 1] + cust[i] : pref[i - 1];
+        }
+        int ans = sum + pref[n - 1] - pref[min - 1];
+        while(r < n - 1){
+            sum -= cust[l];
+            l++;
+            r++;
+            sum += cust[r];
+            if(l - 1 >= 0){
+                ans = max(ans, sum + pref[n - 1] - pref[r] + pref[l - 1]);
+            }
+        }
+        return ans;
+
+    }
+};
+
+---------optimal
+
+class Solution {
+public:
+    int maxSatisfied(vector<int>& cust, vector<int>& g, int min) {
+        int n = cust.size(), l = 0, r = min - 1, sum = 0, lsum = 0, rsum = 0;
+        for(int i = 0; i < n; i++){
+            i < min ? sum += cust[i] : (g[i] ? rsum += 0 : rsum += cust[i]);
+        }
+        int ans = sum + rsum + lsum;
+        while(r < n - 1){
+            if(g[l] == 0){
+                lsum += cust[l];
+            }
+            sum -= cust[l];
+            l++;
+            r++;
+            sum += cust[r];
+            if(g[r] == 0){
+                rsum -= cust[r];
+            }
+            ans = max(ans, sum + lsum + rsum);
+        }
+        return ans;
+    }
+};
+
