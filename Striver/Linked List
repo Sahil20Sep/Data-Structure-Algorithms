@@ -1140,12 +1140,41 @@ n + n kth node + reverse + (out side loop) --> n/ k
 
 simple find length and tail
 
-k == 0
-k % len == 0 return head
-
-tail -> next = head;
-head = len - k npde -> next;
-len - k node -> next = Null;
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head == NULL || head -> next == NULL){
+            return head;
+        }
+        ListNode* temp = head;
+        ListNode* tail = NULL;
+        int length = 0;
+        while(temp){
+            if(temp -> next == NULL){
+                tail = temp;
+            }
+            temp = temp -> next;
+            length++;
+        }
+        if(k % length == 0){
+            return head;
+        }
+        k = k % length;
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while(k--){
+            fast = fast -> next;
+        }
+        while(fast -> next){
+            slow = slow -> next;
+            fast = fast -> next;
+        }
+        tail -> next = head;
+        head = slow -> next;
+        slow -> next = NULL;
+        return head;
+    }
+};
 
 2n time complexity
 
