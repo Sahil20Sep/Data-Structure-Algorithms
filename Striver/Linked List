@@ -818,6 +818,33 @@ return t1
 
 each of node travelr in null if not colliede (n1 + n2)
 
+--------code
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if(headA == NULL || headB == NULL){
+            return NULL;
+        }
+        ListNode* a = headA;
+        ListNode* b = headB;
+        while(a != b){
+            a = a -> next;
+            b = b -> next;
+            if(a == b){
+                return a;
+            }
+            if(a == NULL){
+                a = headB;
+            }
+            if(b == NULL){
+                b = headA;
+            }
+        }
+        return a;
+    }
+};
+
 --------------------------------------------------------------------------------
 
     middle of node
@@ -919,6 +946,9 @@ skip one time slow will be reach before the middle node. just a slit modificatio
 
 n/2 , 1
 
+slow = head,
+fast = head -> next -> next;
+
 ----------------------------------------------------------------------------
 
         (staring node in cycle)
@@ -948,33 +978,44 @@ q2. if collaid how we sure that this is a starting node of cycle.
 
 ------------------------------------------------------------------------------
 
-        (delete a occureance in doubly link lits)
+        (delete a occureance in doubly link list)
 
 ----simple
 
 do tranversel and change the links
 
-temp = head
-while(temp)
-    if(temp -> data == give val)
-        if(temp == head)
-            head = head -> next;
-        prev = temp -> prev;
-        next = temp -> next;
-        if(next)
-        next -> prev = prev; 
-        if(prev)
-        prev -> next = next;
-        delete temp;
-        temp = next;
-    else 
-    temp = temp-> next;
+class Solution {
+  public:
+    void deleteAllOccurOfX(struct Node** head_ref, int x) {
+        Node* head = *head_ref;
+        Node* temp = head;
+        while(temp){
+            if(temp -> data == x){
+                if(temp == head){
+                    head = head -> next;
+                    *head_ref = head; 
+                }
+                Node* beforeNode = temp -> prev;
+                Node* afterNode = temp -> next;
+                if(afterNode){
+                    afterNode -> prev = beforeNode;
+                }
+                if(beforeNode){
+                    beforeNode -> next = afterNode;
+                }
+                temp = afterNode;
+            }else{
+                temp = temp -> next;
+            }
+        }
+    }
+};
 
 n time and 1 space
 
 --------------------------------------------------------------------------
 distinct number
-            (find the sum of parit in sorted doubly link list)
+            (find the sum of pair in sorted doubly link list)
 
 -----brute force
 
@@ -1012,19 +1053,30 @@ over all 2n time and 1 in space
 take the advantage of contiguous
 
 ----optimal
-temp = head
-while(temp && temp -> next){
-    int nextNode = temp -> next;
-    while(nextNode && nextNode ->val = temp -> val){
-        Node* duplicate = nextNode;
-        nexNode = nextNode-> nexxt;
-        free(duplicate);
 
-    temp -> next = nextNode;
-    if(nextNode) nextNode -> prev = temp;
-    temp = temp -> next;
+class Solution
+{
+public:
 
-return head;
+    Node * removeDuplicates(struct Node *head)
+    {
+        Node* temp = head;
+        while(temp && temp -> next){
+            Node* nextNode = temp -> next;
+            while(nextNode && nextNode -> data == temp -> data){
+                Node* store = nextNode;
+                nextNode = nextNode -> next;
+                delete(store);
+            }
+            temp -> next = nextNode;
+            if(nextNode){
+                nextNode -> prev = temp;
+            }
+            temp = temp -> next;
+        }
+        return head;
+    }
+};
 
 --------------------------------------------------------------------------
 
