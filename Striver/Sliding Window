@@ -348,7 +348,7 @@ public:
             while(sum > k){
                 sum -= arr[l++];
             }
-            cnt += (r - l + 1);
+            cnt += (r - l + 1); // here only two element 0 and 1 that's why we not check (sum == goal)
             r++;
         }
         return cnt;
@@ -358,6 +358,57 @@ public:
         return func(arr, k) - func(arr, k - 1);
     }
 };
+
+-----------------------------------------------------------------------------------------
+
+		(SUBARRAY WITH SUM == K) // find the max length
+
+----------------better for (>= 0)
+---------------optimal for (negetive, positive and 0)
+
+class Solution{
+    public:
+    int lenOfLongSubarr(int arr[],  int n, int k) 
+    { 
+        map<int, int> hash;
+        int sum = 0, len = 0;
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            if(sum == k){  
+                len = max(len, i + 1);
+            }
+            int rem = sum - k;
+            if(hash.find(rem) != hash.end()){
+                len = max(len, i - hash[rem]); 
+            }
+            if(hash.find(sum) == hash.end()){
+                hash[sum] = i;
+            }
+        }
+        return len;
+    } 
+};
+
+----------------optimal for >= 0
+
+int longestSubarrayWithSumK(vector<int> a, long long k) {
+    int i = 0, j = 0;
+    long long sum = 0;
+    int length = 0;
+    int n = a.size();
+    while(j < n){
+        sum += a[j];
+        while(sum > k){
+            sum -= a[i];
+            i++;
+        }
+        if(sum == k){
+            length = max(length, j - i);
+        }
+        j++;
+    }
+    return length;
+}
                 
 ---------------------------------------------------------------------------------------
 
