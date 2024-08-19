@@ -9,20 +9,15 @@ no. of leaf node = 1 + no. of internal Node
 
 bool isFullTree (struct Node* root)
 {
-    // If empty tree
     if (root == NULL)
         return true;
-  
-    // If leaf node
+
     if (root->left == NULL && root->right == NULL)
         return true;
   
-    // If both left and right are not NULL, and left & right subtrees
-    // are full
     if ((root->left) && (root->right))
         return (isFullTree(root->left) && isFullTree(root->right));
   
-    // We reach here when none of the above if conditions work
     return false;
 }
 
@@ -342,17 +337,6 @@ public:
 
         (postorder) 1 stack
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
 
@@ -423,17 +407,6 @@ public:
 
               (BFS)
 
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
@@ -483,18 +456,6 @@ TIME --> O(N) , SPACE --> O(N)
 
 --------------------------------------------------------------------------------------
                     (all in one)
-
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 
 class Solution {
 public:
@@ -582,6 +543,8 @@ public:
     }
 };
 
+-----
+
 class Solution {
 public:
 
@@ -645,6 +608,8 @@ public:
 
     }
 };
+
+-------
 
 class Solution {
 public:
@@ -845,7 +810,6 @@ vector<vector<int> > zigzagLevelOrder(TreeNode* root) {
         return vector<vector<int> > ();
     }
     vector<vector<int> > result;
-
     queue<TreeNode*> nodesQueue;
     nodesQueue.push(root);
     bool leftToRight = true;
@@ -856,10 +820,7 @@ vector<vector<int> > zigzagLevelOrder(TreeNode* root) {
         for (int i = 0; i < size; i++) {
             TreeNode* node = nodesQueue.front();
             nodesQueue.pop();
-
-            // find position to fill node's value
             int index = (leftToRight) ? i : (size - 1 - i);
-
             row[index] = node->val;
             if (node->left) {
                 nodesQueue.push(node->left);
@@ -868,7 +829,6 @@ vector<vector<int> > zigzagLevelOrder(TreeNode* root) {
                 nodesQueue.push(node->right);
             }
         }
-        // after this level
         leftToRight = !leftToRight;
         result.push_back(row);
     }
@@ -1339,6 +1299,8 @@ vector<int> Solution::solve(TreeNode* root, int find) {
     
 }
 
+-----------
+
         Recursive approcch
 
 bool inorder(TreeNode* root, int find, vector<int> &ans){
@@ -1797,7 +1759,7 @@ class Solution {
 o(n) + o(n) --> time complexity
 -----------------------------------------------------------------------------------------------
 
-                (count the number of nodes in bt)
+                (count the number of nodes in complete bt)
 
 class Solution {
 public:
@@ -2127,6 +2089,8 @@ public:
         
     }
 };
+
+----------------------------
 
             (pre order)
 
