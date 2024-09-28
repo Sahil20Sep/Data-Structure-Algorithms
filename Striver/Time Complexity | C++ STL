@@ -1,0 +1,153 @@
+-------vector
+
+O(1) --> push_back, pop_back, size
+O(N) --> insert, erase, clear
+
+---------deque
+
+O(1) --> all operation
+
+--------stack
+
+O(1) --> all operation
+
+--------queue
+
+O(1) --> all operation
+
+-------set
+
+O(logN) --> insert, erase, find
+O(1) --> size, empty
+
+-------map
+
+O(logN) --> insert, erase, find
+O(1) --> size
+
+-------unordered_set
+
+O(1) --> all operation
+
+-------unordered_map
+
+O(1) --> all operation
+
+-----------------------------------------------------
+
+chat gpt
+
+Here is a breakdown of the time complexities (best, average, and worst) for some commonly used C++ Standard Template Library (STL) containers and operations:
+
+### 1. **Vector (`std::vector`)**:
+   - **Access (by index)**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+   - **Insertion (at end)**:  
+     - Best: O(1) (amortized)  
+     - Average: O(1) (amortized)  
+     - Worst: O(n) (if resizing is required)  
+   - **Insertion (at specific position)**:  
+     - Best: O(1)  
+     - Average: O(n)  
+     - Worst: O(n)  
+   - **Deletion (from end)**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+   - **Deletion (from specific position)**:  
+     - Best: O(1)  
+     - Average: O(n)  
+     - Worst: O(n)  
+
+### 2. **Deque (`std::deque`)**:
+   - **Access (by index)**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+   - **Insertion/Deletion (at beginning or end)**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+   - **Insertion/Deletion (in the middle)**:  
+     - Best: O(1)  
+     - Average: O(n)  
+     - Worst: O(n)  
+
+### 4. **Set/Multiset (`std::set`, `std::multiset`)** (implemented as Red-Black Tree):
+   - **Access/Find**:  
+     - Best: O(1)  
+     - Average: O(log n)  
+     - Worst: O(log n)  
+   - **Insertion/Deletion**:  
+     - Best: O(log n)  
+     - Average: O(log n)  
+     - Worst: O(log n)  
+
+### 5. **Unordered Set/Unordered Multiset (`std::unordered_set`, `std::unordered_multiset`)** (implemented as Hash Table):
+   - **Access/Find**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(n) (in case of hash collisions)  
+   - **Insertion/Deletion**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(n) (in case of hash collisions)  
+
+### 6. **Map/Multimap (`std::map`, `std::multimap`)** (implemented as Red-Black Tree):
+   - **Access/Find**:  
+     - Best: O(1)  
+     - Average: O(log n)  
+     - Worst: O(log n)  
+   - **Insertion/Deletion**:  
+     - Best: O(log n)  
+     - Average: O(log n)  
+     - Worst: O(log n)  
+
+### 7. **Unordered Map/Unordered Multimap (`std::unordered_map`, `std::unordered_multimap`)** (implemented as Hash Table):
+   - **Access/Find**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(n) (in case of hash collisions)  
+   - **Insertion/Deletion**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(n) (in case of hash collisions)  
+
+### 8. **Stack (`std::stack`)** (uses `std::deque` by default):
+   - **Push/Pop**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+   - **Top**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+
+### 9. **Queue (`std::queue`)** (uses `std::deque` by default):
+   - **Enqueue/Dequeue**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+   - **Front/Back**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+
+### 10. **Priority Queue (`std::priority_queue`)** (uses a heap):
+   - **Push**:  
+     - Best: O(1)  
+     - Average: O(log n)  
+     - Worst: O(log n)  
+   - **Pop (extract max/min)**:  
+     - Best: O(1)  
+     - Average: O(log n)  
+     - Worst: O(log n)  
+   - **Top (peek max/min)**:  
+     - Best: O(1)  
+     - Average: O(1)  
+     - Worst: O(1)  
+
+This summary should give you a good idea of the time complexity for different operations with C++ STL containers!
+
